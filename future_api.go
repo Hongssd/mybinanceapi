@@ -275,7 +275,6 @@ func (api *FutureOrderGetApi) Do() (*FutureOrderGetRes, error) {
 	return binanceCallApiWithSecretGet[FutureOrderGetRes](api.FutureRestClient.c, url)
 }
 
-
 // binance FUTURE FutureUserTrades rest账户成交历史 (USER_DATA)
 func (client *FutureRestClient) NewFutureUserTrades() *FutureUserTradesApi {
 	return &FutureUserTradesApi{

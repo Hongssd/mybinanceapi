@@ -188,7 +188,6 @@ func (api *SwapAllOrdersApi) Do() (*SwapAllOrdersRes, error) {
 	return binanceCallApiWithSecretGet[SwapAllOrdersRes](api.SwapRestClient.c, url)
 }
 
-
 // binance SWAP  SwapOrderPost rest下单 (TRADE)
 func (client *SwapRestClient) NewSwapOrderPost() *SwapOrderPostApi {
 	return &SwapOrderPostApi{
@@ -214,4 +213,3 @@ func (api *SwapOrderGetApi) Do() (*SwapOrderGetRes, error) {
 	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapOrderGet], api.c.ApiSecret)
 	return binanceCallApiWithSecretGet[SwapOrderGetRes](api.SwapRestClient.c, url)
 }
-
