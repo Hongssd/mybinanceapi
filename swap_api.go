@@ -1,4 +1,4 @@
-package binanceservice
+package mybinanceapi
 
 import "time"
 

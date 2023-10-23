@@ -1,4 +1,4 @@
-package binanceservice
+package mybinanceapi
 
 type SubAccountResSubAccount struct {
 	Email                       string `json:"email"`
