@@ -1,4 +1,4 @@
-module mybinanceapi
+module github.com/Hongssd/mybinanceapi
 
 go 1.19
 
