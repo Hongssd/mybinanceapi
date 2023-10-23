@@ -49,6 +49,8 @@ const (
 	SpotOpenOrders
 	SpotAllOrders
 	SpotOrderGet
+	SpotAssetTransferPost //用户万向划转 (USER_DATA)
+	SpotAssetTransferGet  //查询用户万向划转历史 (USER_DATA)
 
 	//通用接口
 	SpotPing
@@ -101,7 +103,8 @@ var SpotApiMap = map[SpotApi]string{
 	SpotOpenOrders:              "/api/v3/openOrders",                //GET接口 查询当前挂单 (USER_DATA)
 	SpotAllOrders:               "/api/v3/allOrders",                 //GET接口 查询所有订单 (USER_DATA)
 	SpotOrderGet:                "/api/v3/order",                     //GET接口 查询订单 (USER_DATA)
-
+	SpotAssetTransferPost:       "/sapi/v1/asset/transfer",           //用户万向划转 (USER_DATA)
+	SpotAssetTransferGet:        "/sapi/v1/asset/transfer",           //查询用户万向划转历史 (USER_DATA)
 	//通用接口
 	SpotPing:         "/api/v3/ping",         //GET接口 测试连通性
 	SpotServerTime:   "/api/v3/time",         //GET接口 获取服务器时间
@@ -531,6 +534,32 @@ func (api *SpotOrderGetApi) Do() (*SpotOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
 	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotOrderGet], api.c.ApiSecret)
 	return binanceCallApiWithSecretGet[SpotOrderGetRes](api.SpotRestClient.c, url)
+}
+
+// binance SPOT spotAssetTransferPost rest用户万向划转 (USER_DATA)
+func (client *SpotRestClient) NewSpotAssetTransferPost() *SpotAssetTransferPostApi {
+	return &SpotAssetTransferPostApi{
+		SpotRestClient: *client,
+		req:            &SpotAssetTransferPostReq{},
+	}
+}
+func (api *SpotAssetTransferPostApi) Do() (*SpotAssetTransferPostRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotAssetTransferPost], api.c.ApiSecret)
+	return binanceCallApiWithSecretPost[SpotAssetTransferPostRes](api.SpotRestClient.c, url, reqBody)
+}
+
+// binance SPOT spotAssetTransferGet rest查询用户万向划转历史 (USER_DATA)
+func (client *SpotRestClient) NewSpotAssetTransferGet() *SpotAssetTransferGetApi {
+	return &SpotAssetTransferGetApi{
+		SpotRestClient: *client,
+		req:            &SpotAssetTransferGetReq{},
+	}
+}
+func (api *SpotAssetTransferGetApi) Do() (*SpotAssetTransferGetRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotAssetTransferGet], api.c.ApiSecret)
+	return binanceCallApiWithSecretGet[SpotAssetTransferGetRes](api.SpotRestClient.c, url)
 }
 
 // binance SPOT spotTickerPrice rest价格 (NONE)

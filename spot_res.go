@@ -454,3 +454,43 @@ type SpotTickerPriceRes struct {
 	Symbol string `json:"symbol"` // 交易对
 	Price  string `json:"price"`  // 价格
 }
+
+type SpotAssetTransferPostRes struct {
+	TranId int64 `json:"tranId"`
+}
+
+// {
+//     "total":2,
+//     "rows":[
+//         {
+//             "asset":"USDT",
+//             "amount":"1",
+//             "type":"MAIN_UMFUTURE"
+//             "status": "CONFIRMED", // status: CONFIRMED / FAILED / PENDING
+//             "tranId": 11415955596,
+//             "timestamp":1544433328000
+//         },
+//         {
+//             "asset":"USDT",
+//             "amount":"2",
+//             "type":"MAIN_UMFUTURE",
+//             "status": "CONFIRMED",
+//             "tranId": 11366865406,
+//             "timestamp":1544433328000
+//         }
+//     ]
+// }
+
+type SpotAssetTransferGetRes struct {
+	Total int                       `json:"total"`
+	Rows  []SpotAssetTransferGetRow `json:"rows"`
+}
+
+type SpotAssetTransferGetRow struct {
+	Asset     string `json:"asset"`
+	Amount    string `json:"amount"`
+	Type      string `json:"type"`
+	Status    string `json:"status"`
+	TranId    int64  `json:"tranId"`
+	Timestamp int64  `json:"timestamp"`
+}
