@@ -31,6 +31,7 @@ const (
 	SpotMarginMaxTransferable
 	SpotMarginInterestHistory
 	SpotMarginOrderGet
+	SpotMarginOrderDelete
 	SpotMarginAllOrders
 	SpotMarginOpenOrders
 
@@ -50,17 +51,28 @@ const (
 	SpotOpenOrders
 	SpotAllOrders
 	SpotOrderGet
+	SpotOrderDelete       //撤销订单 (TRADE)
 	SpotAssetTransferPost //用户万向划转 (USER_DATA)
 	SpotAssetTransferGet  //查询用户万向划转历史 (USER_DATA)
 
 	//通用接口
-	SpotPing
-	SpotServerTime
-	SpotExchangeInfo
+	SpotPing         //测试服务器连通性
+	SpotServerTime   //获取服务器时间
+	SpotExchangeInfo //获取交易规则和交易对信息。
 
 	//行情接口
-	SpotTickerPrice
-	SpotKlines
+	SpotKlines      //K线数据
+	SpotTickerPrice //获取交易对最新价格
+	SpotDepth       //获取深度信息
+
+	SpotTrades           //近期成交列表
+	SpotHistoricalTrades //历史成交记录
+	SpotAggTrades        //近期成交(归集)
+	SpotAvgPrice         //当前平均价格
+	SpotUiKlines         //UIK线数据
+	SpotTicker24hr       //24hr 价格变动情况
+	SpotTickerBookTicker //当前最优挂单
+	SpotTicker           //滚动窗口价格变动统计
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -88,6 +100,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginMaxTransferable:  "/sapi/v1/margin/maxTransferable",   //GET 查询最大可转出额 (USER_DATA)
 	SpotMarginInterestHistory:  "/sapi/v1/margin/interestHistory",   //GET 获取利息历史 (USER_DATA)
 	SpotMarginOrderGet:         "/sapi/v1/margin/order",             //GET 查询杠杆账户订单 (USER_DATA)
+	SpotMarginOrderDelete:      "/sapi/v1/margin/order",             //DELETE 撤销杠杆账户订单 (TRADE)
 	SpotMarginAllOrders:        "/sapi/v1/margin/allOrders",         //GET 查询杠杆账户所有订单 (USER_DATA)
 	SpotMarginOpenOrders:       "/sapi/v1/margin/openOrders",        //GET 查询杠杆账户挂单记录 (USER_DATA)
 
@@ -100,14 +113,17 @@ var SpotApiMap = map[SpotApi]string{
 	//现货下单
 	SpotOrderPost:       "/api/v3/order",         // POST /api/v3/order (HMAC SHA256) 下单 (TRADE)
 	SpotMarginOrderPost: "/sapi/v1/margin/order", // POST /sapi/v1/margin/order (HMAC SHA256) 杠杆账户下单 (TRADE)
+
 	//现货钱包接口
 	SpotAccount:                 "/api/v3/account",                   //GET接口 账户信息 (USER_DATA)
 	SpotAccountApiTradingStatus: "/sapi/v1/account/apiTradingStatus", //GET接口 账户API交易状态(USER_DATA)
 	SpotOpenOrders:              "/api/v3/openOrders",                //GET接口 查询当前挂单 (USER_DATA)
 	SpotAllOrders:               "/api/v3/allOrders",                 //GET接口 查询所有订单 (USER_DATA)
 	SpotOrderGet:                "/api/v3/order",                     //GET接口 查询订单 (USER_DATA)
+	SpotOrderDelete:             "/api/v3/order",                     //DELETE接口 撤销订单 (TRADE)
 	SpotAssetTransferPost:       "/sapi/v1/asset/transfer",           //用户万向划转 (USER_DATA)
 	SpotAssetTransferGet:        "/sapi/v1/asset/transfer",           //查询用户万向划转历史 (USER_DATA)
+
 	//通用接口
 	SpotPing:         "/api/v3/ping",         //GET接口 测试连通性
 	SpotServerTime:   "/api/v3/time",         //GET接口 获取服务器时间
@@ -116,6 +132,7 @@ var SpotApiMap = map[SpotApi]string{
 	//行情接口
 	SpotTickerPrice: "/api/v3/ticker/price", //GET接口 获取交易对最新价格
 	SpotKlines:      "/api/v3/klines",       //GET接口 获取K线数据
+	SpotDepth:       "/api/v3/depth",        //GET接口 获取深度信息
 }
 
 // ================以下为子母账户GET接口
@@ -128,8 +145,8 @@ func (client *SpotRestClient) NewSubAccountList() *SpotSubAccountListApi {
 }
 func (api *SpotSubAccountListApi) Do() (*SubAccountListRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountList], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SubAccountListRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountList], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountListRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT子母账户接口  SubAccountUniversalTransferHistory rest查询子母账户万能划转历史查询
@@ -141,8 +158,8 @@ func (client *SpotRestClient) NewSubAccountUniversalTransferHistory() *SpotSubAc
 }
 func (api *SpotSubAccountUniversalTransferHistoryApi) Do() (*SubAccountUniversalTransferHistoryRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountUniversalTransferHistory], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SubAccountUniversalTransferHistoryRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountUniversalTransferHistory], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountUniversalTransferHistoryRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT子母账户接口  SubAccountAssets rest查询子账户资产 (适用主账户)
@@ -154,8 +171,8 @@ func (client *SpotRestClient) NewSubAccountAssets() *SpotSubAccountAssetsApi {
 }
 func (api *SpotSubAccountAssetsApi) Do() (*SubAccountAssetsRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountAssets], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SubAccountAssetsRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountAssets], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountAssetsRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT子母账户接口  SubAccountAssets rest查询子账户Futures账户详情V2 (适用主账户)
@@ -167,8 +184,8 @@ func (client *SpotRestClient) NewSubAccountFuturesAccount() *SpotSubAccountFutur
 }
 func (api *SpotSubAccountFuturesAccountApi) Do() (*SubAccountFuturesAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SubAccountFuturesAccountRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountFuturesAccountRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT子母账户接口  SubAccountTransferSubUserHistory rest查询子账户划转历史 (仅适用子账户)
@@ -180,8 +197,8 @@ func (client *SpotRestClient) NewSubAccountTransferSubUserHistory() *SpotSubAcco
 }
 func (api *SpotSubAccountTransferSubUserHistoryApi) Do() (*SpotSubAccountTransferSubUserHistoryRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountTransferSubUserHistory], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotSubAccountTransferSubUserHistoryRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountTransferSubUserHistory], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotSubAccountTransferSubUserHistoryRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT现货账户和交易接口  SpotAccount rest账户信息 (USER_DATA)
@@ -193,8 +210,8 @@ func (client *SpotRestClient) NewSpotAccount() *SpotAccountApi {
 }
 func (api *SpotAccountApi) Do() (*SpotAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotAccountRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAccountRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance 查询子账户API Key IP白名单 (适用母账户)  SpotSubAccountApiIpRestriction rest查询子账户API Key IP白名单 (适用母账户)
@@ -206,8 +223,8 @@ func (client *SpotRestClient) NewSpotSubAccountApiIpRestriction() *SpotSubAccoun
 }
 func (api *SpotSubAccountApiIpRestrictionApi) Do() (*SpotSubAccountApiIpRestrictionRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountApiIpRestriction], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotSubAccountApiIpRestrictionRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountApiIpRestriction], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotSubAccountApiIpRestrictionRes](api.SpotRestClient.c, url, GET)
 }
 
 // ================以下为子母账户POST接口
@@ -220,8 +237,8 @@ func (client *SpotRestClient) NewSubAccountVirtualSubAccount() *SpotSubAccountVi
 }
 func (api *SpotSubAccountVirtualSubAccountApi) Do() (*SubAccountVirtualSubAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotSubAccountVirtualSubAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SubAccountVirtualSubAccountRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountVirtualSubAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountVirtualSubAccountRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT子母账户接口  SubAccountUniversalTransfer rest子母账户万能划转
@@ -233,8 +250,8 @@ func (client *SpotRestClient) NewSubAccountUniversalTransfer() *SpotSubAccountUn
 }
 func (api *SpotSubAccountUniversalTransferApi) Do() (*SubAccountUniversalTransferRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotSubAccountUniversalTransfer], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SubAccountUniversalTransferRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountUniversalTransfer], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountUniversalTransferRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT子母账户接口  SubAccountFuturesEnable rest为子账户开通Futures (适用主账户)
@@ -246,8 +263,8 @@ func (client *SpotRestClient) NewSubAccountFuturesEnable() *SpotSubAccountFuture
 }
 func (api *SpotSubAccountFuturesEnableApi) Do() (*SubAccountFuturesEnableRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesEnable], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SubAccountFuturesEnableRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesEnable], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SubAccountFuturesEnableRes](api.SpotRestClient.c, url, POST)
 }
 
 // ================以下为杠杆账户GET接口
@@ -260,8 +277,8 @@ func (client *SpotRestClient) NewMarginAllPairs() *SpotMarginAllPairsApi {
 }
 func (api *SpotMarginAllPairsApi) Do() (*MarginAllPairsRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginAllPairs], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginAllPairsRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginAllPairs], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginAllPairsRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口  MarginIsolatedAllPairs rest获取所有逐仓杠杆交易对(MARKET_DATA)
@@ -273,8 +290,8 @@ func (client *SpotRestClient) NewMarginIsolatedAllPairs() *SpotMarginIsolatedAll
 }
 func (api *SpotMarginIsolatedAllPairsApi) Do() (*MarginIsolatedAllPairsRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginIsolatedAllPairs], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginIsolatedAllPairsRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedAllPairs], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginIsolatedAllPairsRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口  MarginAccount rest查询全仓杠杆账户详情 (USER_DATA)
@@ -286,8 +303,8 @@ func (client *SpotRestClient) NewMarginAccount() *SpotMarginAccountApi {
 }
 func (api *SpotMarginAccountApi) Do() (*MarginAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginAccountRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginAccountRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口  MarginIsolatedAccount rest查询逐仓杠杆账户详情 (USER_DATA)
@@ -299,8 +316,8 @@ func (client *SpotRestClient) NewMarginIsolatedAccount() *SpotMarginIsolatedAcco
 }
 func (api *SpotMarginIsolatedAccountApi) Do() (*MarginIsolatedAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginIsolatedAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginIsolatedAccountRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginIsolatedAccountRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口 MarginMaxBorrowable rest查询最大可借 (MARKET_DATA)
@@ -312,8 +329,8 @@ func (client *SpotRestClient) NewMarginMaxBorrowable() *SpotMarginMaxBorrowableA
 }
 func (api *SpotMarginMaxBorrowableApi) Do() (*MarginMaxBorrowableRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginMaxBorrowable], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginMaxBorrowableRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginMaxBorrowable], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginMaxBorrowableRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口  MarginMaxTransferable rest查询最大可转 (MARKET_DATA)
@@ -325,8 +342,8 @@ func (client *SpotRestClient) NewMarginMaxTransferable() *SpotMarginMaxTransfera
 }
 func (api *SpotMarginMaxTransferableApi) Do() (*MarginMaxTransferableRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginMaxTransferable], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginMaxTransferableRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginMaxTransferable], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginMaxTransferableRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口 MarginInterestHistory rest获取杠杆账户借息历史 (USER_DATA)
@@ -338,8 +355,8 @@ func (client *SpotRestClient) NewMarginInterestHistory() *SpotMarginInterestHist
 }
 func (api *SpotMarginInterestHistoryApi) Do() (*MarginInterestHistoryRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginInterestHistory], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginInterestHistoryRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginInterestHistory], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginInterestHistoryRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口  MarginOrderGet rest查询杠杆账户订单 (USER_DATA)
@@ -351,8 +368,21 @@ func (client *SpotRestClient) NewMarginOrderGet() *SpotMarginOrderGetApi {
 }
 func (api *SpotMarginOrderGetApi) Do() (*MarginOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginOrderGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginOrderGetRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOrderGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginOrderGetRes](api.SpotRestClient.c, url, GET)
+}
+
+// binance SPOT杠杆接口  MarginOrderDelete rest撤销杠杆账户订单 (TRADE)
+func (client *SpotRestClient) NewMarginOrderDelete() *SpotMarginOrderDeleteApi {
+	return &SpotMarginOrderDeleteApi{
+		SpotRestClient: *client,
+		req:            &SpotMarginOrderDeleteReq{},
+	}
+}
+func (api *SpotMarginOrderDeleteApi) Do() (*SpotMarginOrderDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOrderDelete], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotMarginOrderDeleteRes](api.SpotRestClient.c, url, DELETE)
 }
 
 // binance  SPOT杠杆接口 MarginAllOrders rest查询杠杆账户全部订单 (USER_DATA)
@@ -364,8 +394,8 @@ func (client *SpotRestClient) NewMarginAllOrders() *SpotMarginAllOrdersApi {
 }
 func (api *SpotMarginAllOrdersApi) Do() (*MarginAllOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginAllOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginAllOrdersRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginAllOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginAllOrdersRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT杠杆接口 MarginOpenOrders  rest查询杠杆账户挂单记录 (USER_DATA)
@@ -377,8 +407,8 @@ func (client *SpotRestClient) NewMarginOpenOrders() *SpotMarginOpenOrdersApi {
 }
 func (api *SpotMarginOpenOrdersApi) Do() (*MarginOpenOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotMarginOpenOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[MarginOpenOrdersRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOpenOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginOpenOrdersRes](api.SpotRestClient.c, url, GET)
 }
 
 // ================以下为杠杆账户POST接口
@@ -391,8 +421,8 @@ func (client *SpotRestClient) NewMarginTransfer() *SpotMarginTransferApi {
 }
 func (api *SpotMarginTransferApi) Do() (*MarginTransferRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotMarginTransfer], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[MarginTransferRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginTransfer], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginTransferRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT杠杆接口  MarginIsolatedTransfer rest逐仓杠杆账户划转 (MARGIN)
@@ -404,8 +434,8 @@ func (client *SpotRestClient) NewMarginIsolatedTransfer() *SpotMarginIsolatedTra
 }
 func (api *SpotMarginIsolatedTransferApi) Do() (*MarginIsolatedTransferRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotMarginIsolatedTransfer], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[MarginIsolatedTransferRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedTransfer], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginIsolatedTransferRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT杠杆接口 MarginLoan rest 杠杆账户借贷 (MARGIN) 支持逐仓和全仓
@@ -417,8 +447,8 @@ func (client *SpotRestClient) NewMarginLoan() *SpotMarginLoanApi {
 }
 func (api *SpotMarginLoanApi) Do() (*MarginLoanRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotMarginLoan], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[MarginLoanRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginLoan], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginLoanRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT杠杆接口 MarginRepay rest 杠杆账户还贷 (MARGIN) 支持逐仓和全仓
@@ -430,8 +460,8 @@ func (client *SpotRestClient) NewMarginRepay() *SpotMarginRepayApi {
 }
 func (api *SpotMarginRepayApi) Do() (*MarginRepayRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotMarginRepay], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[MarginRepayRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginRepay], api.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginRepayRes](api.SpotRestClient.c, url, POST)
 }
 
 // 下单接口
@@ -444,9 +474,9 @@ func (client *SpotRestClient) NewSpotOrderPost() *SpotOrderPostApi {
 }
 func (api *SpotOrderPostApi) Do() (*SpotOrderPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotOrderPost], api.c.ApiSecret)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderPost], api.c.ApiSecret)
 	log.Warn(url)
-	return binanceCallApiWithSecretPost[SpotOrderPostRes](api.SpotRestClient.c, url, reqBody)
+	return binanceCallApiWithSecret[SpotOrderPostRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT杠杆下单接口 SpotMarginOrderPost rest 杠杆下单 (TRADE)
@@ -458,9 +488,9 @@ func (client *SpotRestClient) NewSpotMarginOrderPost() *SpotMarginOrderPostApi {
 }
 func (api *SpotMarginOrderPostApi) Do() (*SpotMarginOrderPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotMarginOrderPost], api.c.ApiSecret)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOrderPost], api.c.ApiSecret)
 	log.Debug(url)
-	return binanceCallApiWithSecretPost[SpotMarginOrderPostRes](api.SpotRestClient.c, url, reqBody)
+	return binanceCallApiWithSecret[SpotMarginOrderPostRes](api.SpotRestClient.c, url, POST)
 }
 
 // 钱包接口
@@ -473,8 +503,8 @@ func (client *SpotRestClient) NewAccountApiTradingStatus() *SpotAccountApiTradin
 }
 func (api *SpotAccountApiTradingStatusApi) Do() (*SpotAccountApiTradingStatusRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotAccountApiTradingStatus], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotAccountApiTradingStatusRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAccountApiTradingStatus], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAccountApiTradingStatusRes](api.SpotRestClient.c, url, GET)
 }
 
 // 通用接口
@@ -486,8 +516,8 @@ func (client *SpotRestClient) NewPing() *SpotPingApi {
 	}
 }
 func (api *SpotPingApi) Do() (*SpotPingRes, error) {
-	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotPing])
-	return binanceCallApiWithSecretGet[SpotPingRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotPing])
+	return binanceCallApiWithSecret[SpotPingRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT serverTime rest服务器时间 (NONE)
@@ -498,8 +528,8 @@ func (client *SpotRestClient) NewServerTime() *SpotServerTimeApi {
 	}
 }
 func (api *SpotServerTimeApi) Do() (*SpotServerTimeRes, error) {
-	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotServerTime])
-	return binanceCallApiWithSecretGet[SpotServerTimeRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotServerTime])
+	return binanceCallApiWithSecret[SpotServerTimeRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT exchangeInfo rest交易规范
@@ -510,8 +540,8 @@ func (client *SpotRestClient) NewExchangeInfo() *SpotExchangeInfoApi {
 	}
 }
 func (api *SpotExchangeInfoApi) Do() (*SpotExchangeInfoRes, error) {
-	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotExchangeInfo])
-	return binanceCallApiWithSecretGet[SpotExchangeInfoRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotExchangeInfo])
+	return binanceCallApiWithSecret[SpotExchangeInfoRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT openOrders rest当前挂单 (USER_DATA)
@@ -523,8 +553,8 @@ func (client *SpotRestClient) NewOpenOrders() *SpotOpenOrdersApi {
 }
 func (api *SpotOpenOrdersApi) Do() (*SpotOpenOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotOpenOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotOpenOrdersRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOpenOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotOpenOrdersRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT allOrders rest所有订单 (USER_DATA)
@@ -536,8 +566,8 @@ func (client *SpotRestClient) NewAllOrders() *SpotAllOrdersApi {
 }
 func (api *SpotAllOrdersApi) Do() (*SpotAllOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotAllOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotAllOrdersRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAllOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAllOrdersRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT orderGet rest订单查询 (USER_DATA)
@@ -549,8 +579,21 @@ func (client *SpotRestClient) NewSpotOrderGet() *SpotOrderGetApi {
 }
 func (api *SpotOrderGetApi) Do() (*SpotOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotOrderGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotOrderGetRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotOrderGetRes](api.SpotRestClient.c, url, GET)
+}
+
+// binance SPOT orderDelete rest撤销订单 (TRADE)
+func (client *SpotRestClient) NewSpotOrderDelete() *SpotOrderDeleteApi {
+	return &SpotOrderDeleteApi{
+		SpotRestClient: *client,
+		req:            &SpotOrderDeleteReq{},
+	}
+}
+func (api *SpotOrderDeleteApi) Do() (*SpotOrderDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderDelete], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotOrderDeleteRes](api.SpotRestClient.c, url, DELETE)
 }
 
 // binance SPOT spotAssetTransferPost rest用户万向划转 (USER_DATA)
@@ -562,8 +605,8 @@ func (client *SpotRestClient) NewSpotAssetTransferPost() *SpotAssetTransferPostA
 }
 func (api *SpotAssetTransferPostApi) Do() (*SpotAssetTransferPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SPOT, api.req, SpotApiMap[SpotAssetTransferPost], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SpotAssetTransferPostRes](api.SpotRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTransferPost], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAssetTransferPostRes](api.SpotRestClient.c, url, POST)
 }
 
 // binance SPOT spotAssetTransferGet rest查询用户万向划转历史 (USER_DATA)
@@ -575,8 +618,8 @@ func (client *SpotRestClient) NewSpotAssetTransferGet() *SpotAssetTransferGetApi
 }
 func (api *SpotAssetTransferGetApi) Do() (*SpotAssetTransferGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotAssetTransferGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SpotAssetTransferGetRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTransferGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAssetTransferGetRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT spotTickerPrice rest价格 (NONE)
@@ -587,8 +630,8 @@ func (client *SpotRestClient) NewSpotTickerPrice() *SpotTickerPriceApi {
 	}
 }
 func (api *SpotTickerPriceApi) Do() (*SpotTickerPriceRes, error) {
-	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotTickerPrice])
-	return binanceCallApiWithSecretGet[SpotTickerPriceRes](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotTickerPrice])
+	return binanceCallApiWithSecret[SpotTickerPriceRes](api.SpotRestClient.c, url, GET)
 }
 
 // binance SPOT spotKlines restK线数据 (NONE)
@@ -599,11 +642,27 @@ func (client *SpotRestClient) NewSpotKlines() *SpotKlinesApi {
 	}
 }
 func (api *SpotKlinesApi) Do() (*KlinesRes, error) {
-	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotKlines])
-	res, err := binanceCallApiWithSecretGet[KlinesMiddle](api.SpotRestClient.c, url)
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotKlines])
+	res, err := binanceCallApiWithSecret[KlinesMiddle](api.SpotRestClient.c, url, GET)
 	if err != nil {
 		return nil, err
 	}
 	res2 := res.ConvertToRes()
 	return &res2, nil
+}
+
+// binance SPOT spotDepth rest深度信息 (NONE)
+func (client *SpotRestClient) NewSpotDepth() *SpotDepthApi {
+	return &SpotDepthApi{
+		SpotRestClient: *client,
+		req:            &SpotDepthReq{},
+	}
+}
+func (api *SpotDepthApi) Do() (*SpotDepthRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotDepth])
+	res, err := binanceCallApiWithSecret[SpotDepthResMiddle](api.SpotRestClient.c, url, GET)
+	if err != nil {
+		return nil, err
+	}
+	return res.ConvertToRes(), nil
 }

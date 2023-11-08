@@ -61,8 +61,8 @@ func (client *SwapRestClient) NewSwapAccount() *SwapAccountApi {
 }
 func (api *SwapAccountApi) Do() (*SwapAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SwapAccountRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapAccountRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapPositionSideDualGet rest查询持仓模式 (USER_DATA)
@@ -74,8 +74,8 @@ func (client *SwapRestClient) NewSwapPositionSideDualGet() *SwapPositionSideDual
 }
 func (api *SwapPositionSideDualGetApi) Do() (*SwapPositionSideDualGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapPositionSideDualGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SwapPositionSideDualGetRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapPositionSideDualGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapPositionSideDualGetRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapLeverageBracket rest杠杆分层标准 (USER_DATA)
@@ -87,8 +87,8 @@ func (client *SwapRestClient) NewSwapLeverageBracket() *SwapLeverageBracketApi {
 }
 func (api *SwapLeverageBracketApi) Do() (*SwapLeverageBracketRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapLeverageBracket], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SwapLeverageBracketRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapLeverageBracket], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapLeverageBracketRes](api.SwapRestClient.c, url, GET)
 }
 
 //============POST接口
@@ -101,8 +101,8 @@ func (client *SwapRestClient) NewSwapPositionSideDualPost() *SwapPositionSideDua
 }
 func (api *SwapPositionSideDualPostApi) Do() (*SwapPositionSideDualPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SWAP, api.req, SwapApiMap[SwapPositionSideDualPost], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SwapPositionSideDualPostRes](api.SwapRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapPositionSideDualPost], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapPositionSideDualPostRes](api.SwapRestClient.c, url, POST)
 }
 
 // binance SWAP  SwapLeverage rest调整开仓杠杆 (TRADE)
@@ -114,8 +114,8 @@ func (client *SwapRestClient) NewSwapLeverage() *SwapLeverageApi {
 }
 func (api *SwapLeverageApi) Do() (*SwapLeverageRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SWAP, api.req, SwapApiMap[SwapLeverage], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SwapLeverageRes](api.SwapRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapLeverage], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapLeverageRes](api.SwapRestClient.c, url, POST)
 }
 
 // binance SWAP  SwapMarginType rest变换逐全仓模式 (TRADE)
@@ -127,8 +127,8 @@ func (client *SwapRestClient) NewSwapMarginType() *SwapMarginTypeApi {
 }
 func (api *SwapMarginTypeApi) Do() (*SwapMarginTypeRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SWAP, api.req, SwapApiMap[SwapMarginType], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SwapMarginTypeRes](api.SwapRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapMarginType], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapMarginTypeRes](api.SwapRestClient.c, url, POST)
 }
 
 //通用接口
@@ -140,8 +140,8 @@ func (client *SwapRestClient) NewPing() *SwapPingApi {
 	}
 }
 func (api *SwapPingApi) Do() (*SwapPingRes, error) {
-	url := binanceHandlerRequestApiGet(SWAP, api.req, SwapApiMap[SwapPing])
-	return binanceCallApiWithSecretGet[SwapPingRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApi(SWAP, api.req, SwapApiMap[SwapPing])
+	return binanceCallApiWithSecret[SwapPingRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapServerTime rest获取服务器时间
@@ -152,8 +152,8 @@ func (client *SwapRestClient) NewServerTime() *SwapServerTimeApi {
 	}
 }
 func (api *SwapServerTimeApi) Do() (*SwapServerTimeRes, error) {
-	url := binanceHandlerRequestApiGet(SWAP, api.req, SwapApiMap[SwapServerTime])
-	return binanceCallApiWithSecretGet[SwapServerTimeRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApi(SWAP, api.req, SwapApiMap[SwapServerTime])
+	return binanceCallApiWithSecret[SwapServerTimeRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapExchangeInfo rest交易规则和交易对信息
@@ -164,8 +164,8 @@ func (client *SwapRestClient) NewExchangeInfo() *SwapExchangeInfoApi {
 	}
 }
 func (api *SwapExchangeInfoApi) Do() (*SwapExchangeInfoRes, error) {
-	url := binanceHandlerRequestApiGet(SWAP, api.req, SwapApiMap[SwapExchangeInfo])
-	return binanceCallApiWithSecretGet[SwapExchangeInfoRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApi(SWAP, api.req, SwapApiMap[SwapExchangeInfo])
+	return binanceCallApiWithSecret[SwapExchangeInfoRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapOpenOrders rest查询当前挂单 (USER_DATA)
@@ -177,8 +177,8 @@ func (client *SwapRestClient) NewOpenOrders() *SwapOpenOrdersApi {
 }
 func (api *SwapOpenOrdersApi) Do() (*SwapOpenOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapOpenOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SwapOpenOrdersRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOpenOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapOpenOrdersRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapAllOrders rest查询所有订单 (USER_DATA)
@@ -190,8 +190,8 @@ func (client *SwapRestClient) NewAllOrders() *SwapAllOrdersApi {
 }
 func (api *SwapAllOrdersApi) Do() (*SwapAllOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapAllOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SwapAllOrdersRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapAllOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapAllOrdersRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapOrderPost rest下单 (TRADE)
@@ -203,8 +203,8 @@ func (client *SwapRestClient) NewSwapOrderPost() *SwapOrderPostApi {
 }
 func (api *SwapOrderPostApi) Do() (*SwapOrderPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(SWAP, api.req, SwapApiMap[SwapOrderPost], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[SwapOrderPostRes](api.SwapRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderPost], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapOrderPostRes](api.SwapRestClient.c, url, POST)
 }
 
 // binance SWAP  SwapOrderGet	rest查询订单 (USER_DATA)
@@ -216,8 +216,8 @@ func (client *SwapRestClient) NewSwapOrderGet() *SwapOrderGetApi {
 }
 func (api *SwapOrderGetApi) Do() (*SwapOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapOrderGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[SwapOrderGetRes](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapOrderGetRes](api.SwapRestClient.c, url, GET)
 }
 
 // binance SWAP  SwapKlines rest获取K线数据
@@ -228,8 +228,8 @@ func (client *SwapRestClient) NewSwapKlines() *SwapKlinesApi {
 	}
 }
 func (api *SwapKlinesApi) Do() (*KlinesRes, error) {
-	url := binanceHandlerRequestApiGet(SWAP, api.req, SwapApiMap[SwapKlines])
-	res, err := binanceCallApiWithSecretGet[KlinesMiddle](api.SwapRestClient.c, url)
+	url := binanceHandlerRequestApi(SWAP, api.req, SwapApiMap[SwapKlines])
+	res, err := binanceCallApiWithSecret[KlinesMiddle](api.SwapRestClient.c, url, GET)
 	if err != nil {
 		return nil, err
 	}

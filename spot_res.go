@@ -509,3 +509,122 @@ type SpotSubAccountTransferSubUserHistoryResRow struct {
 	Time            int64  `json:"time"`
 }
 
+// {
+// 	"lastUpdateId": 1027024,
+// 	"bids": [
+// 	  [
+// 		"4.00000000",     // 价位
+// 		"431.00000000"    // 挂单量
+// 	  ]
+// 	],
+// 	"asks": [
+// 	  [
+// 		"4.00000200",
+// 		"12.00000000"
+// 	  ]
+// 	]
+//   }
+
+type SpotDepthRes struct {
+	LastUpdateId int64           `json:"lastUpdateId"`
+	Bids         []SpotDepthGear `json:"bids"`
+	Asks         []SpotDepthGear `json:"asks"`
+}
+
+type SpotDepthResMiddle struct {
+	LastUpdateId int64           `json:"lastUpdateId"`
+	Bids         [][]interface{} `json:"bids"`
+	Asks         [][]interface{} `json:"asks"`
+}
+type SpotDepthGear struct {
+	Price  string `json:"price"`
+	Amount string `json:"amount"`
+}
+
+func (middle *SpotDepthResMiddle) ConvertToRes() *SpotDepthRes {
+	res := SpotDepthRes{}
+	res.LastUpdateId = middle.LastUpdateId
+	res.Bids = []SpotDepthGear{}
+	res.Asks = []SpotDepthGear{}
+	for _, gear := range middle.Bids {
+		res.Bids = append(res.Bids, SpotDepthGear{
+			Price:  gear[0].(string),
+			Amount: gear[1].(string),
+		})
+	}
+	for _, gear := range middle.Asks {
+		res.Asks = append(res.Asks, SpotDepthGear{
+			Price:  gear[0].(string),
+			Amount: gear[1].(string),
+		})
+	}
+	return &res
+}
+
+//	{
+//		"symbol": "LTCBTC",
+//		"origClientOrderId": "myOrder1",
+//		"orderId": 4,
+//		"orderListId": -1, // OCO订单ID，否则为 -1
+//		"clientOrderId": "cancelMyOrder1",
+//		"transactTime": 1684804350068,
+//		"price": "2.00000000",
+//		"origQty": "1.00000000",
+//		"executedQty": "0.00000000",
+//		"cummulativeQuoteQty": "0.00000000",
+//		"status": "CANCELED",
+//		"timeInForce": "GTC",
+//		"type": "LIMIT",
+//		"side": "BUY",
+//		"selfTradePreventionMode": "NONE"
+//	  }
+type SpotOrderDeleteRes struct {
+	Symbol                  string `json:"symbol"`                  // 交易对
+	OrigClientOrderId       string `json:"origClientOrderId"`       // 原始的客户端订单ID
+	OrderId                 int64  `json:"orderId"`                 // 系统的订单ID
+	OrderListId             int64  `json:"orderListId"`             // OCO订单ID，否则为 -1
+	ClientOrderId           string `json:"clientOrderId"`           // 客户自己设置的ID
+	TransactTime            int64  `json:"transactTime"`            // 交易的时间戳
+	Price                   string `json:"price"`                   // 订单价格
+	OrigQty                 string `json:"origQty"`                 // 用户设置的原始订单数量
+	ExecutedQty             string `json:"executedQty"`             // 交易的订单数量
+	CummulativeQuoteQty     string `json:"cummulativeQuoteQty"`     // 累计交易的金额
+	Status                  string `json:"status"`                  // 订单状态
+	TimeInForce             string `json:"timeInForce"`             // 订单的时效方式
+	Type                    string `json:"type"`                    // 订单类型， 比如市价单，现价单等
+	Side                    string `json:"side"`                    // 订单方向，买还是卖
+	SelfTradePreventionMode string `json:"selfTradePreventionMode"` // 自我交易预防模式
+}
+
+// {
+// 	"symbol": "LTCBTC",
+// 	"orderId": "28",
+// 	"origClientOrderId": "myOrder1",
+// 	"clientOrderId": "cancelMyOrder1",
+// 	"price": "1.00000000",
+// 	"origQty": "10.00000000",
+// 	"executedQty": "8.00000000",
+// 	"cummulativeQuoteQty": "8.00000000",
+// 	"status": "CANCELED",
+// 	"timeInForce": "GTC",
+// 	"type": "LIMIT",
+// 	"side": "SELL",
+// 	"isIsolated": true       // 是否是逐仓symbol交易
+//   }
+
+type SpotMarginOrderDeleteRes struct {
+	Symbol                  string `json:"symbol"`                  // 交易对
+	OrderId                 int64  `json:"orderId"`                 // 系统的订单ID
+	OrigClientOrderId       string `json:"origClientOrderId"`       // 原始的客户端订单ID
+	ClientOrderId           string `json:"clientOrderId"`           // 客户自己设置的ID
+	Price                   string `json:"price"`                   // 订单价格
+	OrigQty                 string `json:"origQty"`                 // 用户设置的原始订单数量
+	ExecutedQty             string `json:"executedQty"`             // 交易的订单数量
+	CummulativeQuoteQty     string `json:"cummulativeQuoteQty"`     // 累计交易的金额
+	Status                  string `json:"status"`                  // 订单状态
+	TimeInForce             string `json:"timeInForce"`             // 订单的时效方式
+	Type                    string `json:"type"`                    // 订单类型， 比如市价单，现价单等
+	Side                    string `json:"side"`                    // 订单方向，买还是卖
+	IsIsolated              bool   `json:"isIsolated"`              // 是否是逐仓symbol交易
+	SelfTradePreventionMode string `json:"selfTradePreventionMode"` // 自我交易预防模式
+}

@@ -25,6 +25,15 @@ const (
 	BIT_SIZE_32 = 32
 )
 
+type RequestType string
+
+const (
+	GET    = "GET"
+	POST   = "POST"
+	DELETE = "DELETE"
+	PUT    = "PUT"
+)
+
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var log = logrus.New()
@@ -44,40 +53,13 @@ func HmacSha256(secret, data string) string {
 	return sha
 }
 
-// GetRequest 发送 get 请求
-func GetRequest(url string, isGzip bool) ([]byte, error) {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	client := &http.Client{}
-	if isGzip { // 请求 header 添加 gzip
-		req.Header.Add("Content-Encoding", "gzip")
-		req.Header.Add("Accept-Encoding", "gzip")
-	}
-	req.Close = true
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body := resp.Body
-	if resp.Header.Get("Content-Encoding") == "gzip" {
-		body, err = gzip.NewReader(resp.Body)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-	}
-	data, err := io.ReadAll(body)
-	return data, err
+// Request 发送请求
+func Request(url string, method string, isGzip bool) ([]byte, error) {
+	return RequestWithHeader(url, method, map[string]string{}, isGzip)
 }
 
-func GetRequestWithHeader(url string, headerMap map[string]string, isGzip bool) ([]byte, error) {
-	req, err := http.NewRequest("GET", url, nil)
+func RequestWithHeader(url string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -92,39 +74,7 @@ func GetRequestWithHeader(url string, headerMap map[string]string, isGzip bool) 
 	}
 	req.Close = true
 
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body := resp.Body
-	if resp.Header.Get("Content-Encoding") == "gzip" {
-		body, err = gzip.NewReader(resp.Body)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-	}
-	data, err := io.ReadAll(body)
-	return data, err
-}
-
-func PostRequestWithHeader(url string, reqBody []byte, headerMap map[string]string, isGzip bool) ([]byte, error) {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(reqBody))
-	if err != nil {
-		return nil, err
-	}
-	for k, v := range headerMap {
-		req.Header.Set(k, v)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	client := &http.Client{}
-	if isGzip { // 请求 header 添加 gzip
-		req.Header.Add("Content-Encoding", "gzip")
-		req.Header.Add("Accept-Encoding", "gzip")
-	}
-	req.Close = true
+	log.Debug(req.URL.String())
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -206,9 +156,9 @@ func (*MyBinance) NewSwapRestClient(apiKey string, apiSecret string) *SwapRestCl
 	return client
 }
 
-// 通用鉴权POST接口调用
-func binanceCallApiWithSecretPost[T any](client *Client, url string, reqBody []byte) (*T, error) {
-	body, err := PostRequestWithHeader(url, []byte{}, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)
+// 通用鉴权接口调用
+func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, error) {
+	body, err := RequestWithHeader(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)
 	if err != nil {
 		return nil, err
 	}
@@ -219,24 +169,9 @@ func binanceCallApiWithSecretPost[T any](client *Client, url string, reqBody []b
 	return &res.Result, res.handlerError()
 }
 
-// 通用鉴权GET接口调用
-func binanceCallApiWithSecretGet[T any](client *Client, url string) (*T, error) {
-	body, err := GetRequestWithHeader(url, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)
-	if err != nil {
-		return nil, err
-	}
-	// log.Warn(string(body))
-	res, err := handlerCommonRest[T](body)
-	if err != nil {
-		return nil, err
-	}
-	return &res.Result, res.handlerError()
-}
-
-// 通用鉴权POST接口封装
-func binanceHandlerRequestApiWithSecretPost[T any](apiType ApiType, request *T, name, secret string) (string, []byte) {
+// 通用鉴权接口封装
+func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name, secret string) string {
 	query := binanceHandlerReq(request)
-	log.Debug(query)
 	sign := HmacSha256(secret, query)
 
 	u := url.URL{
@@ -245,26 +180,13 @@ func binanceHandlerRequestApiWithSecretPost[T any](apiType ApiType, request *T, 
 		Path:     name,
 		RawQuery: query + "&signature=" + sign,
 	}
-	reqBody, _ := json.Marshal(request)
-	return u.String(), reqBody
-}
-
-// 通用鉴权GET接口封装
-func binanceHandlerRequestApiWithSecretGet[T any](apiType ApiType, request *T, name, secret string) string {
-	query := binanceHandlerReq(request)
-	sign := HmacSha256(secret, query)
-	u := url.URL{
-		Scheme:   "https",
-		Host:     BinanceGetRestHostByApiType(apiType),
-		Path:     name,
-		RawQuery: query + "&signature=" + sign,
-	}
-	log.Debug(u.String())
+	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
+	// log.Debug(u.String())
 	return u.String()
 }
 
-// 通用非鉴权GET接口封装
-func binanceHandlerRequestApiGet[T any](apiType ApiType, request *T, name string) string {
+// 通用非鉴权接口封装
+func binanceHandlerRequestApi[T any](apiType ApiType, request *T, name string) string {
 	query := binanceHandlerReq(request)
 	u := url.URL{
 		Scheme:   "https",
@@ -304,6 +226,10 @@ func binanceHandlerReq[T any](req *T) string {
 			params := make([]reflect.Value, 0)
 			result := ToStringMethod.Call(params)
 			paramBuffer.WriteString(paramName + "=" + result[0].String() + "&")
+		case reflect.Slice:
+			s := v.Field(i).Interface()
+			d, _ := json.Marshal(s)
+			paramBuffer.WriteString(paramName + "=" + url.QueryEscape(string(d)) + "&")
 		case reflect.Invalid:
 		default:
 			log.Errorf("req type error %s:%s", paramName, v.Field(i).Elem().Kind())

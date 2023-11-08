@@ -18,6 +18,8 @@ const (
 	FutureAllOrders
 	FutureOrderPost
 	FutureOrderGet
+	FutureOrderDelete
+	FutureBatchOrdersDelete
 
 	FutureUserTrades
 
@@ -50,8 +52,10 @@ var FutureApiMap = map[FutureApi]string{
 	FutureOpenOrders: "/fapi/v1/openOrders", //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)
 	FutureAllOrders:  "/fapi/v1/allOrders",  //GET接口 (HMAC SHA256)查询所有订单 (USER_DATA)
 
-	FutureOrderPost: "/fapi/v1/order", //POST接口 (HMAC SHA256)下单 (TRADE)
-	FutureOrderGet:  "/fapi/v1/order", //GET接口 (HMAC SHA256)查询订单 (USER_DATA)
+	FutureOrderPost:         "/fapi/v1/order",       //POST接口 (HMAC SHA256)下单 (TRADE)
+	FutureOrderGet:          "/fapi/v1/order",       //GET接口 (HMAC SHA256)查询订单 (USER_DATA)
+	FutureOrderDelete:       "/fapi/v1/order",       //DELETE接口 (HMAC SHA256)撤销订单 (TRADE)
+	FutureBatchOrdersDelete: "/fapi/v1/batchOrders", //DELETE接口 (HMAC SHA256)批量撤销订单 (TRADE)
 
 	FutureUserTrades: "/fapi/v1/userTrades", //GET接口 (HMAC SHA256)账户成交历史 (USER_DATA)
 
@@ -75,8 +79,8 @@ func (client *FutureRestClient) NewFutureAccount() *FutureAccountApi {
 }
 func (api *FutureAccountApi) Do() (*FutureAccountRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureAccount], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureAccountRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureAccount], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureAccountRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE  FuturePositionSideDualGet rest查询持仓模式 (USER_DATA)
@@ -88,8 +92,8 @@ func (client *FutureRestClient) NewFuturePositionSideDualGet() *FuturePositionSi
 }
 func (api *FuturePositionSideDualGetApi) Do() (*FuturePositionSideDualGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FuturePositionSideDualGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FuturePositionSideDualGetRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FuturePositionSideDualGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FuturePositionSideDualGetRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE  FutureMultiAssetsMarginGet rest查询联合保证金模式 (USER_DATA)
@@ -101,8 +105,8 @@ func (client *FutureRestClient) NewFutureMultiAssetsMarginGet() *FutureMultiAsse
 }
 func (api *FutureMultiAssetsMarginGetApi) Do() (*FutureMultiAssetsMarginGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureMultiAssetsMarginGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureMultiAssetsMarginGetRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureMultiAssetsMarginGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureMultiAssetsMarginGetRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE  FutureLeverageBracket rest杠杆分层标准 (USER_DATA)
@@ -114,8 +118,8 @@ func (client *FutureRestClient) NewFutureLeverageBracket() *FutureLeverageBracke
 }
 func (api *FutureLeverageBracketApi) Do() (*FutureLeverageBracketRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureLeverageBracket], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureLeverageBracketRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureLeverageBracket], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureLeverageBracketRes](api.FutureRestClient.c, url, GET)
 }
 
 //========POST接口
@@ -128,8 +132,8 @@ func (client *FutureRestClient) NewFuturePositionSideDualPost() *FuturePositionS
 }
 func (api *FuturePositionSideDualPostApi) Do() (*FuturePositionSideDualPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(FUTURE, api.req, FutureApiMap[FuturePositionSideDualPost], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[FuturePositionSideDualPostRes](api.FutureRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FuturePositionSideDualPost], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FuturePositionSideDualPostRes](api.FutureRestClient.c, url, POST)
 }
 
 // binance FUTURE  FutureMultiAssetsMarginPost rest更改联合保证金模式 (TRADE)
@@ -141,8 +145,8 @@ func (client *FutureRestClient) NewFutureMultiAssetsMarginPost() *FutureMultiAss
 }
 func (api *FutureMultiAssetsMarginPostApi) Do() (*FutureMultiAssetsMarginPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(FUTURE, api.req, FutureApiMap[FutureMultiAssetsMarginPost], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[FutureMultiAssetsMarginPostRes](api.FutureRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureMultiAssetsMarginPost], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureMultiAssetsMarginPostRes](api.FutureRestClient.c, url, POST)
 }
 
 // binance FUTURE  FutureLeverage rest调整开仓杠杆 (TRADE)
@@ -154,8 +158,8 @@ func (client *FutureRestClient) NewFutureLeverage() *FutureLeverageApi {
 }
 func (api *FutureLeverageApi) Do() (*FutureLeverageRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(FUTURE, api.req, FutureApiMap[FutureLeverage], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[FutureLeverageRes](api.FutureRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureLeverage], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureLeverageRes](api.FutureRestClient.c, url, POST)
 }
 
 // binance FUTURE  FutureMarginType rest变换逐全仓模式 (TRADE)
@@ -167,8 +171,8 @@ func (client *FutureRestClient) NewFutureMarginType() *FutureMarginTypeApi {
 }
 func (api *FutureMarginTypeApi) Do() (*FutureMarginTypeRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(FUTURE, api.req, FutureApiMap[FutureMarginType], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[FutureMarginTypeRes](api.FutureRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureMarginType], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureMarginTypeRes](api.FutureRestClient.c, url, POST)
 }
 
 // binance FUTURE  FutureCommissionRate rest查询用户当前的手续费率 (USER_DATA)
@@ -180,8 +184,8 @@ func (client *FutureRestClient) NewFutureCommissionRate() *FutureCommissionRateA
 }
 func (api *FutureCommissionRateApi) Do() (*FutureCommissionRateRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureCommissionRate], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureCommissionRateRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureCommissionRate], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureCommissionRateRes](api.FutureRestClient.c, url, GET)
 }
 
 //通用接口
@@ -194,8 +198,8 @@ func (client *FutureRestClient) NewPing() *FuturePingApi {
 }
 
 func (api *FuturePingApi) Do() (*FuturePingRes, error) {
-	url := binanceHandlerRequestApiGet(FUTURE, api.req, FutureApiMap[FuturePing])
-	return binanceCallApiWithSecretGet[FuturePingRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApi(FUTURE, api.req, FutureApiMap[FuturePing])
+	return binanceCallApiWithSecret[FuturePingRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE FutureTime rest获取服务器时间 (NONE)
@@ -207,8 +211,8 @@ func (client *FutureRestClient) NewServerTime() *FutureServerTimeApi {
 }
 
 func (api *FutureServerTimeApi) Do() (*FutureTimeRes, error) {
-	url := binanceHandlerRequestApiGet(FUTURE, api.req, FutureApiMap[FutureServerTime])
-	return binanceCallApiWithSecretGet[FutureTimeRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApi(FUTURE, api.req, FutureApiMap[FutureServerTime])
+	return binanceCallApiWithSecret[FutureTimeRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE FutureExchangeInfo rest交易规范信息和交易对信息 (NONE)
@@ -220,8 +224,8 @@ func (client *FutureRestClient) NewExchangeInfo() *FutureExchangeInfoApi {
 }
 
 func (api *FutureExchangeInfoApi) Do() (*FutureExchangeInfoRes, error) {
-	url := binanceHandlerRequestApiGet(FUTURE, api.req, FutureApiMap[FutureExchangeInfo])
-	return binanceCallApiWithSecretGet[FutureExchangeInfoRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApi(FUTURE, api.req, FutureApiMap[FutureExchangeInfo])
+	return binanceCallApiWithSecret[FutureExchangeInfoRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE FutureOpenOrders rest查询当前挂单 (USER_DATA)
@@ -234,8 +238,8 @@ func (client *FutureRestClient) NewOpenOrders() *FutureOpenOrdersApi {
 
 func (api *FutureOpenOrdersApi) Do() (*FutureOpenOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureOpenOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureOpenOrdersRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOpenOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureOpenOrdersRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE FutureAllOrders rest查询所有订单 (USER_DATA)
@@ -248,8 +252,8 @@ func (client *FutureRestClient) NewAllOrders() *FutureAllOrdersApi {
 
 func (api *FutureAllOrdersApi) Do() (*FutureAllOrdersRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureAllOrders], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureAllOrdersRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureAllOrders], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureAllOrdersRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE FutureOrderPost rest下单 (TRADE)
@@ -262,8 +266,8 @@ func (client *FutureRestClient) NewFutureOrderPost() *FutureOrderPostApi {
 
 func (api *FutureOrderPostApi) Do() (*FutureOrderPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url, reqBody := binanceHandlerRequestApiWithSecretPost(FUTURE, api.req, FutureApiMap[FutureOrderPost], api.c.ApiSecret)
-	return binanceCallApiWithSecretPost[FutureOrderPostRes](api.FutureRestClient.c, url, reqBody)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOrderPost], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureOrderPostRes](api.FutureRestClient.c, url, POST)
 }
 
 // binance FUTURE FutureOrderGet  rest查询订单 (USER_DATA)
@@ -276,8 +280,36 @@ func (client *FutureRestClient) NewFutureOrderGet() *FutureOrderGetApi {
 
 func (api *FutureOrderGetApi) Do() (*FutureOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureOrderGet], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureOrderGetRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOrderGet], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureOrderGetRes](api.FutureRestClient.c, url, GET)
+}
+
+// binance FUTURE FutureOrderDelete rest撤销订单 (TRADE)
+func (client *FutureRestClient) NewFutureOrderDelete() *FutureOrderDeleteApi {
+	return &FutureOrderDeleteApi{
+		FutureRestClient: *client,
+		req:              &FutureOrderDeleteReq{},
+	}
+}
+
+func (api *FutureOrderDeleteApi) Do() (*FutureOrderDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOrderDelete], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureOrderDeleteRes](api.FutureRestClient.c, url, DELETE)
+}
+
+// binance FUTURE FutureBatchOrdersDelete rest批量撤销订单 (TRADE)
+func (client *FutureRestClient) NewFutureBatchOrdersDelete() *FutureBatchOrdersDeleteApi {
+	return &FutureBatchOrdersDeleteApi{
+		FutureRestClient: *client,
+		req:              &FutureBatchOrdersDeleteReq{},
+	}
+}
+
+func (api *FutureBatchOrdersDeleteApi) Do() (*FutureBatchOrdersDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureBatchOrdersDelete], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureBatchOrdersDeleteRes](api.FutureRestClient.c, url, DELETE)
 }
 
 // binance FUTURE FutureUserTrades rest账户成交历史 (USER_DATA)
@@ -290,8 +322,8 @@ func (client *FutureRestClient) NewFutureUserTrades() *FutureUserTradesApi {
 
 func (api *FutureUserTradesApi) Do() (*FutureUserTradesRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
-	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureUserTrades], api.c.ApiSecret)
-	return binanceCallApiWithSecretGet[FutureUserTradesRes](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureUserTrades], api.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureUserTradesRes](api.FutureRestClient.c, url, GET)
 }
 
 // binance FUTURE FutureKlines restK线数据 (MARKET_DATA)
@@ -302,8 +334,8 @@ func (client *FutureRestClient) NewFutureKlines() *FutureKlinesApi {
 	}
 }
 func (api *FutureKlinesApi) Do() (*KlinesRes, error) {
-	url := binanceHandlerRequestApiGet(FUTURE, api.req, FutureApiMap[FutureKlines])
-	res, err := binanceCallApiWithSecretGet[KlinesMiddle](api.FutureRestClient.c, url)
+	url := binanceHandlerRequestApi(FUTURE, api.req, FutureApiMap[FutureKlines])
+	res, err := binanceCallApiWithSecret[KlinesMiddle](api.FutureRestClient.c, url, GET)
 	if err != nil {
 		return nil, err
 	}

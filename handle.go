@@ -19,7 +19,7 @@ func handlerCommonRest[T any](data []byte) (*BinanceRestRes[T], error) {
 	res := &BinanceRestRes[T]{}
 	var err error
 	// log.Warn(string(data))
-	if strings.Contains(string(data), "code") {
+	if strings.Contains(string(data), "code") && !strings.HasPrefix(string(data), "[") {
 		err = json.Unmarshal(data, res)
 		if err != nil {
 			log.Error("rest返回值获取失败", err)
@@ -28,7 +28,7 @@ func handlerCommonRest[T any](data []byte) (*BinanceRestRes[T], error) {
 		var result T
 		err = json.Unmarshal(data, &result)
 		if err != nil {
-			log.Error("rest返回值获取失败", err)
+			log.Error("rest返回值序列化错误", err)
 		}
 		res.Result = result
 	}

@@ -561,3 +561,87 @@ func (api *FutureKlinesApi) Limit(Limit int) *FutureKlinesApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
+
+// symbol	STRING	YES	交易对
+// orderId	LONG	NO	系统订单号
+// origClientOrderId	STRING	NO	用户自定义的订单号
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+
+type FutureOrderDeleteReq struct {
+	Symbol            *string `json:"symbol"`            //YES 交易对
+	OrderId           *int64  `json:"orderId"`           //NO 系统订单号
+	OrigClientOrderId *string `json:"origClientOrderId"` //NO 用户自定义的订单号
+	RecvWindow        *int64  `json:"recvWindow"`        //NO
+	Timestamp         *int64  `json:"timestamp"`         //YES
+}
+
+type FutureOrderDeleteApi struct {
+	FutureRestClient
+	req *FutureOrderDeleteReq
+}
+
+func (api *FutureOrderDeleteApi) Symbol(Symbol string) *FutureOrderDeleteApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *FutureOrderDeleteApi) OrderId(OrderId int64) *FutureOrderDeleteApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *FutureOrderDeleteApi) OrigClientOrderId(OrigClientOrderId string) *FutureOrderDeleteApi {
+	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
+	return api
+}
+func (api *FutureOrderDeleteApi) Recvwindow(Recvwindow int64) *FutureOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(Recvwindow)
+	return api
+}
+func (api *FutureOrderDeleteApi) Timestamp(Timestamp int64) *FutureOrderDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// symbol	STRING	YES	交易对
+// orderIdList	LIST<LONG>	NO	系统订单号, 最多支持10个订单
+
+// 比如[1234567,2345678]
+// origClientOrderIdList	LIST<STRING>	NO	用户自定义的订单号, 最多支持10个订单
+
+// 比如["my_id_1","my_id_2"] 需要encode双引号。逗号后面没有空格。
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+
+type FutureBatchOrdersDeleteReq struct {
+	Symbol                *string   `json:"symbol"`                //YES 交易对
+	OrderIdList           *[]int64  `json:"orderIdList"`           //NO 系统订单号, 最多支持10个订单
+	OrigClientOrderIdList *[]string `json:"origClientOrderIdList"` //NO 用户自定义的订单号, 最多支持10个订单
+	RecvWindow            *int64    `json:"recvWindow"`            //NO
+	Timestamp             *int64    `json:"timestamp"`             //YES
+}
+
+type FutureBatchOrdersDeleteApi struct {
+	FutureRestClient
+	req *FutureBatchOrdersDeleteReq
+}
+
+func (api *FutureBatchOrdersDeleteApi) Symbol(Symbol string) *FutureBatchOrdersDeleteApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *FutureBatchOrdersDeleteApi) OrderIdList(OrderIdList []int64) *FutureBatchOrdersDeleteApi {
+	api.req.OrderIdList = GetPointer(OrderIdList)
+	return api
+}
+func (api *FutureBatchOrdersDeleteApi) OrigClientOrderIdList(OrigClientOrderIdList []string) *FutureBatchOrdersDeleteApi {
+	api.req.OrigClientOrderIdList = GetPointer(OrigClientOrderIdList)
+	return api
+}
+func (api *FutureBatchOrdersDeleteApi) Recvwindow(Recvwindow int64) *FutureBatchOrdersDeleteApi {
+	api.req.RecvWindow = GetPointer(Recvwindow)
+	return api
+}
+func (api *FutureBatchOrdersDeleteApi) Timestamp(Timestamp int64) *FutureBatchOrdersDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

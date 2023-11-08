@@ -1364,3 +1364,130 @@ func (api *SpotKlinesApi) Limit(Limit int) *SpotKlinesApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
+
+// symbol	STRING	YES
+// limit	INT	NO	默认 100; 最大 5000. 可选值:[5, 10, 20, 50, 100, 500, 1000, 5000]
+// 如果 limit > 5000, 最多返回5000条数据.
+type SpotDepthReq struct {
+	Symbol *string `json:"symbol"` //YES
+	Limit  *int    `json:"limit"`  //NO	默认 100; 最大 5000. 可选值:[5, 10, 20, 50, 100, 500, 1000, 5000]
+}
+
+type SpotDepthApi struct {
+	SpotRestClient
+	req *SpotDepthReq
+}
+
+func (api *SpotDepthApi) Symbol(Symbol string) *SpotDepthApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SpotDepthApi) Limit(Limit int) *SpotDepthApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+
+// symbol	STRING	YES
+// orderId	LONG	NO
+// origClientOrderId	STRING	NO
+// newClientOrderId	STRING	NO	用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值。
+// cancelRestrictions	ENUM	NO	支持的值:
+// 			ONLY_NEW - 如果订单状态为 NEW，订单取消将成功。
+// 			ONLY_PARTIALLY_FILLED - 如果订单状态为 PARTIALLY_FILLED，订单取消将成功。
+// recvWindow	LONG	NO	赋值不得大于 60000
+// timestamp	LONG	YES
+
+type SpotOrderDeleteReq struct {
+	Symbol             *string `json:"symbol"`             //YES
+	OrderId            *int64  `json:"orderId"`            //NO
+	OrigClientOrderId  *string `json:"origClientOrderId"`  //NO
+	NewClientOrderId   *string `json:"newClientOrderId"`   //NO	用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值。
+	CancelRestrictions *string `json:"cancelRestrictions"` //NO	支持的值: ONLY_NEW - 如果订单状态为 NEW，订单取消将成功。 ONLY_PARTIALLY_FILLED - 如果订单状态为 PARTIALLY_FILLED，订单取消将成功。
+	RecvWindow         *int64  `json:"recvWindow"`         //NO	赋值不得大于 60000
+	Timestamp          *int64  `json:"timestamp"`          //YES
+}
+
+type SpotOrderDeleteApi struct {
+	SpotRestClient
+	req *SpotOrderDeleteReq
+}
+
+func (api *SpotOrderDeleteApi) Symbol(Symbol string) *SpotOrderDeleteApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SpotOrderDeleteApi) OrderId(OrderId int64) *SpotOrderDeleteApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *SpotOrderDeleteApi) OrigClientOrderId(OrigClientOrderId string) *SpotOrderDeleteApi {
+	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
+	return api
+}
+func (api *SpotOrderDeleteApi) NewClientOrderId(NewClientOrderId string) *SpotOrderDeleteApi {
+	api.req.NewClientOrderId = GetPointer(NewClientOrderId)
+	return api
+}
+func (api *SpotOrderDeleteApi) CancelRestrictions(CancelRestrictions string) *SpotOrderDeleteApi {
+	api.req.CancelRestrictions = GetPointer(CancelRestrictions)
+	return api
+}
+func (api *SpotOrderDeleteApi) RecvWindow(RecvWindow int64) *SpotOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotOrderDeleteApi) Timestamp(Timestamp int64) *SpotOrderDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// symbol	STRING	YES
+// isIsolated	STRING	NO	是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"
+// orderId	LONG	NO
+// origClientOrderId	STRING	NO
+// newClientOrderId	STRING	NO	用于唯一识别此撤销订单，默认自动生成。
+// recvWindow	LONG	NO	T赋值不能大于 60000
+// timestamp	LONG	YES
+type SpotMarginOrderDeleteReq struct {
+	Symbol            *string `json:"symbol"`            //YES
+	IsIsolated        *string `json:"isIsolated"`        //NO	是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"
+	OrderId           *int64  `json:"orderId"`           //NO
+	OrigClientOrderId *string `json:"origClientOrderId"` //NO
+	NewClientOrderId  *string `json:"newClientOrderId"`  //NO	用于唯一识别此撤销订单，默认自动生成。
+	RecvWindow        *int64  `json:"recvWindow"`        //NO	T赋值不能大于 60000
+	Timestamp         *int64  `json:"timestamp"`         //YES
+}
+
+type SpotMarginOrderDeleteApi struct {
+	SpotRestClient
+	req *SpotMarginOrderDeleteReq
+}
+
+func (api *SpotMarginOrderDeleteApi) Symbol(Symbol string) *SpotMarginOrderDeleteApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SpotMarginOrderDeleteApi) IsIsolated(IsIsolated string) *SpotMarginOrderDeleteApi {
+	api.req.IsIsolated = GetPointer(IsIsolated)
+	return api
+}
+func (api *SpotMarginOrderDeleteApi) OrderId(OrderId int64) *SpotMarginOrderDeleteApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *SpotMarginOrderDeleteApi) OrigClientOrderId(OrigClientOrderId string) *SpotMarginOrderDeleteApi {
+	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
+	return api
+}
+func (api *SpotMarginOrderDeleteApi) NewClientOrderId(NewClientOrderId string) *SpotMarginOrderDeleteApi {
+	api.req.NewClientOrderId = GetPointer(NewClientOrderId)
+	return api
+}
+func (api *SpotMarginOrderDeleteApi) RecvWindow(RecvWindow int64) *SpotMarginOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotMarginOrderDeleteApi) Timestamp(Timestamp int64) *SpotMarginOrderDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
