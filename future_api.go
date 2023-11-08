@@ -27,6 +27,9 @@ const (
 	FuturePing
 	FutureServerTime
 	FutureExchangeInfo
+
+	//行情接口
+	FutureKlines
 )
 
 var FutureApiMap = map[FutureApi]string{
@@ -58,6 +61,8 @@ var FutureApiMap = map[FutureApi]string{
 	FuturePing:         "/fapi/v1/ping",         //GET接口 测试服务器连通性
 	FutureServerTime:   "/fapi/v1/time",         //GET接口 获取服务器时间
 	FutureExchangeInfo: "/fapi/v1/exchangeInfo", //GET接口 交易规则和交易对信息
+
+	FutureKlines: "/fapi/v1/klines", //GET接口 K线数据
 }
 
 //=======GET接口
@@ -287,4 +292,21 @@ func (api *FutureUserTradesApi) Do() (*FutureUserTradesRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
 	url := binanceHandlerRequestApiWithSecretGet(FUTURE, api.req, FutureApiMap[FutureUserTrades], api.c.ApiSecret)
 	return binanceCallApiWithSecretGet[FutureUserTradesRes](api.FutureRestClient.c, url)
+}
+
+// binance FUTURE FutureKlines restK线数据 (MARKET_DATA)
+func (client *FutureRestClient) NewFutureKlines() *FutureKlinesApi {
+	return &FutureKlinesApi{
+		FutureRestClient: *client,
+		req:              &FutureKlinesReq{},
+	}
+}
+func (api *FutureKlinesApi) Do() (*KlinesRes, error) {
+	url := binanceHandlerRequestApiGet(FUTURE, api.req, FutureApiMap[FutureKlines])
+	res, err := binanceCallApiWithSecretGet[KlinesMiddle](api.FutureRestClient.c, url)
+	if err != nil {
+		return nil, err
+	}
+	res2 := res.ConvertToRes()
+	return &res2, nil
 }

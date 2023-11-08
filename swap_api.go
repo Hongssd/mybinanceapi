@@ -20,6 +20,9 @@ const (
 	SwapPing
 	SwapServerTime
 	SwapExchangeInfo
+
+	//行情接口
+	SwapKlines
 )
 
 var SwapApiMap = map[SwapApi]string{
@@ -43,6 +46,9 @@ var SwapApiMap = map[SwapApi]string{
 	SwapPing:         "/dapi/v1/ping",         //GET接口 测试连接
 	SwapServerTime:   "/dapi/v1/time",         //GET接口 获取服务器时间
 	SwapExchangeInfo: "/dapi/v1/exchangeInfo", //GET接口 交易规则和交易对信息
+
+	//行情接口
+	SwapKlines: "/dapi/v1/klines", //GET接口 获取K线数据
 }
 
 //============GET接口
@@ -212,4 +218,21 @@ func (api *SwapOrderGetApi) Do() (*SwapOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
 	url := binanceHandlerRequestApiWithSecretGet(SWAP, api.req, SwapApiMap[SwapOrderGet], api.c.ApiSecret)
 	return binanceCallApiWithSecretGet[SwapOrderGetRes](api.SwapRestClient.c, url)
+}
+
+// binance SWAP  SwapKlines rest获取K线数据
+func (client *SwapRestClient) NewSwapKlines() *SwapKlinesApi {
+	return &SwapKlinesApi{
+		SwapRestClient: *client,
+		req:            &SwapKlinesReq{},
+	}
+}
+func (api *SwapKlinesApi) Do() (*KlinesRes, error) {
+	url := binanceHandlerRequestApiGet(SWAP, api.req, SwapApiMap[SwapKlines])
+	res, err := binanceCallApiWithSecretGet[KlinesMiddle](api.SwapRestClient.c, url)
+	if err != nil {
+		return nil, err
+	}
+	res2 := res.ConvertToRes()
+	return &res2, nil
 }

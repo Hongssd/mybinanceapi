@@ -378,3 +378,37 @@ func (api *SwapOrderGetApi) Timestamp(Timestamp int64) *SwapOrderGetApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SwapKlinesReq struct {
+	Symbol    *string `json:"symbol"`    //YES
+	Interval  *string `json:"interval"`  //YES	详见枚举定义：K线间隔
+	StartTime *int64  `json:"startTime"` //NO
+	EndTime   *int64  `json:"endTime"`   //NO
+	Limit     *int    `json:"limit"`     //NO	默认 500; 最大 1000.
+}
+
+type SwapKlinesApi struct {
+	SwapRestClient
+	req *SwapKlinesReq
+}
+
+func (api *SwapKlinesApi) Symbol(Symbol string) *SwapKlinesApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SwapKlinesApi) Interval(Interval string) *SwapKlinesApi {
+	api.req.Interval = GetPointer(Interval)
+	return api
+}
+func (api *SwapKlinesApi) StartTime(StartTime int64) *SwapKlinesApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *SwapKlinesApi) EndTime(EndTime int64) *SwapKlinesApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *SwapKlinesApi) Limit(Limit int) *SwapKlinesApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}

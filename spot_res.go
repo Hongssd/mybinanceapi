@@ -494,3 +494,18 @@ type SpotAssetTransferGetRow struct {
 	TranId    int64  `json:"tranId"`
 	Timestamp int64  `json:"timestamp"`
 }
+
+type SpotSubAccountTransferSubUserHistoryRes []SpotSubAccountTransferSubUserHistoryResRow
+type SpotSubAccountTransferSubUserHistoryResRow struct {
+	CounterParty    string `json:"counterParty"`
+	Email           string `json:"email"`
+	Type            int64  `json:"type"` // 1 for transfer in , 2 for transfer out
+	Asset           string `json:"asset"`
+	Qty             string `json:"qty"`
+	FromAccountType string `json:"fromAccountType"`
+	ToAccountType   string `json:"toAccountType"`
+	Status          string `json:"status"` // status: PROCESS / SUCCESS / FAILURE
+	TranId          int64  `json:"tranId"`
+	Time            int64  `json:"time"`
+}
+

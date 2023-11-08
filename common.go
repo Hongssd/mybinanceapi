@@ -324,3 +324,16 @@ func BinanceGetRestHostByApiType(apiType ApiType) string {
 		return ""
 	}
 }
+
+func interfaceStringToFloat64(inter interface{}) float64 {
+	return stringToFloat64(inter.(string))
+}
+
+func interfaceStringToInt64(inter interface{}) int64 {
+	return int64(inter.(float64))
+}
+
+func stringToFloat64(str string) float64 {
+	f, _ := strconv.ParseFloat(str, BIT_SIZE_64)
+	return f
+}

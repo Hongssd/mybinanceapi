@@ -15,6 +15,7 @@ const (
 	SpotSubAccountAssets
 	SpotSubAccountFuturesAccount
 	SpotSubAccountApiIpRestriction
+	SpotSubAccountTransferSubUserHistory
 	//POST
 	SpotSubAccountVirtualSubAccount
 	SpotSubAccountUniversalTransfer
@@ -59,6 +60,7 @@ const (
 
 	//行情接口
 	SpotTickerPrice
+	SpotKlines
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -69,6 +71,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotSubAccountAssets:                   "/sapi/v4/sub-account/assets",                      //GET接口 查询子账户资产(适用主账户)(USER_DATA)
 	SpotSubAccountFuturesAccount:           "/sapi/v2/sub-account/futures/account",             //GET接口 查询子账户Futures账户详情V2 (适用主账户)
 	SpotSubAccountApiIpRestriction:         "/sapi/v1/sub-account/subAccountApi/ipRestriction", //GET接口 查询子账户API Key IP白名单 (适用母账户)
+	SpotSubAccountTransferSubUserHistory:   "/sapi/v1/sub-account/transfer/subUserHistory",     //GET 查询子账户划转历史 (仅适用子账户)
 
 	//POST
 	SpotSubAccountVirtualSubAccount: "/sapi/v1/sub-account/virtualSubAccount", //POST接口 创建虚拟子账户(适用主账户)
@@ -112,6 +115,7 @@ var SpotApiMap = map[SpotApi]string{
 
 	//行情接口
 	SpotTickerPrice: "/api/v3/ticker/price", //GET接口 获取交易对最新价格
+	SpotKlines:      "/api/v3/klines",       //GET接口 获取K线数据
 }
 
 // ================以下为子母账户GET接口
@@ -165,6 +169,19 @@ func (api *SpotSubAccountFuturesAccountApi) Do() (*SubAccountFuturesAccountRes, 
 	api.Timestamp(time.Now().UnixMilli())
 	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesAccount], api.c.ApiSecret)
 	return binanceCallApiWithSecretGet[SubAccountFuturesAccountRes](api.SpotRestClient.c, url)
+}
+
+// binance SPOT子母账户接口  SubAccountTransferSubUserHistory rest查询子账户划转历史 (仅适用子账户)
+func (client *SpotRestClient) NewSubAccountTransferSubUserHistory() *SpotSubAccountTransferSubUserHistoryApi {
+	return &SpotSubAccountTransferSubUserHistoryApi{
+		SpotRestClient: *client,
+		req:            &SpotSubAccountTransferSubUserHistoryReq{},
+	}
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) Do() (*SpotSubAccountTransferSubUserHistoryRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecretGet(SPOT, api.req, SpotApiMap[SpotSubAccountTransferSubUserHistory], api.c.ApiSecret)
+	return binanceCallApiWithSecretGet[SpotSubAccountTransferSubUserHistoryRes](api.SpotRestClient.c, url)
 }
 
 // binance SPOT现货账户和交易接口  SpotAccount rest账户信息 (USER_DATA)
@@ -572,4 +589,21 @@ func (client *SpotRestClient) NewSpotTickerPrice() *SpotTickerPriceApi {
 func (api *SpotTickerPriceApi) Do() (*SpotTickerPriceRes, error) {
 	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotTickerPrice])
 	return binanceCallApiWithSecretGet[SpotTickerPriceRes](api.SpotRestClient.c, url)
+}
+
+// binance SPOT spotKlines restK线数据 (NONE)
+func (client *SpotRestClient) NewSpotKlines() *SpotKlinesApi {
+	return &SpotKlinesApi{
+		SpotRestClient: *client,
+		req:            &SpotKlinesReq{},
+	}
+}
+func (api *SpotKlinesApi) Do() (*KlinesRes, error) {
+	url := binanceHandlerRequestApiGet(SPOT, api.req, SpotApiMap[SpotKlines])
+	res, err := binanceCallApiWithSecretGet[KlinesMiddle](api.SpotRestClient.c, url)
+	if err != nil {
+		return nil, err
+	}
+	res2 := res.ConvertToRes()
+	return &res2, nil
 }

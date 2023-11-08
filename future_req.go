@@ -527,3 +527,37 @@ func (api *FutureUserTradesApi) Timestamp(Timestamp int64) *FutureUserTradesApi 
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type FutureKlinesReq struct {
+	Symbol    *string `json:"symbol"`    //YES
+	Interval  *string `json:"interval"`  //YES	详见枚举定义：K线间隔
+	StartTime *int64  `json:"startTime"` //NO
+	EndTime   *int64  `json:"endTime"`   //NO
+	Limit     *int    `json:"limit"`     //NO	默认 500; 最大 1000.
+}
+
+type FutureKlinesApi struct {
+	FutureRestClient
+	req *FutureKlinesReq
+}
+
+func (api *FutureKlinesApi) Symbol(Symbol string) *FutureKlinesApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *FutureKlinesApi) Interval(Interval string) *FutureKlinesApi {
+	api.req.Interval = GetPointer(Interval)
+	return api
+}
+func (api *FutureKlinesApi) StartTime(StartTime int64) *FutureKlinesApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *FutureKlinesApi) EndTime(EndTime int64) *FutureKlinesApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *FutureKlinesApi) Limit(Limit int) *FutureKlinesApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}

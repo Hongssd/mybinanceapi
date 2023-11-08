@@ -1268,3 +1268,99 @@ func (api *SpotAssetTransferGetApi) Timestamp(Timestamp int64) *SpotAssetTransfe
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+// asset	STRING	NO	如不提供，返回所有asset 划转记录
+// type	INT	NO	1: transfer in, 2: transfer out; 如不提供，返回transfer out方向划转记录
+// startTime	LONG	NO
+// endTime	LONG	NO
+// limit	INT	NO	默认值: 500
+// returnFailHistory	BOOLEAN	NO	默认False，返回PROCESS和SUCCESS状态的数据；如果传True返回PROCESS、SUCCESS、FAILURE状态的数据
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotSubAccountTransferSubUserHistoryReq struct {
+	Asset             *string `json:"asset"`             //NO	如不提供，返回所有asset 划转记录
+	Type              *int64  `json:"type"`              //NO	1: transfer in, 2: transfer out; 如不提供，返回transfer out方向划转记录
+	StartTime         *int64  `json:"startTime"`         //NO
+	EndTime           *int64  `json:"endTime"`           //NO
+	Limit             *int64  `json:"limit"`             //NO	默认值: 500
+	ReturnFailHistory *bool   `json:"returnFailHistory"` //NO	默认False，返回PROCESS和SUCCESS状态的数据；如果传True返回PROCESS、SUCCESS、FAILURE状态的数据
+	RecvWindow        *int64  `json:"recvWindow"`        //NO
+	Timestamp         *int64  `json:"timestamp"`         //YES
+}
+
+type SpotSubAccountTransferSubUserHistoryApi struct {
+	SpotRestClient
+	req *SpotSubAccountTransferSubUserHistoryReq
+}
+
+func (api *SpotSubAccountTransferSubUserHistoryApi) Asset(Asset string) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.Asset = GetPointer(Asset)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) Type(Type int64) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.Type = GetPointer(Type)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) StartTime(StartTime int64) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) EndTime(EndTime int64) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) Limit(Limit int64) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) ReturnFailHistory(ReturnFailHistory bool) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.ReturnFailHistory = GetPointer(ReturnFailHistory)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) RecvWindow(RecvWindow int64) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotSubAccountTransferSubUserHistoryApi) Timestamp(Timestamp int64) *SpotSubAccountTransferSubUserHistoryApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// symbol	STRING	YES
+// interval	ENUM	YES	详见枚举定义：K线间隔
+// startTime	LONG	NO
+// endTime	LONG	NO
+// limit	INT	NO	默认 500; 最大 1000.
+type SpotKlinesReq struct {
+	Symbol    *string `json:"symbol"`    //YES
+	Interval  *string `json:"interval"`  //YES	详见枚举定义：K线间隔
+	StartTime *int64  `json:"startTime"` //NO
+	EndTime   *int64  `json:"endTime"`   //NO
+	Limit     *int    `json:"limit"`     //NO	默认 500; 最大 1000.
+}
+
+type SpotKlinesApi struct {
+	SpotRestClient
+	req *SpotKlinesReq
+}
+
+func (api *SpotKlinesApi) Symbol(Symbol string) *SpotKlinesApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SpotKlinesApi) Interval(Interval string) *SpotKlinesApi {
+	api.req.Interval = GetPointer(Interval)
+	return api
+}
+func (api *SpotKlinesApi) StartTime(StartTime int64) *SpotKlinesApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *SpotKlinesApi) EndTime(EndTime int64) *SpotKlinesApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *SpotKlinesApi) Limit(Limit int) *SpotKlinesApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
