@@ -194,7 +194,7 @@ func binanceHandlerRequestApi[T any](apiType ApiType, request *T, name string) s
 		Path:     name,
 		RawQuery: query,
 	}
-	log.Debug(u.String())
+	// log.Debug(u.String())
 	return u.String()
 }
 

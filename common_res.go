@@ -1,5 +1,7 @@
 package mybinanceapi
 
+import "github.com/shopspring/decimal"
+
 type KlinesMiddleRow [11]interface{}
 
 type KlinesMiddle []KlinesMiddleRow
@@ -37,4 +39,21 @@ func (klinesMiddle *KlinesMiddle) ConvertToRes() KlinesRes {
 		klines = append(klines, k)
 	}
 	return klines
+}
+
+type DepthGear struct {
+	Price    string `json:"price"`
+	Quantity string `json:"quantity"`
+}
+
+func (gear *DepthGear) ParseDecimal() (decimal.Decimal, decimal.Decimal, error) {
+	price, err := decimal.NewFromString(gear.Price)
+	if err != nil {
+		return decimal.Zero, decimal.Zero, err
+	}
+	quantity, err := decimal.NewFromString(gear.Quantity)
+	if err != nil {
+		return decimal.Zero, decimal.Zero, err
+	}
+	return price, quantity, nil
 }

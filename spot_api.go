@@ -130,9 +130,17 @@ var SpotApiMap = map[SpotApi]string{
 	SpotExchangeInfo: "/api/v3/exchangeInfo", //GET接口 获取交易规范
 
 	//行情接口
-	SpotTickerPrice: "/api/v3/ticker/price", //GET接口 获取交易对最新价格
-	SpotKlines:      "/api/v3/klines",       //GET接口 获取K线数据
-	SpotDepth:       "/api/v3/depth",        //GET接口 获取深度信息
+	SpotTickerPrice:      "/api/v3/ticker/price",      //GET接口 获取交易对最新价格
+	SpotKlines:           "/api/v3/klines",            //GET接口 获取K线数据
+	SpotDepth:            "/api/v3/depth",             //GET接口 获取深度信息
+	SpotTrades:           "/api/v3/trades",            //GET接口 近期成交列表
+	SpotHistoricalTrades: "/api/v3/historicalTrades",  //GET接口 历史成交记录
+	SpotAggTrades:        "/api/v3/aggTrades",         //GET接口 近期成交(归集)
+	SpotAvgPrice:         "/api/v3/avgPrice",          //GET接口 当前平均价格
+	SpotUiKlines:         "/api/v3/uiKlines",          //GET接口 UIK线数据
+	SpotTicker24hr:       "/api/v3/ticker/24hr",       //GET接口 24hr 价格变动情况
+	SpotTickerBookTicker: "/api/v3/ticker/bookTicker", //GET接口 当前最优挂单
+	SpotTicker:           "/api/v3/ticker",            //GET接口 滚动窗口价格变动统计
 }
 
 // ================以下为子母账户GET接口
@@ -665,4 +673,129 @@ func (api *SpotDepthApi) Do() (*SpotDepthRes, error) {
 		return nil, err
 	}
 	return res.ConvertToRes(), nil
+}
+
+// binance SPOT SpotTrades rest最近成交 (NONE)
+func (client *SpotRestClient) NewSpotTrades() *SpotTradesApi {
+	return &SpotTradesApi{
+		SpotRestClient: *client,
+		req:            &SpotTradesReq{},
+	}
+}
+func (api *SpotTradesApi) Do() (*SpotTradesRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotTrades])
+	return binanceCallApiWithSecret[SpotTradesRes](api.SpotRestClient.c, url, GET)
+}
+
+// binance SPOT spotHistoricalTrades rest历史成交 (NONE)
+func (client *SpotRestClient) NewSpotHistoricalTrades() *SpotHistoricalTradesApi {
+	return &SpotHistoricalTradesApi{
+		SpotRestClient: *client,
+		req:            &SpotHistoricalTradesReq{},
+	}
+}
+func (api *SpotHistoricalTradesApi) Do() (*SpotHistoricalTradesRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotHistoricalTrades])
+	return binanceCallApiWithSecret[SpotHistoricalTradesRes](api.SpotRestClient.c, url, GET)
+}
+
+// binance SPOT spotAggTrades rest近期成交(归集)(NONE)
+func (client *SpotRestClient) NewSpotAggTrades() *SpotAggTradesApi {
+	return &SpotAggTradesApi{
+		SpotRestClient: *client,
+		req:            &SpotAggTradesReq{},
+	}
+}
+func (api *SpotAggTradesApi) Do() (*SpotAggTradesRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotAggTrades])
+	return binanceCallApiWithSecret[SpotAggTradesRes](api.SpotRestClient.c, url, GET)
+}
+
+// binance SPOT spotAvgPrice rest当前平均价格 (NONE)
+func (client *SpotRestClient) NewSpotAvgPrice() *SpotAvgPriceApi {
+	return &SpotAvgPriceApi{
+		SpotRestClient: *client,
+		req:            &SpotAvgPriceReq{},
+	}
+}
+func (api *SpotAvgPriceApi) Do() (*SpotAvgPriceRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotAvgPrice])
+	return binanceCallApiWithSecret[SpotAvgPriceRes](api.SpotRestClient.c, url, GET)
+}
+
+// binance SPOT spotUiKlines restUI K线数据 (NONE)
+func (client *SpotRestClient) NewSpotUiKlines() *SpotUiKlinesApi {
+	return &SpotUiKlinesApi{
+		SpotRestClient: *client,
+		req:            &SpotKlinesReq{},
+	}
+}
+func (api *SpotUiKlinesApi) Do() (*KlinesRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotKlines])
+	res, err := binanceCallApiWithSecret[KlinesMiddle](api.SpotRestClient.c, url, GET)
+	if err != nil {
+		return nil, err
+	}
+	res2 := res.ConvertToRes()
+	return &res2, nil
+}
+
+// binance SPOT spotTicker24hr rest24hr价格变动情况 (NONE)
+func (client *SpotRestClient) NewSpotTicker24hr() *SpotTicker24hrApi {
+	return &SpotTicker24hrApi{
+		SpotRestClient: *client,
+		req:            &SpotTicker24hrReq{},
+	}
+}
+func (api *SpotTicker24hrApi) Do() (*SpotTicker24hrRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotTicker24hr])
+	if api.req.Symbol != nil && *api.req.Symbol != "" {
+		res, err := binanceCallApiWithSecret[SpotTicker24hrResRow](api.SpotRestClient.c, url, GET)
+		if err != nil {
+			return nil, err
+		}
+		return &SpotTicker24hrRes{*res}, nil
+	} else {
+		return binanceCallApiWithSecret[SpotTicker24hrRes](api.SpotRestClient.c, url, GET)
+	}
+}
+
+// binance SPOT spotTickerBookTicker rest当前最优挂单 (NONE)
+func (client *SpotRestClient) NewSpotTickerBookTicker() *SpotTickerBookTickerApi {
+	return &SpotTickerBookTickerApi{
+		SpotRestClient: *client,
+		req:            &SpotTickerBookTickerReq{},
+	}
+}
+func (api *SpotTickerBookTickerApi) Do() (*SpotTickerBookTickerRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotTickerBookTicker])
+	if api.req.Symbol != nil && *api.req.Symbol != "" {
+		res, err := binanceCallApiWithSecret[SpotTickerBookTickerResRow](api.SpotRestClient.c, url, GET)
+		if err != nil {
+			return nil, err
+		}
+		return &SpotTickerBookTickerRes{*res}, nil
+	} else {
+		return binanceCallApiWithSecret[SpotTickerBookTickerRes](api.SpotRestClient.c, url, GET)
+	}
+}
+
+// binance SPOT spotTicker rest滚动窗口价格变动统计
+func (client *SpotRestClient) NewSpotTicker() *SpotTickerApi {
+	return &SpotTickerApi{
+		SpotRestClient: *client,
+		req:            &SpotTickerReq{},
+	}
+}
+func (api *SpotTickerApi) Do() (*SpotTickerRes, error) {
+	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotTicker])
+	if api.req.Symbol != nil && *api.req.Symbol != "" {
+		res, err := binanceCallApiWithSecret[SpotTickerResRow](api.SpotRestClient.c, url, GET)
+		if err != nil {
+			return nil, err
+		}
+		return &SpotTickerRes{*res}, nil
+	} else {
+		return binanceCallApiWithSecret[SpotTickerRes](api.SpotRestClient.c, url, GET)
+	}
 }

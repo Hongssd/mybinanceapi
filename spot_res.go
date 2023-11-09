@@ -526,9 +526,9 @@ type SpotSubAccountTransferSubUserHistoryResRow struct {
 //   }
 
 type SpotDepthRes struct {
-	LastUpdateId int64           `json:"lastUpdateId"`
-	Bids         []SpotDepthGear `json:"bids"`
-	Asks         []SpotDepthGear `json:"asks"`
+	LastUpdateId int64       `json:"lastUpdateId"`
+	Bids         []DepthGear `json:"bids"`
+	Asks         []DepthGear `json:"asks"`
 }
 
 type SpotDepthResMiddle struct {
@@ -536,26 +536,22 @@ type SpotDepthResMiddle struct {
 	Bids         [][]interface{} `json:"bids"`
 	Asks         [][]interface{} `json:"asks"`
 }
-type SpotDepthGear struct {
-	Price  string `json:"price"`
-	Amount string `json:"amount"`
-}
 
 func (middle *SpotDepthResMiddle) ConvertToRes() *SpotDepthRes {
 	res := SpotDepthRes{}
 	res.LastUpdateId = middle.LastUpdateId
-	res.Bids = []SpotDepthGear{}
-	res.Asks = []SpotDepthGear{}
+	res.Bids = []DepthGear{}
+	res.Asks = []DepthGear{}
 	for _, gear := range middle.Bids {
-		res.Bids = append(res.Bids, SpotDepthGear{
-			Price:  gear[0].(string),
-			Amount: gear[1].(string),
+		res.Bids = append(res.Bids, DepthGear{
+			Price:    gear[0].(string),
+			Quantity: gear[1].(string),
 		})
 	}
 	for _, gear := range middle.Asks {
-		res.Asks = append(res.Asks, SpotDepthGear{
-			Price:  gear[0].(string),
-			Amount: gear[1].(string),
+		res.Asks = append(res.Asks, DepthGear{
+			Price:    gear[0].(string),
+			Quantity: gear[1].(string),
 		})
 	}
 	return &res
@@ -627,4 +623,163 @@ type SpotMarginOrderDeleteRes struct {
 	Side                    string `json:"side"`                    // 订单方向，买还是卖
 	IsIsolated              bool   `json:"isIsolated"`              // 是否是逐仓symbol交易
 	SelfTradePreventionMode string `json:"selfTradePreventionMode"` // 自我交易预防模式
+}
+
+// [
+//   {
+//     "id": 28457,
+//     "price": "4.00000100",
+//     "qty": "12.00000000",
+//     "time": 1499865549590, // 交易成交时间, 和websocket中的T一致.
+//     "isBuyerMaker": true,
+//     "isBestMatch": true
+//   }
+// ]
+
+type SpotTradesRes []SpotTradesResRow
+type SpotTradesResRow struct {
+	Id           int64  `json:"id"`           // 交易ID
+	Price        string `json:"price"`        // 交易价格
+	Qty          string `json:"qty"`          // 交易数量
+	Time         int64  `json:"time"`         // 交易成交时间, 和websocket中的T一致.
+	IsBuyerMaker bool   `json:"isBuyerMaker"` // 是否是买方成交
+	IsBestMatch  bool   `json:"isBestMatch"`  // 是否是最优成交
+}
+
+type SpotHistoricalTradesRes []SpotTradesResRow
+
+// [
+//   {
+//     "a": 26129,         // 归集成交ID
+//     "p": "0.01633102",  // 成交价
+//     "q": "4.70443515",  // 成交量
+//     "f": 27781,         // 被归集的首个成交ID
+//     "l": 27781,         // 被归集的末个成交ID
+//     "T": 1498793709153, // 成交时间
+//     "m": true,          // 是否为主动卖出单
+//     "M": true           // 是否为最优撮合单(可忽略，目前总为最优撮合)
+//   }
+// ]
+
+type SpotAggTradesRes []SpotAggTradesResRow
+type SpotAggTradesResRow struct {
+	Id           int64  `json:"a"` // 归集成交ID
+	Price        string `json:"p"` // 成交价格
+	Qty          string `json:"q"` // 成交数量
+	FirstTradeId int64  `json:"f"` // 被归集的首个成交ID
+	LastTradeId  int64  `json:"l"` // 被归集的末个成交ID
+	Time         int64  `json:"T"` // 成交时间
+	IsBuyerMaker bool   `json:"m"` // 是否为主动卖出单
+	IsBestMatch  bool   `json:"M"` // 是否为最优撮合单(可忽略，目前总为最优撮合)
+}
+
+//	{
+//		"mins": 5,
+//		"price": "9.35751834"
+//	  }
+type SpotAvgPriceRes struct {
+	Mins  int64  `json:"mins"`  // 价格平均值计算时间
+	Price string `json:"price"` // 价格平均值
+}
+
+//	{
+//		"symbol": "BNBBTC",
+//		"priceChange": "-94.99999800",
+//		"priceChangePercent": "-95.960",
+//		"weightedAvgPrice": "0.29628482",
+//		"prevClosePrice": "0.10002000",
+//		"lastPrice": "4.00000200",
+//		"lastQty": "200.00000000",
+//		"bidPrice": "4.00000000",
+//		"bidQty": "100.00000000",
+//		"askPrice": "4.00000200",
+//		"askQty": "100.00000000",
+//		"openPrice": "99.00000000",
+//		"highPrice": "100.00000000",
+//		"lowPrice": "0.10000000",
+//		"volume": "8913.30000000",
+//		"quoteVolume": "15.30000000",
+//		"openTime": 1499783499040,
+//		"closeTime": 1499869899040,
+//		"firstId": 28385,   // 首笔成交id
+//		"lastId": 28460,    // 末笔成交id
+//		"count": 76         // 成交笔数
+//	  }
+type SpotTicker24hrRes []SpotTicker24hrResRow
+type SpotTicker24hrResRow struct {
+	Symbol             string `json:"symbol"`             // 交易对
+	PriceChange        string `json:"priceChange"`        // 价格变动
+	PriceChangePercent string `json:"priceChangePercent"` // 价格变动百分比
+	WeightedAvgPrice   string `json:"weightedAvgPrice"`   // 平均价格
+	PrevClosePrice     string `json:"prevClosePrice"`     // 前一日收盘价
+	LastPrice          string `json:"lastPrice"`          // 最新成交价
+	LastQty            string `json:"lastQty"`            // 最新成交量
+	BidPrice           string `json:"bidPrice"`           // 当前最高买价
+	BidQty             string `json:"bidQty"`             // 当前最高买价对应的量
+	AskPrice           string `json:"askPrice"`           // 当前最低卖价
+	AskQty             string `json:"askQty"`             // 当前最低卖价对应的量
+	OpenPrice          string `json:"openPrice"`          // 24小时内第一次交易的价格
+	HighPrice          string `json:"highPrice"`          // 24小时内最高成交价
+	LowPrice           string `json:"lowPrice"`           // 24小时内最低成交加
+	Volume             string `json:"volume"`             // 24小时内成交量
+	QuoteVolume        string `json:"quoteVolume"`        // 24小时内成交额
+	OpenTime           int64  `json:"openTime"`           // 统计开始时间
+	CloseTime          int64  `json:"closeTime"`          // 统计结束时间
+	FirstId            int64  `json:"firstId"`            // 首笔成交id
+	LastId             int64  `json:"lastId"`             // 末笔成交id
+	Count              int64  `json:"count"`              // 成交笔数
+}
+
+// {
+// 	"symbol": "LTCBTC",
+// 	"bidPrice": "4.00000000Decimal
+// 	"bidQty": "431.00000000",
+// 	"askPrice": "4.00000200",
+// 	"askQty": "9.00000000"
+//   }
+
+type SpotTickerBookTickerRes []SpotTickerBookTickerResRow
+type SpotTickerBookTickerResRow struct {
+	Symbol   string `json:"symbol"`   // 交易对
+	BidPrice string `json:"bidPrice"` // 当前最高买价
+	BidQty   string `json:"bidQty"`   // 当前最高买价对应的量
+	AskPrice string `json:"askPrice"` // 当前最低卖价
+	AskQty   string `json:"askQty"`   // 当前最低卖价对应的量
+}
+
+//	{
+//		"symbol":             "BNBBTC",
+//		"priceChange":        "-8.00000000",  // 价格变化
+//		"priceChangePercent": "-88.889",      // 价格变化百分比
+//		"weightedAvgPrice":   "2.60427807",
+//		"openPrice":          "9.00000000",
+//		"highPrice":          "9.00000000",
+//		"lowPrice":           "1.00000000",
+//		"lastPrice":          "1.00000000",
+//		"volume":             "187.00000000",
+//		"quoteVolume":        "487.00000000",
+//		"openTime":           1641859200000,  // ticker的开始时间
+//		"closeTime":          1642031999999,  // ticker的结束时间
+//		"firstId":            0,              // 统计时间内的第一笔trade id
+//		"lastId":             60,
+//		"count":              61              // 统计时间内交易笔数
+//	  }
+type SpotTickerRes []SpotTickerResRow
+
+type SpotTickerResRow struct {
+	Symbol             string `json:"symbol"`             // 交易对
+	PriceChange        string `json:"priceChange"`        // 价格变动
+	PriceChangePercent string `json:"priceChangePercent"` // 价格变动百分比
+	WeightedAvgPrice   string `json:"weightedAvgPrice"`   // 平均价格
+	OpenPrice          string `json:"openPrice"`          // 24小时内第一次交易的价格
+	HighPrice          string `json:"highPrice"`          // 24小时内最高成交价
+	LowPrice           string `json:"lowPrice"`           // 24小时内最低成交加
+	LastPrice          string `json:"lastPrice"`          // 最新成交价
+	Volume             string `json:"volume"`             // 24小时内成交量
+	QuoteVolume        string `json:"quoteVolume"`        // 24小时内成交额
+	OpenTime           int64  `json:"openTime"`           // 统计开始时间
+	CloseTime          int64  `json:"closeTime"`          // 统计结束时间
+	FirstId            int64  `json:"firstId"`            // 首笔成交id
+	LastId             int64  `json:"lastId"`             // 末笔成交id
+	Count              int64  `json:"count"`              // 成交笔数
 }
