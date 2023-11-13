@@ -117,16 +117,13 @@ type Client struct {
 	ApiKey    string
 	ApiSecret string
 }
+type RestClient struct {
+	c *Client
+}
 
-type SpotRestClient struct {
-	c *Client
-}
-type FutureRestClient struct {
-	c *Client
-}
-type SwapRestClient struct {
-	c *Client
-}
+type SpotRestClient RestClient
+type FutureRestClient RestClient
+type SwapRestClient RestClient
 
 func (*MyBinance) NewSpotRestClient(apiKey string, apiSecret string) *SpotRestClient {
 	client := &SpotRestClient{

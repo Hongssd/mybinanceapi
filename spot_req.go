@@ -12,8 +12,8 @@ type SpotSubAccountListReq struct {
 }
 
 type SpotSubAccountListApi struct {
-	SpotRestClient
-	req *SpotSubAccountListReq
+	client *SpotRestClient
+	req    *SpotSubAccountListReq
 }
 
 func (api *SpotSubAccountListApi) Email(Email string) *SpotSubAccountListApi {
@@ -56,8 +56,8 @@ type SpotSubAccountVirtualSubAccountReq struct {
 	Timestamp        *int64  `json:"timestamp"`
 }
 type SpotSubAccountVirtualSubAccountApi struct {
-	SpotRestClient
-	req *SpotSubAccountVirtualSubAccountReq
+	client *SpotRestClient
+	req    *SpotSubAccountVirtualSubAccountReq
 }
 
 func (api *SpotSubAccountVirtualSubAccountApi) SubAccountString(SubAccountString string) *SpotSubAccountVirtualSubAccountApi {
@@ -86,8 +86,8 @@ type SpotSubAccountUniversalTransferReq struct {
 	Timestamp       *int64           `json:"timestamp"`
 }
 type SpotSubAccountUniversalTransferApi struct {
-	SpotRestClient
-	req *SpotSubAccountUniversalTransferReq
+	client *SpotRestClient
+	req    *SpotSubAccountUniversalTransferReq
 }
 
 func (api *SpotSubAccountUniversalTransferApi) FromEmail(FromEmail string) *SpotSubAccountUniversalTransferApi {
@@ -143,8 +143,8 @@ type SpotSubAccountUniversalTransferHistoryReq struct {
 	Timestamp    *int64  `json:"timestamp"`
 }
 type SpotSubAccountUniversalTransferHistoryApi struct {
-	SpotRestClient
-	req *SpotSubAccountUniversalTransferHistoryReq
+	client *SpotRestClient
+	req    *SpotSubAccountUniversalTransferHistoryReq
 }
 
 func (api *SpotSubAccountUniversalTransferHistoryApi) FromEmail(FromEmail string) *SpotSubAccountUniversalTransferHistoryApi {
@@ -190,8 +190,8 @@ type SpotSubAccountAssetsReq struct {
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SpotSubAccountAssetsApi struct {
-	SpotRestClient
-	req *SpotSubAccountAssetsReq
+	client *SpotRestClient
+	req    *SpotSubAccountAssetsReq
 }
 
 func (api *SpotSubAccountAssetsApi) Email(Email string) *SpotSubAccountAssetsApi {
@@ -215,8 +215,8 @@ type SpotSubAccountFuturesAccountReq struct {
 }
 
 type SpotSubAccountFuturesAccountApi struct {
-	SpotRestClient
-	req *SpotSubAccountFuturesAccountReq
+	client *SpotRestClient
+	req    *SpotSubAccountFuturesAccountReq
 }
 
 func (api *SpotSubAccountFuturesAccountApi) Email(Email string) *SpotSubAccountFuturesAccountApi {
@@ -243,8 +243,8 @@ type SpotSubAccountFuturesEnableReq struct {
 }
 
 type SpotSubAccountFuturesEnableApi struct {
-	SpotRestClient
-	req *SpotSubAccountFuturesEnableReq
+	client *SpotRestClient
+	req    *SpotSubAccountFuturesEnableReq
 }
 
 func (api *SpotSubAccountFuturesEnableApi) Email(Email string) *SpotSubAccountFuturesEnableApi {
@@ -265,8 +265,8 @@ type SpotAccountReq struct {
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SpotAccountApi struct {
-	SpotRestClient
-	req *SpotAccountReq
+	client *SpotRestClient
+	req    *SpotAccountReq
 }
 
 func (api *SpotAccountApi) Recvwindow(Recvwindow int64) *SpotAccountApi {
@@ -286,8 +286,8 @@ type SpotSubAccountApiIpRestrictionReq struct {
 }
 
 type SpotSubAccountApiIpRestrictionApi struct {
-	SpotRestClient
-	req *SpotSubAccountApiIpRestrictionReq
+	client *SpotRestClient
+	req    *SpotSubAccountApiIpRestrictionReq
 }
 
 func (api *SpotSubAccountApiIpRestrictionApi) Email(Email string) *SpotSubAccountApiIpRestrictionApi {
@@ -313,8 +313,8 @@ type SpotMarginAllPairsReq struct {
 }
 
 type SpotMarginAllPairsApi struct {
-	SpotRestClient
-	req *SpotMarginAllPairsReq
+	client *SpotRestClient
+	req    *SpotMarginAllPairsReq
 }
 
 func (api *SpotMarginAllPairsApi) Recvwindow(Recvwindow int64) *SpotMarginAllPairsApi {
@@ -332,8 +332,8 @@ type SpotMarginIsolatedAllPairsReq struct {
 }
 
 type SpotMarginIsolatedAllPairsApi struct {
-	SpotRestClient
-	req *SpotMarginIsolatedAllPairsReq
+	client *SpotRestClient
+	req    *SpotMarginIsolatedAllPairsReq
 }
 
 func (api *SpotMarginIsolatedAllPairsApi) Recvwindow(Recvwindow int64) *SpotMarginIsolatedAllPairsApi {
@@ -351,8 +351,8 @@ type SpotMarginAccountReq struct {
 }
 
 type SpotMarginAccountApi struct {
-	SpotRestClient
-	req *SpotMarginAccountReq
+	client *SpotRestClient
+	req    *SpotMarginAccountReq
 }
 
 func (api *SpotMarginAccountApi) Recvwindow(Recvwindow int64) *SpotMarginAccountApi {
@@ -371,8 +371,8 @@ type SpotMarginIsolatedAccountReq struct {
 }
 
 type SpotMarginIsolatedAccountApi struct {
-	SpotRestClient
-	req *SpotMarginIsolatedAccountReq
+	client *SpotRestClient
+	req    *SpotMarginIsolatedAccountReq
 }
 
 func (api *SpotMarginIsolatedAccountApi) Symbols(Symbols string) *SpotMarginIsolatedAccountApi {
@@ -399,8 +399,8 @@ type SpotMarginTransferReq struct {
 }
 
 type SpotMarginTransferApi struct {
-	SpotRestClient
-	req *SpotMarginTransferReq
+	client *SpotRestClient
+	req    *SpotMarginTransferReq
 }
 
 func (api *SpotMarginTransferApi) Asset(Asset string) *SpotMarginTransferApi {
@@ -435,8 +435,8 @@ type SpotMarginIsolatedTransferReq struct {
 }
 
 type SpotMarginIsolatedTransferApi struct {
-	SpotRestClient
-	req *SpotMarginIsolatedTransferReq
+	client *SpotRestClient
+	req    *SpotMarginIsolatedTransferReq
 }
 
 func (api *SpotMarginIsolatedTransferApi) Asset(Asset string) *SpotMarginIsolatedTransferApi {
@@ -478,8 +478,8 @@ type SpotMarginLoanReq struct {
 }
 
 type SpotMarginLoanApi struct {
-	SpotRestClient
-	req *SpotMarginLoanReq
+	client *SpotRestClient
+	req    *SpotMarginLoanReq
 }
 
 func (api *SpotMarginLoanApi) Asset(Asset string) *SpotMarginLoanApi {
@@ -517,8 +517,8 @@ type SpotMarginRepayReq struct {
 }
 
 type SpotMarginRepayApi struct {
-	SpotRestClient
-	req *SpotMarginRepayReq
+	client *SpotRestClient
+	req    *SpotMarginRepayReq
 }
 
 func (api *SpotMarginRepayApi) Asset(Asset string) *SpotMarginRepayApi {
@@ -554,8 +554,8 @@ type SpotMarginMaxBorrowableReq struct {
 }
 
 type SpotMarginMaxBorrowableApi struct {
-	SpotRestClient
-	req *SpotMarginMaxBorrowableReq
+	client *SpotRestClient
+	req    *SpotMarginMaxBorrowableReq
 }
 
 func (api *SpotMarginMaxBorrowableApi) Asset(Asset string) *SpotMarginMaxBorrowableApi {
@@ -583,8 +583,8 @@ type SpotMarginMaxTransferableReq struct {
 }
 
 type SpotMarginMaxTransferableApi struct {
-	SpotRestClient
-	req *SpotMarginMaxTransferableReq
+	client *SpotRestClient
+	req    *SpotMarginMaxTransferableReq
 }
 
 func (api *SpotMarginMaxTransferableApi) Asset(Asset string) *SpotMarginMaxTransferableApi {
@@ -617,8 +617,8 @@ type SpotMarginInterestHistoryReq struct {
 }
 
 type SpotMarginInterestHistoryApi struct {
-	SpotRestClient
-	req *SpotMarginInterestHistoryReq
+	client *SpotRestClient
+	req    *SpotMarginInterestHistoryReq
 }
 
 func (api *SpotMarginInterestHistoryApi) Asset(Asset string) *SpotMarginInterestHistoryApi {
@@ -668,8 +668,8 @@ type SpotMarginOrderGetReq struct {
 }
 
 type SpotMarginOrderGetApi struct {
-	SpotRestClient
-	req *SpotMarginOrderGetReq
+	client *SpotRestClient
+	req    *SpotMarginOrderGetReq
 }
 
 func (api *SpotMarginOrderGetApi) Symbol(Symbol string) *SpotMarginOrderGetApi {
@@ -709,8 +709,8 @@ type SpotMarginAllOrdersReq struct {
 }
 
 type SpotMarginAllOrdersApi struct {
-	SpotRestClient
-	req *SpotMarginAllOrdersReq
+	client *SpotRestClient
+	req    *SpotMarginAllOrdersReq
 }
 
 func (api *SpotMarginAllOrdersApi) Symbol(Symbol string) *SpotMarginAllOrdersApi {
@@ -754,8 +754,8 @@ type SpotMarginOpenOrdersReq struct {
 }
 
 type SpotMarginOpenOrdersApi struct {
-	SpotRestClient
-	req *SpotMarginOpenOrdersReq
+	client *SpotRestClient
+	req    *SpotMarginOpenOrdersReq
 }
 
 func (api *SpotMarginOpenOrdersApi) Symbol(Symbol string) *SpotMarginOpenOrdersApi {
@@ -796,8 +796,8 @@ type SpotOrderPostReq struct {
 }
 
 type SpotOrderPostApi struct {
-	SpotRestClient
-	req *SpotOrderPostReq
+	client *SpotRestClient
+	req    *SpotOrderPostReq
 }
 
 func (api *SpotOrderPostApi) Symbol(Symbol string) *SpotOrderPostApi {
@@ -909,8 +909,8 @@ type SpotMarginOrderPostReq struct {
 }
 
 type SpotMarginOrderPostApi struct {
-	SpotRestClient
-	req *SpotMarginOrderPostReq
+	client *SpotRestClient
+	req    *SpotMarginOrderPostReq
 }
 
 func (api *SpotMarginOrderPostApi) Symbol(Symbol string) *SpotMarginOrderPostApi {
@@ -985,22 +985,22 @@ func (api *SpotMarginOrderPostApi) Timestamp(Timestamp int64) *SpotMarginOrderPo
 type SpotPingReq struct {
 }
 type SpotPingApi struct {
-	SpotRestClient
-	req *SpotPingReq
+	client *SpotRestClient
+	req    *SpotPingReq
 }
 
 type SpotServerTimeReq struct {
 }
 type SpotServerTimeApi struct {
-	SpotRestClient
-	req *SpotServerTimeReq
+	client *SpotRestClient
+	req    *SpotServerTimeReq
 }
 
 type SpotExchangeInfoReq struct {
 }
 type SpotExchangeInfoApi struct {
-	SpotRestClient
-	req *SpotExchangeInfoReq
+	client *SpotRestClient
+	req    *SpotExchangeInfoReq
 }
 
 type SpotAccountApiTradingStatusReq struct {
@@ -1009,8 +1009,8 @@ type SpotAccountApiTradingStatusReq struct {
 }
 
 type SpotAccountApiTradingStatusApi struct {
-	SpotRestClient
-	req *SpotAccountApiTradingStatusReq
+	client *SpotRestClient
+	req    *SpotAccountApiTradingStatusReq
 }
 
 func (api *SpotAccountApiTradingStatusApi) RecvWindow(RecvWindow int64) *SpotAccountApiTradingStatusApi {
@@ -1032,8 +1032,8 @@ type SpotOpenOrdersReq struct {
 }
 
 type SpotOpenOrdersApi struct {
-	SpotRestClient
-	req *SpotOpenOrdersReq
+	client *SpotRestClient
+	req    *SpotOpenOrdersReq
 }
 
 func (api *SpotOpenOrdersApi) Symbol(Symbol string) *SpotOpenOrdersApi {
@@ -1067,8 +1067,8 @@ type SpotAllOrdersReq struct {
 }
 
 type SpotAllOrdersApi struct {
-	SpotRestClient
-	req *SpotAllOrdersReq
+	client *SpotRestClient
+	req    *SpotAllOrdersReq
 }
 
 func (api *SpotAllOrdersApi) Symbol(Symbol string) *SpotAllOrdersApi {
@@ -1115,8 +1115,8 @@ type SpotOrderGetReq struct {
 }
 
 type SpotOrderGetApi struct {
-	SpotRestClient
-	req *SpotOrderGetReq
+	client *SpotRestClient
+	req    *SpotOrderGetReq
 }
 
 func (api *SpotOrderGetApi) Symbol(Symbol string) *SpotOrderGetApi {
@@ -1145,8 +1145,8 @@ type SpotTickerPriceReq struct {
 }
 
 type SpotTickerPriceApi struct {
-	SpotRestClient
-	req *SpotTickerPriceReq
+	client *SpotRestClient
+	req    *SpotTickerPriceReq
 }
 
 func (api *SpotTickerPriceApi) Symbol(Symbol string) *SpotTickerPriceApi {
@@ -1172,8 +1172,8 @@ type SpotAssetTransferPostReq struct {
 }
 
 type SpotAssetTransferPostApi struct {
-	SpotRestClient
-	req *SpotAssetTransferPostReq
+	client *SpotRestClient
+	req    *SpotAssetTransferPostReq
 }
 
 func (api *SpotAssetTransferPostApi) Type(Type AssertTransferType) *SpotAssetTransferPostApi {
@@ -1228,8 +1228,8 @@ type SpotAssetTransferGetReq struct {
 }
 
 type SpotAssetTransferGetApi struct {
-	SpotRestClient
-	req *SpotAssetTransferGetReq
+	client *SpotRestClient
+	req    *SpotAssetTransferGetReq
 }
 
 func (api *SpotAssetTransferGetApi) Type(Type AssertTransferType) *SpotAssetTransferGetApi {
@@ -1289,8 +1289,8 @@ type SpotSubAccountTransferSubUserHistoryReq struct {
 }
 
 type SpotSubAccountTransferSubUserHistoryApi struct {
-	SpotRestClient
-	req *SpotSubAccountTransferSubUserHistoryReq
+	client *SpotRestClient
+	req    *SpotSubAccountTransferSubUserHistoryReq
 }
 
 func (api *SpotSubAccountTransferSubUserHistoryApi) Asset(Asset string) *SpotSubAccountTransferSubUserHistoryApi {
@@ -1340,8 +1340,8 @@ type SpotKlinesReq struct {
 }
 
 type SpotKlinesApi struct {
-	SpotRestClient
-	req *SpotKlinesReq
+	client *SpotRestClient
+	req    *SpotKlinesReq
 }
 
 func (api *SpotKlinesApi) Symbol(Symbol string) *SpotKlinesApi {
@@ -1374,8 +1374,8 @@ type SpotDepthReq struct {
 }
 
 type SpotDepthApi struct {
-	SpotRestClient
-	req *SpotDepthReq
+	client *SpotRestClient
+	req    *SpotDepthReq
 }
 
 func (api *SpotDepthApi) Symbol(Symbol string) *SpotDepthApi {
@@ -1408,8 +1408,8 @@ type SpotOrderDeleteReq struct {
 }
 
 type SpotOrderDeleteApi struct {
-	SpotRestClient
-	req *SpotOrderDeleteReq
+	client *SpotRestClient
+	req    *SpotOrderDeleteReq
 }
 
 func (api *SpotOrderDeleteApi) Symbol(Symbol string) *SpotOrderDeleteApi {
@@ -1459,8 +1459,8 @@ type SpotMarginOrderDeleteReq struct {
 }
 
 type SpotMarginOrderDeleteApi struct {
-	SpotRestClient
-	req *SpotMarginOrderDeleteReq
+	client *SpotRestClient
+	req    *SpotMarginOrderDeleteReq
 }
 
 func (api *SpotMarginOrderDeleteApi) Symbol(Symbol string) *SpotMarginOrderDeleteApi {
@@ -1500,8 +1500,8 @@ type SpotTradesReq struct {
 }
 
 type SpotTradesApi struct {
-	SpotRestClient
-	req *SpotTradesReq
+	client *SpotRestClient
+	req    *SpotTradesReq
 }
 
 func (api *SpotTradesApi) Symbol(Symbol string) *SpotTradesApi {
@@ -1524,8 +1524,8 @@ type SpotHistoricalTradesReq struct {
 }
 
 type SpotHistoricalTradesApi struct {
-	SpotRestClient
-	req *SpotHistoricalTradesReq
+	client *SpotRestClient
+	req    *SpotHistoricalTradesReq
 }
 
 func (api *SpotHistoricalTradesApi) Symbol(Symbol string) *SpotHistoricalTradesApi {
@@ -1555,8 +1555,8 @@ type SpotAggTradesReq struct {
 }
 
 type SpotAggTradesApi struct {
-	SpotRestClient
-	req *SpotAggTradesReq
+	client *SpotRestClient
+	req    *SpotAggTradesReq
 }
 
 func (api *SpotAggTradesApi) Symbol(Symbol string) *SpotAggTradesApi {
@@ -1586,8 +1586,8 @@ type SpotAvgPriceReq struct {
 }
 
 type SpotAvgPriceApi struct {
-	SpotRestClient
-	req *SpotAvgPriceReq
+	client *SpotRestClient
+	req    *SpotAvgPriceReq
 }
 
 func (api *SpotAvgPriceApi) Symbol(Symbol string) *SpotAvgPriceApi {
@@ -1633,8 +1633,8 @@ type SpotTicker24hrReq struct {
 }
 
 type SpotTicker24hrApi struct {
-	SpotRestClient
-	req *SpotTicker24hrReq
+	client *SpotRestClient
+	req    *SpotTicker24hrReq
 }
 
 func (api *SpotTicker24hrApi) Symbol(Symbol string) *SpotTicker24hrApi {
@@ -1656,8 +1656,8 @@ type SpotTickerBookTickerReq struct {
 }
 
 type SpotTickerBookTickerApi struct {
-	SpotRestClient
-	req *SpotTickerBookTickerReq
+	client *SpotRestClient
+	req    *SpotTickerBookTickerReq
 }
 
 func (api *SpotTickerBookTickerApi) Symbol(Symbol string) *SpotTickerBookTickerApi {
@@ -1688,8 +1688,8 @@ type SpotTickerReq struct {
 }
 
 type SpotTickerApi struct {
-	SpotRestClient
-	req *SpotTickerReq
+	client *SpotRestClient
+	req    *SpotTickerReq
 }
 
 func (api *SpotTickerApi) Symbol(Symbol string) *SpotTickerApi {
@@ -1708,5 +1708,3 @@ func (api *SpotTickerApi) Type(Type string) *SpotTickerApi {
 	api.req.Type = GetPointer(Type)
 	return api
 }
-
-

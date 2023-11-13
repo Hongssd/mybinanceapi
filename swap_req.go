@@ -7,8 +7,8 @@ type SwapAccountReq struct {
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SwapAccountApi struct {
-	SwapRestClient
-	req *SwapAccountReq
+	client *SwapRestClient
+	req    *SwapAccountReq
 }
 
 func (api *SwapAccountApi) Recvwindow(Recvwindow int64) *SwapAccountApi {
@@ -25,8 +25,8 @@ type SwapPositionSideDualGetReq struct {
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SwapPositionSideDualGetApi struct {
-	SwapRestClient
-	req *SwapPositionSideDualGetReq
+	client *SwapRestClient
+	req    *SwapPositionSideDualGetReq
 }
 
 func (api *SwapPositionSideDualGetApi) Recvwindow(Recvwindow int64) *SwapPositionSideDualGetApi {
@@ -45,8 +45,8 @@ type SwapPositionSideDualPostReq struct {
 }
 
 type SwapPositionSideDualPostApi struct {
-	SwapRestClient
-	req *SwapPositionSideDualPostReq
+	client *SwapRestClient
+	req    *SwapPositionSideDualPostReq
 }
 
 func (api *SwapPositionSideDualPostApi) DualSidePosition(DualSidePosition string) *SwapPositionSideDualPostApi {
@@ -70,8 +70,8 @@ type SwapLeverageReq struct {
 }
 
 type SwapLeverageApi struct {
-	SwapRestClient
-	req *SwapLeverageReq
+	client *SwapRestClient
+	req    *SwapLeverageReq
 }
 
 func (api *SwapLeverageApi) Symbol(Symbol string) *SwapLeverageApi {
@@ -99,8 +99,8 @@ type SwapMarginTypeReq struct {
 }
 
 type SwapMarginTypeApi struct {
-	SwapRestClient
-	req *SwapMarginTypeReq
+	client *SwapRestClient
+	req    *SwapMarginTypeReq
 }
 
 func (api *SwapMarginTypeApi) Symbol(Symbol string) *SwapMarginTypeApi {
@@ -127,8 +127,8 @@ type SwapLeverageBracketReq struct {
 }
 
 type SwapLeverageBracketApi struct {
-	SwapRestClient
-	req *SwapLeverageBracketReq
+	client *SwapRestClient
+	req    *SwapLeverageBracketReq
 }
 
 func (api *SwapLeverageBracketApi) Symbol(Symbol string) *SwapLeverageBracketApi {
@@ -147,22 +147,22 @@ func (api *SwapLeverageBracketApi) Timestamp(Timestamp int64) *SwapLeverageBrack
 type SwapPingReq struct {
 }
 type SwapPingApi struct {
-	SwapRestClient
-	req *SwapPingReq
+	client *SwapRestClient
+	req    *SwapPingReq
 }
 
 type SwapServerTimeReq struct {
 }
 type SwapServerTimeApi struct {
-	SwapRestClient
-	req *SwapServerTimeReq
+	client *SwapRestClient
+	req    *SwapServerTimeReq
 }
 
 type SwapExchangeInfoReq struct {
 }
 type SwapExchangeInfoApi struct {
-	SwapRestClient
-	req *SwapExchangeInfoReq
+	client *SwapRestClient
+	req    *SwapExchangeInfoReq
 }
 
 type SwapOpenOrdersReq struct {
@@ -172,8 +172,8 @@ type SwapOpenOrdersReq struct {
 }
 
 type SwapOpenOrdersApi struct {
-	SwapRestClient
-	req *SwapOpenOrdersReq
+	client *SwapRestClient
+	req    *SwapOpenOrdersReq
 }
 
 func (api *SwapOpenOrdersApi) Symbol(Symbol string) *SwapOpenOrdersApi {
@@ -207,8 +207,8 @@ type SwapAllOrdersReq struct {
 }
 
 type SwapAllOrdersApi struct {
-	SwapRestClient
-	req *SwapAllOrdersReq
+	client *SwapRestClient
+	req    *SwapAllOrdersReq
 }
 
 func (api *SwapAllOrdersApi) Symbol(Symbol string) *SwapAllOrdersApi {
@@ -262,8 +262,8 @@ type SwapOrderPostReq struct {
 }
 
 type SwapOrderPostApi struct {
-	SwapRestClient
-	req *SwapOrderPostReq
+	client *SwapRestClient
+	req    *SwapOrderPostReq
 }
 
 func (api *SwapOrderPostApi) Symbol(Symbol string) *SwapOrderPostApi {
@@ -354,8 +354,8 @@ type SwapOrderGetReq struct {
 }
 
 type SwapOrderGetApi struct {
-	SwapRestClient
-	req *SwapOrderGetReq
+	client *SwapRestClient
+	req    *SwapOrderGetReq
 }
 
 func (api *SwapOrderGetApi) Symbol(Symbol string) *SwapOrderGetApi {
@@ -388,8 +388,8 @@ type SwapKlinesReq struct {
 }
 
 type SwapKlinesApi struct {
-	SwapRestClient
-	req *SwapKlinesReq
+	client *SwapRestClient
+	req    *SwapKlinesReq
 }
 
 func (api *SwapKlinesApi) Symbol(Symbol string) *SwapKlinesApi {

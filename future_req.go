@@ -8,8 +8,8 @@ type FutureAccountReq struct {
 	Timestamp  *int64 `json:"timestamp"`
 }
 type FutureAccountApi struct {
-	FutureRestClient
-	req *FutureAccountReq
+	client *FutureRestClient
+	req    *FutureAccountReq
 }
 
 func (api *FutureAccountApi) Recvwindow(Recvwindow int64) *FutureAccountApi {
@@ -27,8 +27,8 @@ type FuturePositionSideDualGetReq struct {
 	Timestamp  *int64 `json:"timestamp"`
 }
 type FuturePositionSideDualGetApi struct {
-	FutureRestClient
-	req *FuturePositionSideDualGetReq
+	client *FutureRestClient
+	req    *FuturePositionSideDualGetReq
 }
 
 func (api *FuturePositionSideDualGetApi) Recvwindow(Recvwindow int64) *FuturePositionSideDualGetApi {
@@ -46,8 +46,8 @@ type FutureMultiAssetsMarginGetReq struct {
 	Timestamp  *int64 `json:"timestamp"`
 }
 type FutureMultiAssetsMarginGetApi struct {
-	FutureRestClient
-	req *FutureMultiAssetsMarginGetReq
+	client *FutureRestClient
+	req    *FutureMultiAssetsMarginGetReq
 }
 
 func (api *FutureMultiAssetsMarginGetApi) Recvwindow(Recvwindow int64) *FutureMultiAssetsMarginGetApi {
@@ -67,8 +67,8 @@ type FuturePositionSideDualPostReq struct {
 }
 
 type FuturePositionSideDualPostApi struct {
-	FutureRestClient
-	req *FuturePositionSideDualPostReq
+	client *FutureRestClient
+	req    *FuturePositionSideDualPostReq
 }
 
 func (api *FuturePositionSideDualPostApi) DualSidePosition(DualSidePosition string) *FuturePositionSideDualPostApi {
@@ -92,8 +92,8 @@ type FutureMultiAssetsMarginPostReq struct {
 }
 
 type FutureMultiAssetsMarginPostApi struct {
-	FutureRestClient
-	req *FutureMultiAssetsMarginPostReq
+	client *FutureRestClient
+	req    *FutureMultiAssetsMarginPostReq
 }
 
 func (api *FutureMultiAssetsMarginPostApi) MultiAssetsMargin(MultiAssetsMargin string) *FutureMultiAssetsMarginPostApi {
@@ -118,8 +118,8 @@ type FutureLeverageReq struct {
 }
 
 type FutureLeverageApi struct {
-	FutureRestClient
-	req *FutureLeverageReq
+	client *FutureRestClient
+	req    *FutureLeverageReq
 }
 
 func (api *FutureLeverageApi) Symbol(Symbol string) *FutureLeverageApi {
@@ -148,8 +148,8 @@ type FutureMarginTypeReq struct {
 }
 
 type FutureMarginTypeApi struct {
-	FutureRestClient
-	req *FutureMarginTypeReq
+	client *FutureRestClient
+	req    *FutureMarginTypeReq
 }
 
 func (api *FutureMarginTypeApi) Symbol(Symbol string) *FutureMarginTypeApi {
@@ -177,8 +177,8 @@ type FutureLeverageBracketReq struct {
 }
 
 type FutureLeverageBracketApi struct {
-	FutureRestClient
-	req *FutureLeverageBracketReq
+	client *FutureRestClient
+	req    *FutureLeverageBracketReq
 }
 
 func (api *FutureLeverageBracketApi) Symbol(Symbol string) *FutureLeverageBracketApi {
@@ -197,22 +197,22 @@ func (api *FutureLeverageBracketApi) Timestamp(Timestamp int64) *FutureLeverageB
 type FuturePingReq struct {
 }
 type FuturePingApi struct {
-	FutureRestClient
-	req *FuturePingReq
+	client *FutureRestClient
+	req    *FuturePingReq
 }
 
 type FutureServerTimeReq struct {
 }
 type FutureServerTimeApi struct {
-	FutureRestClient
-	req *FutureServerTimeReq
+	client *FutureRestClient
+	req    *FutureServerTimeReq
 }
 
 type FutureExchangeInfoReq struct {
 }
 type FutureExchangeInfoApi struct {
-	FutureRestClient
-	req *FutureExchangeInfoReq
+	client *FutureRestClient
+	req    *FutureExchangeInfoReq
 }
 
 type FutureOpenOrdersReq struct {
@@ -222,8 +222,8 @@ type FutureOpenOrdersReq struct {
 }
 
 type FutureOpenOrdersApi struct {
-	FutureRestClient
-	req *FutureOpenOrdersReq
+	client *FutureRestClient
+	req    *FutureOpenOrdersReq
 }
 
 func (api *FutureOpenOrdersApi) Symbol(Symbol string) *FutureOpenOrdersApi {
@@ -257,8 +257,8 @@ type FutureAllOrdersReq struct {
 }
 
 type FutureAllOrdersApi struct {
-	FutureRestClient
-	req *FutureAllOrdersReq
+	client *FutureRestClient
+	req    *FutureAllOrdersReq
 }
 
 func (api *FutureAllOrdersApi) Symbol(Symbol string) *FutureAllOrdersApi {
@@ -331,8 +331,8 @@ type FutureOrderPostReq struct {
 }
 
 type FutureOrderPostApi struct {
-	FutureRestClient
-	req *FutureOrderPostReq
+	client *FutureRestClient
+	req    *FutureOrderPostReq
 }
 
 func (api *FutureOrderPostApi) Symbol(Symbol string) *FutureOrderPostApi {
@@ -423,8 +423,8 @@ type FutureOrderGetReq struct {
 }
 
 type FutureOrderGetApi struct {
-	FutureRestClient
-	req *FutureOrderGetReq
+	client *FutureRestClient
+	req    *FutureOrderGetReq
 }
 
 func (api *FutureOrderGetApi) Symbol(Symbol string) *FutureOrderGetApi {
@@ -454,8 +454,8 @@ type FutureCommissionRateReq struct {
 	Timestamp  *int64  `json:"timestamp"`  //YES
 }
 type FutureCommissionRateApi struct {
-	FutureRestClient
-	req *FutureCommissionRateReq
+	client *FutureRestClient
+	req    *FutureCommissionRateReq
 }
 
 func (api *FutureCommissionRateApi) Symbol(Symbol string) *FutureCommissionRateApi {
@@ -491,8 +491,8 @@ type FutureUserTradesReq struct {
 }
 
 type FutureUserTradesApi struct {
-	FutureRestClient
-	req *FutureUserTradesReq
+	client *FutureRestClient
+	req    *FutureUserTradesReq
 }
 
 func (api *FutureUserTradesApi) Symbol(Symbol string) *FutureUserTradesApi {
@@ -537,8 +537,8 @@ type FutureKlinesReq struct {
 }
 
 type FutureKlinesApi struct {
-	FutureRestClient
-	req *FutureKlinesReq
+	client *FutureRestClient
+	req    *FutureKlinesReq
 }
 
 func (api *FutureKlinesApi) Symbol(Symbol string) *FutureKlinesApi {
@@ -577,8 +577,8 @@ type FutureOrderDeleteReq struct {
 }
 
 type FutureOrderDeleteApi struct {
-	FutureRestClient
-	req *FutureOrderDeleteReq
+	client *FutureRestClient
+	req    *FutureOrderDeleteReq
 }
 
 func (api *FutureOrderDeleteApi) Symbol(Symbol string) *FutureOrderDeleteApi {
@@ -621,8 +621,8 @@ type FutureBatchOrdersDeleteReq struct {
 }
 
 type FutureBatchOrdersDeleteApi struct {
-	FutureRestClient
-	req *FutureBatchOrdersDeleteReq
+	client *FutureRestClient
+	req    *FutureBatchOrdersDeleteReq
 }
 
 func (api *FutureBatchOrdersDeleteApi) Symbol(Symbol string) *FutureBatchOrdersDeleteApi {
@@ -655,8 +655,8 @@ type FutureDepthReq struct {
 }
 
 type FutureDepthApi struct {
-	FutureRestClient
-	req *FutureDepthReq
+	client *FutureRestClient
+	req    *FutureDepthReq
 }
 
 //YES	交易对
@@ -679,8 +679,8 @@ type FutureTradesReq struct {
 }
 
 type FutureTradesApi struct {
-	FutureRestClient
-	req *FutureTradesReq
+	client *FutureRestClient
+	req    *FutureTradesReq
 }
 
 //YES	交易对
@@ -705,8 +705,8 @@ type FutureHistoricalTradesReq struct {
 }
 
 type FutureHistoricalTradesApi struct {
-	FutureRestClient
-	req *FutureHistoricalTradesReq
+	client *FutureRestClient
+	req    *FutureHistoricalTradesReq
 }
 
 //YES	交易对
@@ -741,8 +741,8 @@ type FutureAggTradesReq struct {
 }
 
 type FutureAggTradesApi struct {
-	FutureRestClient
-	req *FutureAggTradesReq
+	client *FutureRestClient
+	req    *FutureAggTradesReq
 }
 
 //YES	交易对
@@ -781,8 +781,8 @@ type FuturePremiumIndexReq struct {
 }
 
 type FuturePremiumIndexApi struct {
-	FutureRestClient
-	req *FuturePremiumIndexReq
+	client *FutureRestClient
+	req    *FuturePremiumIndexReq
 }
 
 //NO	交易对
@@ -803,8 +803,8 @@ type FutureFundingRateReq struct {
 }
 
 type FutureFundingRateApi struct {
-	FutureRestClient
-	req *FutureFundingRateReq
+	client *FutureRestClient
+	req    *FutureFundingRateReq
 }
 
 //NO	交易对
@@ -835,8 +835,8 @@ type FutureFundingInfoReq struct {
 }
 
 type FutureFundingInfoApi struct {
-	FutureRestClient
-	req *FutureFundingInfoReq
+	client *FutureRestClient
+	req    *FutureFundingInfoReq
 }
 
 // symbol	STRING	NO	交易对
@@ -845,8 +845,8 @@ type FutureTicker24hrReq struct {
 }
 
 type FutureTicker24hrApi struct {
-	FutureRestClient
-	req *FutureTicker24hrReq
+	client *FutureRestClient
+	req    *FutureTicker24hrReq
 }
 
 //NO	交易对
@@ -861,8 +861,8 @@ type FutureTickerPriceReq struct {
 }
 
 type FutureTickerPriceApi struct {
-	FutureRestClient
-	req *FutureTickerPriceReq
+	client *FutureRestClient
+	req    *FutureTickerPriceReq
 }
 
 //NO	交易对
@@ -878,8 +878,8 @@ type FutureTickerBookTickerReq struct {
 }
 
 type FutureTickerBookTickerApi struct {
-	FutureRestClient
-	req *FutureTickerBookTickerReq
+	client *FutureRestClient
+	req    *FutureTickerBookTickerReq
 }
 
 //NO	交易对
@@ -905,8 +905,8 @@ type FutureDataBasisReq struct {
 }
 
 type FutureDataBasisApi struct {
-	FutureRestClient
-	req *FutureDataBasisReq
+	client *FutureRestClient
+	req    *FutureDataBasisReq
 }
 
 //YES	BTCUSDT
