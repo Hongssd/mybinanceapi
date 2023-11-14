@@ -98,11 +98,10 @@ type MyBinance struct {
 }
 
 const (
-	BINANCE_API_SPOT_HTTP      = "api.binance.com"
-	BINANCE_API_FUTURE_HTTP    = "fapi.binance.com"
-	BINANCE_API_SWAP_HTTP      = "dapi.binance.com"
-	BINANCE_API_SPOT_WEBSOCKET = "wss://stream.binance.com:9443/ws"
-	IS_GZIP                    = true
+	BINANCE_API_SPOT_HTTP   = "api.binance.com"
+	BINANCE_API_FUTURE_HTTP = "fapi.binance.com"
+	BINANCE_API_SWAP_HTTP   = "dapi.binance.com"
+	IS_GZIP                 = true
 )
 
 type ApiType int
@@ -112,6 +111,18 @@ const (
 	FUTURE
 	SWAP
 )
+
+func (apiType *ApiType) String() string {
+	switch *apiType {
+	case SPOT:
+		return "SPOT"
+	case FUTURE:
+		return "FUTURE"
+	case SWAP:
+		return "SWAP"
+	}
+	return ""
+}
 
 type Client struct {
 	ApiKey    string
