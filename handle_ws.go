@@ -1,7 +1,11 @@
 package mybinanceapi
 
+import (
+	"strings"
+	"time"
+)
+
 type WsKline struct {
-	Version              float64 `json:"version"`
 	Timestamp            int64   `json:"timestamp"`
 	AccountType          string  `json:"account_type"`                 //K线类型 现货:spot 币合约:swap u合约:future
 	Symbol               string  `json:"symbol"`                       //交易对
@@ -22,10 +26,6 @@ type WsKline struct {
 func HandleWsCombinedKline(apiType ApiType, data []byte) (*WsKline, error) {
 	_, ddata, _ := handlerWsCombined(data)
 	return HandleWsKline(apiType, ddata)
-}
-
-func HandleWsCombinedKlineGzip(apiType ApiType, data []byte) (*WsKline, error) {
-	return HandleWsKline(apiType, data)
 }
 
 func handlerWsCombined(data []byte) (string, []byte, error) {
@@ -62,7 +62,6 @@ func HandleWsKline(apiType ApiType, data []byte) (*WsKline, error) {
 
 func HandleWsKlineMap(apiType ApiType, m map[string]interface{}) *WsKline {
 	myKline := WsKline{
-		Version:              float64(1.0),
 		AccountType:          apiType.String(),
 		Symbol:               m["s"].(string),
 		Interval:             m["i"].(string),
@@ -79,4 +78,140 @@ func HandleWsKlineMap(apiType ApiType, m map[string]interface{}) *WsKline {
 		BuyTransactionAmount: interfaceStringToFloat64(m["Q"]),
 	}
 	return &myKline
+}
+
+type WsDepth struct {
+	Timestamp    int64        `json:"timestamp"`
+	Level        string       `json:"level"`
+	USpeed       string       `json:"u_speed"`
+	AccountType  string       `json:"account_type"`
+	Symbol       string       `json:"symbol"`
+	UpperU       int64        `json:"upper_u"`
+	LowerU       int64        `json:"lower_u"`
+	PreU         int64        `json:"pre_u"`
+	LastUpdateID int64        `json:"last_update_id"`
+	Bids         []PriceLevel `json:"bids"`
+	Asks         []PriceLevel `json:"asks"`
+}
+type PriceLevel struct {
+	Price    float64 `json:"price"`
+	Quantity float64 `json:"quantity"`
+}
+
+func HandleWsCombinedDepth(apiType ApiType, data []byte) (*WsDepth, error) {
+
+	streams, ddata, _ := handlerWsCombined(data)
+	split := strings.Split(streams, "@")
+	symbol := strings.ToUpper(split[0])
+
+	var isLevelDepth bool
+	if split[1] == "depth" {
+		isLevelDepth = false
+	} else {
+		isLevelDepth = true
+	}
+	if isLevelDepth {
+		Level := ""
+		uSpeed := ""
+		if len(split) >= 2 {
+			Level = split[1][5:len(split[1])]
+		}
+		if len(split) == 3 {
+			uSpeed = split[2]
+		}
+		d, err := HandleDepth(apiType, symbol, ddata, isLevelDepth)
+		if err != nil {
+			return d, err
+		}
+		d.USpeed = uSpeed
+		d.Level = Level
+		return d, err
+	} else {
+		uSpeed := ""
+		if len(split) == 3 {
+			uSpeed = split[2]
+		}
+		d, err := HandleDepth(apiType, symbol, ddata, isLevelDepth)
+		if err != nil {
+			return d, err
+		}
+		d.USpeed = uSpeed
+		return d, err
+	}
+
+}
+
+func HandleDepth(apiType ApiType, symbol string, data []byte, isLeveDepth bool) (*WsDepth, error) {
+
+	all := make(map[string]interface{})
+	err := json.Unmarshal(data, &all)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	timestamp := time.Now().UnixMilli()
+	bidsKey := "b"
+	asksKey := "a"
+	lastUpdateIdKey := "u"
+
+	if isLeveDepth && apiType == SPOT {
+		bidsKey = "bids"
+		asksKey = "asks"
+		lastUpdateIdKey = "lastUpdateId"
+	} else {
+		timestamp = interfaceStringToInt64(all["E"])
+	}
+
+	bids := []PriceLevel{}
+	asks := []PriceLevel{}
+
+	bidsArray := all[bidsKey].([]interface{})
+	asksArray := all[asksKey].([]interface{})
+
+	for _, b := range bidsArray {
+		bid := PriceLevel{
+			Price:    interfaceStringToFloat64((b.([]interface{}))[0]),
+			Quantity: interfaceStringToFloat64((b.([]interface{}))[1]),
+		}
+		bids = append(bids, bid)
+	}
+
+	for _, a := range asksArray {
+		ask := PriceLevel{
+			Price:    interfaceStringToFloat64((a.([]interface{}))[0]),
+			Quantity: interfaceStringToFloat64((a.([]interface{}))[1]),
+		}
+		asks = append(asks, ask)
+	}
+	var upperU, lowerU, preU int64
+
+	if isLeveDepth && apiType == SPOT {
+		upperU, lowerU, preU = 0, 0, 0
+	} else {
+		switch apiType {
+		case SPOT:
+			upperU = interfaceStringToInt64(all["U"])
+			lowerU = interfaceStringToInt64(all["u"])
+		case FUTURE, SWAP:
+			upperU = interfaceStringToInt64(all["U"])
+			lowerU = interfaceStringToInt64(all["u"])
+			preU = interfaceStringToInt64(all["pu"])
+		default:
+			upperU, lowerU, preU = 0, 0, 0
+		}
+	}
+
+	myDepth := WsDepth{
+		UpperU:       upperU,
+		LowerU:       lowerU,
+		PreU:         preU,
+		LastUpdateID: int64(all[lastUpdateIdKey].(float64)),
+		AccountType:  apiType.String(),
+		Symbol:       symbol,
+		Timestamp:    timestamp,
+		Bids:         bids,
+		Asks:         asks,
+	}
+	return &myDepth, nil
 }

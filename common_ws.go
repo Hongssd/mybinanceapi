@@ -37,13 +37,15 @@ var (
 
 // 数据流订阅基础客户端
 type WsStreamClient struct {
-	apiType              ApiType
-	isGzip               bool
-	conn                 *websocket.Conn
-	UnSubscribeMap       map[int64]*Subscription[SubscribeResult] //取消订阅的返回结果
-	ListSubscriptionsMap map[int64]*Subscription[SubscribeParams] //查询当前所有订阅的返回结果
-	CommonSubMap         map[int64]*Subscription[SubscribeResult] //订阅的返回结果
-	KlineSubMap          map[string]*Subscription[WsKline]
+	apiType      ApiType
+	isGzip       bool
+	conn         *websocket.Conn
+	commonSubMap map[int64]*Subscription[SubscribeResult] //订阅的返回结果
+	klineSubMap  map[string]*Subscription[WsKline]
+	depthSubMap  map[string]*Subscription[WsDepth]
+	resultChan   chan []byte
+	errChan      chan error
+	isClose      bool
 }
 
 // 订阅请求结构体
@@ -65,27 +67,42 @@ type SubscribeParams []string
 
 // 数据流订阅返回标准结构体
 type Subscription[T any] struct {
-	conn       *WsStreamClient //订阅的连接
+	ws         *WsStreamClient //订阅的连接
 	ID         int64           //此次订阅ID
 	Method     string          //订阅方法
 	Params     SubscribeParams //订阅参数
 	resultChan chan T          //接收订阅结果的通道
 	errChan    chan error      //接收订阅错误的通道
+	closeChan  chan struct{}   //接收订阅关闭的通道
 }
 
 // 获取订阅结果
-func (sub *Subscription[T]) ResultChan() <-chan T {
+func (sub *Subscription[T]) ResultChan() chan T {
 	return sub.resultChan
 }
 
 // 获取错误订阅
-func (sub *Subscription[T]) ErrChan() <-chan error {
+func (sub *Subscription[T]) ErrChan() chan error {
 	return sub.errChan
 }
 
-func Subscribe[T any](ws *WsStreamClient, method string, params []string) (*Subscription[T], error) {
-	node, err := snowflake.NewNode(1)
-	id := node.Generate().Int64()
+// 获取关闭订阅信号
+func (sub *Subscription[T]) CloseChan() chan struct{} {
+	return sub.closeChan
+}
+
+func sendMsg[T any](ws *WsStreamClient, id int64, method string, params []string) (*Subscription[T], error) {
+	if ws == nil || ws.conn == nil || ws.isClose {
+		return nil, fmt.Errorf("websocket is close")
+	}
+	if id == 0 {
+		node, err := snowflake.NewNode(1)
+		if err != nil {
+			return nil, err
+		}
+		id = node.Generate().Int64()
+	}
+	log.Debugf("send msg: {%d:%s:%v}", id, method, params)
 	subscribeReq := SubscribeReq{
 		Method: method,
 		Params: params,
@@ -103,11 +120,59 @@ func Subscribe[T any](ws *WsStreamClient, method string, params []string) (*Subs
 		ID:         subscribeReq.Id,
 		Method:     method,
 		Params:     params,
-		resultChan: make(chan T, 1),
-		errChan:    make(chan error, 1),
+		resultChan: make(chan T),
+		errChan:    make(chan error),
+		closeChan:  make(chan struct{}),
+		ws:         ws,
 	}
 
 	return result, nil
+}
+
+func (ws *WsStreamClient) Close() error {
+	ws.isClose = true
+
+	err := ws.conn.Close()
+	if err != nil {
+		return err
+	}
+	//手动关闭成功，给所有订阅发送关闭信号
+	ws.sendWsCloseToAllSub()
+
+	//初始化连接状态
+	ws.conn = nil
+	close(ws.resultChan)
+	close(ws.errChan)
+	ws.resultChan = nil
+	ws.errChan = nil
+	ws.commonSubMap = make(map[int64]*Subscription[SubscribeResult])
+	ws.klineSubMap = make(map[string]*Subscription[WsKline])
+	ws.depthSubMap = make(map[string]*Subscription[WsDepth])
+	return nil
+}
+
+func (ws *WsStreamClient) OpenConn() error {
+	if ws.resultChan == nil {
+		ws.resultChan = make(chan []byte)
+	}
+	if ws.errChan == nil {
+		ws.errChan = make(chan error)
+	}
+	apiUrl := handlerWsStreamRequestApi(ws.apiType, ws.isGzip)
+	if ws.conn == nil {
+
+		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
+		ws.conn = conn
+		ws.isClose = false
+		log.Debug("OpenConn success to ", apiUrl)
+		ws.handleResult(ws.resultChan, ws.errChan)
+		return err
+	} else {
+		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
+		ws.conn = conn
+		log.Debug("Auto ReOpenConn success to ", apiUrl)
+		return err
+	}
 }
 
 type SpotWsStreamClient struct {
@@ -123,74 +188,120 @@ type SwapWsStreamClient struct {
 func (*MyBinance) NewSpotWsStreamClient() *SpotWsStreamClient {
 	return &SpotWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:              SPOT,
-			isGzip:               false,
-			UnSubscribeMap:       make(map[int64]*Subscription[SubscribeResult]),
-			ListSubscriptionsMap: make(map[int64]*Subscription[SubscribeParams]),
-			CommonSubMap:         make(map[int64]*Subscription[SubscribeResult]),
-			KlineSubMap:          make(map[string]*Subscription[WsKline]),
+			apiType:      SPOT,
+			isGzip:       false,
+			commonSubMap: make(map[int64]*Subscription[SubscribeResult]),
+			klineSubMap:  make(map[string]*Subscription[WsKline]),
+			depthSubMap:  make(map[string]*Subscription[WsDepth]),
 		},
 	}
 }
 func (*MyBinance) NewFutureWsStreamClient() *FutureWsStreamClient {
 	return &FutureWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:              FUTURE,
-			isGzip:               IS_GZIP,
-			UnSubscribeMap:       make(map[int64]*Subscription[SubscribeResult]),
-			ListSubscriptionsMap: make(map[int64]*Subscription[SubscribeParams]),
-			CommonSubMap:         make(map[int64]*Subscription[SubscribeResult]),
-			KlineSubMap:          make(map[string]*Subscription[WsKline]),
+			apiType:      FUTURE,
+			isGzip:       false,
+			commonSubMap: make(map[int64]*Subscription[SubscribeResult]),
+			klineSubMap:  make(map[string]*Subscription[WsKline]),
+			depthSubMap:  make(map[string]*Subscription[WsDepth]),
 		},
 	}
 }
 func (*MyBinance) NewSwapWsStreamClient() *SwapWsStreamClient {
 	return &SwapWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:              SWAP,
-			isGzip:               IS_GZIP,
-			UnSubscribeMap:       make(map[int64]*Subscription[SubscribeResult]),
-			ListSubscriptionsMap: make(map[int64]*Subscription[SubscribeParams]),
-			CommonSubMap:         make(map[int64]*Subscription[SubscribeResult]),
-			KlineSubMap:          make(map[string]*Subscription[WsKline]),
+			apiType:      SWAP,
+			isGzip:       false,
+			commonSubMap: make(map[int64]*Subscription[SubscribeResult]),
+			klineSubMap:  make(map[string]*Subscription[WsKline]),
+			depthSubMap:  make(map[string]*Subscription[WsDepth]),
 		},
 	}
 }
 
-func (ws *WsStreamClient) SendSubscribeResultToChan(result SubscribeResult) {
+func (ws *WsStreamClient) sendSubscribeResultToChan(result SubscribeResult) {
 	if result.Error != "" {
-		if sub, ok := ws.UnSubscribeMap[result.Id]; ok {
-			sub.errChan <- fmt.Errorf("errHandler: %s===%v", result.Error, sub.Params)
-		}
-		if sub, ok := ws.ListSubscriptionsMap[result.Id]; ok {
-			sub.errChan <- fmt.Errorf("errHandler: %s===%v", result.Error, sub.Params)
-		}
-		if sub, ok := ws.CommonSubMap[result.Id]; ok {
+		if sub, ok := ws.commonSubMap[result.Id]; ok {
 			sub.errChan <- fmt.Errorf("errHandler: %s===%v", result.Error, sub.Params)
 		}
 	} else {
-		if sub, ok := ws.UnSubscribeMap[result.Id]; ok {
-			sub.resultChan <- result
-		}
-		if sub, ok := ws.ListSubscriptionsMap[result.Id]; ok {
-			sub.resultChan <- result.Result
-		}
-		if sub, ok := ws.CommonSubMap[result.Id]; ok {
+		if sub, ok := ws.commonSubMap[result.Id]; ok {
 			sub.resultChan <- result
 		}
 	}
 }
 
-func (ws *WsStreamClient) HandleResult(resultChan chan []byte, errChan chan error) {
+func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(params []string) {
+	isCloseMap := map[int64]bool{}
+	for _, param := range params {
+		if sub, ok := ws.klineSubMap[param]; ok {
+			delete(ws.klineSubMap, param)
+			if _, ok2 := isCloseMap[sub.ID]; ok2 {
+				continue
+			}
+			sub.closeChan <- struct{}{}
+			isCloseMap[sub.ID] = true
+		} else if sub, ok := ws.depthSubMap[param]; ok {
+			delete(ws.depthSubMap, param)
+			if _, ok2 := isCloseMap[sub.ID]; ok2 {
+				continue
+			}
+			sub.closeChan <- struct{}{}
+			isCloseMap[sub.ID] = true
+		}
+	}
+}
+
+func (ws *WsStreamClient) sendWsCloseToAllSub() {
+	params := []string{}
+	for _, sub := range ws.commonSubMap {
+		params = append(params, sub.Params...)
+	}
+	ws.sendUnSubscribeSuccessToCloseChan(params)
+}
+
+func (ws *WsStreamClient) reSubscribeForReconnect() error {
+	for _, sub := range ws.commonSubMap {
+		log.Infof("ReSubscribe:{%d,%s,%v}", sub.ID, sub.Method, sub.Params)
+		resultSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
+		for err != nil {
+			log.Error(err)
+			time.Sleep(500 * time.Millisecond)
+			resultSub, err = sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
+		}
+		sub.ID = resultSub.ID
+	}
+	return nil
+}
+
+func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan error) {
 	go func() {
 		for {
-			log.Info("handle")
 			select {
-			case err := <-errChan:
+			case err, ok := <-errChan:
+				if !ok {
+					return
+				}
 				log.Error(err)
-				//TODO:错误处理 重连等
-				return
-			case data := <-resultChan:
+				//错误处理 重连等
+				//ws标记为非关闭 且返回错误包含EOF、close、reset时自动重连
+				if !ws.isClose && (strings.Contains(err.Error(), "EOF") ||
+					strings.Contains(err.Error(), "close") ||
+					strings.Contains(err.Error(), "reset")) {
+					err := ws.OpenConn()
+					for err != nil {
+						time.Sleep(500 * time.Millisecond)
+						err = ws.OpenConn()
+					}
+					ws.reSubscribeForReconnect()
+				} else {
+					continue
+				}
+			case data, ok := <-resultChan:
+				if !ok {
+					return
+				}
+				// log.Debug("receive result: ", string(data))
 				//处理订阅或查询订阅列表请求返回结果
 				if strings.Contains(string(data), "error") || strings.Contains(string(data), "result") {
 					result := SubscribeResult{}
@@ -199,109 +310,339 @@ func (ws *WsStreamClient) HandleResult(resultChan chan []byte, errChan chan erro
 						log.Error(err)
 						continue
 					}
-					ws.SendSubscribeResultToChan(result)
+					ws.sendSubscribeResultToChan(result)
+					continue
 				}
 
 				//处理正常数据的返回结果
-				if strings.Contains(string(data), "kline") {
-
+				if strings.Contains(string(data), "@kline") {
 					var k *WsKline
 					var err error
 					//K线处理
-					if !ws.isGzip || ws.apiType == SPOT {
-						k, err = HandleWsCombinedKline(ws.apiType, data)
-					} else {
-						k, err = HandleWsCombinedKlineGzip(ws.apiType, data)
-					}
-					param := fmt.Sprintf("%s@kline_%s", k.Symbol, k.Interval)
-					if sub, ok := ws.KlineSubMap[param]; ok {
+					// if !ws.isGzip {
+					k, err = HandleWsCombinedKline(ws.apiType, data)
+					// } else {
+					// 	k, err = HandleWsCombinedKlineGzip(ws.apiType, data)
+					// }
+					param := getKlineSubscribeParam(k.Symbol, k.Interval)
+					if sub, ok := ws.klineSubMap[param]; ok {
 						if err != nil {
 							sub.errChan <- err
 							continue
 						}
 						sub.resultChan <- *k
 					}
+					continue
+				}
 
+				if strings.Contains(string(data), "@depth") {
+					var d *WsDepth
+					var err error
+					//深度处理
+					// if !ws.isGzip {
+					d, err = HandleWsCombinedDepth(ws.apiType, data)
+					// } else {
+					// 	d, err = HandleWsCombinedDepthGzip(ws.apiType, data, false, true)
+					// }
+					param := getLevelDepthSubscribeParam(d.Symbol, d.Level, d.USpeed)
+					// log.Warn(param)
+					if sub, ok := ws.depthSubMap[param]; ok {
+						if err != nil {
+							sub.errChan <- err
+							continue
+						}
+						sub.resultChan <- *d
+					}
+					continue
 				}
 			}
 		}
 	}()
 }
 
-func (ws *WsStreamClient) Close() error {
-	return ws.conn.Close()
-}
-
-func (ws *WsStreamClient) OpenConn() error {
-	conn, resultChan, errChan, err := wsStreamServe(handlerWsStreamRequestApi(ws.apiType, ws.isGzip), ws.isGzip)
-	ws.conn = conn
-	ws.HandleResult(resultChan, errChan)
-	errChan <- fmt.Errorf("aaa%d", 1)
-	return err
-}
-
-// 订阅K线
+// 订阅K线 如: "BTCUSDT","1m"
 func (ws *WsStreamClient) SubscribeKline(symbol string, interval string) (*Subscription[WsKline], error) {
-	param := fmt.Sprintf("%s@kline_%s", symbol, interval)
+	param := getKlineSubscribeParam(symbol, interval)
 	params := []string{param}
-	doSub, err := Subscribe[SubscribeResult](ws, SUBSCRIBE, params)
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
 	if err != nil {
 		return nil, err
 	}
-	ws.CommonSubMap[doSub.ID] = doSub
-	log.Info(doSub)
+	ws.commonSubMap[doSub.ID] = doSub
+
 	select {
-	case <-doSub.ErrChan():
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeKline Error: ", err)
 		return nil, err
-	case <-doSub.ResultChan():
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeKline Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsKline]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
 			Params:     params,
-			resultChan: make(chan WsKline, 1),
-			errChan:    make(chan error, 1),
+			resultChan: make(chan WsKline),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
 		}
-		ws.KlineSubMap[param] = sub
+		ws.klineSubMap[param] = sub
+		return sub, nil
+	}
+}
+
+// 批量订阅K线 如: []string{"BTCUSDT","ETHUSDT"},[]string{"1m","5m"}
+func (ws *WsStreamClient) SubscribeKlineMultiple(symbols []string, intervals []string) (*Subscription[WsKline], error) {
+	params := []string{}
+	for _, symbol := range symbols {
+		for _, interval := range intervals {
+			param := getKlineSubscribeParam(symbol, interval)
+			params = append(params, param)
+		}
+	}
+
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeKline Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeKline Success Params:%v Result:%v", doSub.Params, subResult)
+		resultChan := make(chan WsKline)
+		errChan := make(chan error)
+		closeChan := make(chan struct{})
+		sub := &Subscription[WsKline]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: resultChan,
+			errChan:    errChan,
+			closeChan:  closeChan,
+			ws:         ws,
+		}
+		for _, param := range params {
+			ws.klineSubMap[param] = sub
+		}
+		return sub, nil
+	}
+}
+
+// 订阅有限档深度 如: "BTCUSDT","20","100ms"
+func (ws *WsStreamClient) SubscribeLevelDepth(symbol string, level string, USpeed string) (*Subscription[WsDepth], error) {
+	param := getLevelDepthSubscribeParam(symbol, level, USpeed)
+	params := []string{param}
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeLevelDepth Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeLevelDepth Success: params:%v result:%v", doSub.Params, subResult)
+		sub := &Subscription[WsDepth]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: make(chan WsDepth),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
+		}
+
+		ws.depthSubMap[param] = sub
+		return sub, nil
+	}
+}
+
+// 批量订阅有限档深度 如: "BTCUSDT","20","100ms"
+func (ws *WsStreamClient) SubscribeLevelDepthMultiple(symbols []string, level string, USpeed string) (*Subscription[WsDepth], error) {
+	params := []string{}
+	for _, symbol := range symbols {
+		param := getLevelDepthSubscribeParam(symbol, level, USpeed)
+		params = append(params, param)
+	}
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeLevelDepth Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeLevelDepth Success: params:%v result:%v", doSub.Params, subResult)
+		sub := &Subscription[WsDepth]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: make(chan WsDepth),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
+		}
+		for _, param := range params {
+			ws.depthSubMap[param] = sub
+		}
+		return sub, nil
+	}
+}
+
+// 订阅增量深度 如: "BTCUSDT","100ms"
+func (ws *WsStreamClient) SubscribeIncrementDepth(symbol string, USpeed string) (*Subscription[WsDepth], error) {
+	param := getIncrementDepthSubscribeParam(symbol, USpeed)
+	params := []string{param}
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeIncrementDepth Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeIncrementDepth Success: params:%v result:%v", doSub.Params, subResult)
+		sub := &Subscription[WsDepth]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: make(chan WsDepth),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
+		}
+
+		ws.depthSubMap[param] = sub
+		return sub, nil
+	}
+}
+
+// 批量订阅增量深度 如: "BTCUSDT","100ms"
+func (ws *WsStreamClient) SubscribeIncrementDepthMultiple(symbols []string, USpeed string) (*Subscription[WsDepth], error) {
+	params := []string{}
+	for _, symbol := range symbols {
+		param := getIncrementDepthSubscribeParam(symbol, USpeed)
+		params = append(params, param)
+	}
+
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeIncrementDepth Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeIncrementDepth Success: params:%v result:%v", doSub.Params, subResult)
+		sub := &Subscription[WsDepth]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: make(chan WsDepth),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
+		}
+		for _, param := range params {
+			ws.depthSubMap[param] = sub
+		}
 		return sub, nil
 	}
 }
 
 // 获取当前所有订阅
 func (ws *WsStreamClient) CurrentSubscribeList() ([]string, error) {
-	listSub, err := Subscribe[SubscribeParams](ws, LIST_SUBSCRIPTIONS, []string{})
+	listSub, err := sendMsg[SubscribeResult](ws, 0, LIST_SUBSCRIPTIONS, []string{})
 	if err != nil {
 		return nil, err
 	}
-	ws.ListSubscriptionsMap[listSub.ID] = listSub
+	ws.commonSubMap[listSub.ID] = listSub
 	select {
-	case <-listSub.ErrChan():
+	case err := <-listSub.ErrChan():
+		log.Error("CurrentSubscribeList Error: ", err)
 		return nil, err
-	case list := <-listSub.ResultChan():
-		return list, nil
+	case subResult := <-listSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debug("CurrentSubscribeList Success: ", subResult)
+		delete(ws.commonSubMap, listSub.ID)
+		return subResult.Result, nil
 	}
 }
 
 // 取消订阅
 func (sub *Subscription[T]) Unsubscribe() error {
-	unSub, err := Subscribe[SubscribeResult](sub.conn, UNSUBSCRIBE, sub.Params)
+	unSub, err := sendMsg[SubscribeResult](sub.ws, 0, UNSUBSCRIBE, sub.Params)
 	if err != nil {
 		return err
 	}
+	sub.ws.commonSubMap[unSub.ID] = unSub
+
 	select {
-	case <-unSub.ErrChan():
-		return err
-	case <-unSub.ResultChan():
+	case err := <-unSub.ErrChan():
+		return fmt.Errorf("Unsubscribe Error: %v", err)
+	case subResult := <-unSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("Unsubscribe Success Params:%v Result:%v", unSub.Params, subResult)
+
+		//取消订阅成功，给所有订阅消息的通道发送关闭信号
+		sub.ws.sendUnSubscribeSuccessToCloseChan(unSub.Params)
+		//删除当前订阅列表中已存在的记录
+		delete(sub.ws.commonSubMap, unSub.ID)
+		delete(sub.ws.commonSubMap, sub.ID)
 		return nil
 	}
+
 }
 
 // 标准订阅方法
-func wsStreamServe(api string, isGzip bool) (*websocket.Conn, chan []byte, chan error, error) {
-	resultChan := make(chan []byte, 1)
-	errChan := make(chan error, 1)
+func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan error) (*websocket.Conn, error) {
 	c, _, err := websocket.DefaultDialer.Dial(api, nil)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 	c.SetReadLimit(655350)
 	go func() {
@@ -315,6 +656,7 @@ func wsStreamServe(api string, isGzip bool) (*websocket.Conn, chan []byte, chan 
 					errChan <- err
 					return
 				}
+				log.Warn(string(message))
 				reader, err := gzip.NewReader(bytes.NewReader(message))
 				if err != nil {
 					errChan <- err
@@ -339,7 +681,7 @@ func wsStreamServe(api string, isGzip bool) (*websocket.Conn, chan []byte, chan 
 			}
 		}
 	}()
-	return c, nil, nil, err
+	return c, err
 }
 
 // 获取数据流请求URL
@@ -401,4 +743,22 @@ func keepAlive(c *websocket.Conn, timeout time.Duration) {
 			}
 		}
 	}()
+}
+func getKlineSubscribeParam(symbol string, interval string) string {
+	return fmt.Sprintf("%s@kline_%s", strings.ToLower(symbol), interval)
+}
+func getLevelDepthSubscribeParam(symbol string, level string, USpeed string) string {
+	if USpeed != "" {
+		return fmt.Sprintf("%s@depth%s@%s", strings.ToLower(symbol), level, USpeed)
+	} else {
+		return fmt.Sprintf("%s@depth%s", strings.ToLower(symbol), level)
+	}
+}
+func getIncrementDepthSubscribeParam(symbol string, USpeed string) string {
+	if USpeed != "" {
+		return fmt.Sprintf("%s@depth@%s", strings.ToLower(symbol), USpeed)
+	} else {
+		return fmt.Sprintf("%s@depth", strings.ToLower(symbol))
+	}
+
 }

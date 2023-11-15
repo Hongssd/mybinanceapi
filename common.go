@@ -91,6 +91,7 @@ func RequestWithHeader(url string, method string, headerMap map[string]string, i
 		}
 	}
 	data, err := io.ReadAll(body)
+	log.Debug(string(data))
 	return data, err
 }
 
