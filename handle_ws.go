@@ -215,3 +215,46 @@ func HandleDepth(apiType ApiType, symbol string, data []byte, isLeveDepth bool) 
 	}
 	return &myDepth, nil
 }
+
+type WsAggTrade struct {
+	Timestamp   int64   `json:"timestamp"`                //事件时间
+	Symbol      string  `json:"symbol"`                   //交易对
+	AccountType string  `json:"account_type"`             //账户类型 SPOT 现货 FUTURE U合约 SWAP 币本位合约
+	AId         int64   `gorm:"primaryKey " json:"a_id" ` // 归集交易ID
+	Price       float64 `json:"price"`                    //成交价
+	Quantity    float64 `json:"quantity"`                 //成交量
+	First       int64   `json:"first"`                    //被归集的首个交易ID
+	Last        int64   `json:"last"`                     //被归集的末次交易ID
+	TradeTime   int64   `json:"trade_time"`               //成交时间
+	IsMarket    bool    `json:"is_market"`                //买方是否做市
+}
+
+func HandleWsCombinedAggTrade(apiType ApiType, data []byte) (*WsAggTrade, error) {
+	_, ddata, _ := handlerWsCombined(data)
+	return HandleWsAggTrade(apiType, ddata)
+}
+func HandleWsAggTrade(apiType ApiType, data []byte) (*WsAggTrade, error) {
+	all := make(map[string]interface{})
+	err := json.Unmarshal(data, &all)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	myAggTrade := HandleWsAggTradeMap(apiType, all)
+	return myAggTrade, nil
+}
+func HandleWsAggTradeMap(apiType ApiType, m map[string]interface{}) *WsAggTrade {
+	myAggTrade := WsAggTrade{
+		Timestamp:   interfaceStringToInt64(m["E"].(float64)),
+		AccountType: apiType.String(),
+		Symbol:      m["s"].(string),
+		AId:         interfaceStringToInt64(m["a"].(float64)),
+		Price:       interfaceStringToFloat64(m["p"]),
+		Quantity:    interfaceStringToFloat64(m["q"]),
+		First:       interfaceStringToInt64(m["f"]),
+		Last:        interfaceStringToInt64(m["l"]),
+		TradeTime:   interfaceStringToInt64(m["T"]),
+		IsMarket:    m["m"].(bool),
+	}
+	return &myAggTrade
+}

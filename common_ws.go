@@ -37,15 +37,16 @@ var (
 
 // 数据流订阅基础客户端
 type WsStreamClient struct {
-	apiType      ApiType
-	isGzip       bool
-	conn         *websocket.Conn
-	commonSubMap map[int64]*Subscription[SubscribeResult] //订阅的返回结果
-	klineSubMap  map[string]*Subscription[WsKline]
-	depthSubMap  map[string]*Subscription[WsDepth]
-	resultChan   chan []byte
-	errChan      chan error
-	isClose      bool
+	apiType        ApiType
+	isGzip         bool
+	conn           *websocket.Conn
+	commonSubMap   map[int64]*Subscription[SubscribeResult] //订阅的返回结果
+	klineSubMap    map[string]*Subscription[WsKline]
+	depthSubMap    map[string]*Subscription[WsDepth]
+	aggTradeSubMap map[string]*Subscription[WsAggTrade]
+	resultChan     chan []byte
+	errChan        chan error
+	isClose        bool
 }
 
 // 订阅请求结构体
@@ -148,6 +149,7 @@ func (ws *WsStreamClient) Close() error {
 	ws.commonSubMap = make(map[int64]*Subscription[SubscribeResult])
 	ws.klineSubMap = make(map[string]*Subscription[WsKline])
 	ws.depthSubMap = make(map[string]*Subscription[WsDepth])
+	ws.aggTradeSubMap = make(map[string]*Subscription[WsAggTrade])
 	return nil
 }
 
@@ -188,33 +190,36 @@ type SwapWsStreamClient struct {
 func (*MyBinance) NewSpotWsStreamClient() *SpotWsStreamClient {
 	return &SpotWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:      SPOT,
-			isGzip:       false,
-			commonSubMap: make(map[int64]*Subscription[SubscribeResult]),
-			klineSubMap:  make(map[string]*Subscription[WsKline]),
-			depthSubMap:  make(map[string]*Subscription[WsDepth]),
+			apiType:        SPOT,
+			isGzip:         false,
+			commonSubMap:   make(map[int64]*Subscription[SubscribeResult]),
+			klineSubMap:    make(map[string]*Subscription[WsKline]),
+			depthSubMap:    make(map[string]*Subscription[WsDepth]),
+			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
 		},
 	}
 }
 func (*MyBinance) NewFutureWsStreamClient() *FutureWsStreamClient {
 	return &FutureWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:      FUTURE,
-			isGzip:       false,
-			commonSubMap: make(map[int64]*Subscription[SubscribeResult]),
-			klineSubMap:  make(map[string]*Subscription[WsKline]),
-			depthSubMap:  make(map[string]*Subscription[WsDepth]),
+			apiType:        FUTURE,
+			isGzip:         false,
+			commonSubMap:   make(map[int64]*Subscription[SubscribeResult]),
+			klineSubMap:    make(map[string]*Subscription[WsKline]),
+			depthSubMap:    make(map[string]*Subscription[WsDepth]),
+			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
 		},
 	}
 }
 func (*MyBinance) NewSwapWsStreamClient() *SwapWsStreamClient {
 	return &SwapWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:      SWAP,
-			isGzip:       false,
-			commonSubMap: make(map[int64]*Subscription[SubscribeResult]),
-			klineSubMap:  make(map[string]*Subscription[WsKline]),
-			depthSubMap:  make(map[string]*Subscription[WsDepth]),
+			apiType:        SWAP,
+			isGzip:         false,
+			commonSubMap:   make(map[int64]*Subscription[SubscribeResult]),
+			klineSubMap:    make(map[string]*Subscription[WsKline]),
+			depthSubMap:    make(map[string]*Subscription[WsDepth]),
+			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
 		},
 	}
 }
@@ -243,6 +248,13 @@ func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(params []string) {
 			isCloseMap[sub.ID] = true
 		} else if sub, ok := ws.depthSubMap[param]; ok {
 			delete(ws.depthSubMap, param)
+			if _, ok2 := isCloseMap[sub.ID]; ok2 {
+				continue
+			}
+			sub.closeChan <- struct{}{}
+			isCloseMap[sub.ID] = true
+		} else if sub, ok := ws.aggTradeSubMap[param]; ok {
+			delete(ws.aggTradeSubMap, param)
 			if _, ok2 := isCloseMap[sub.ID]; ok2 {
 				continue
 			}
@@ -352,6 +364,26 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							continue
 						}
 						sub.resultChan <- *d
+					}
+					continue
+				}
+
+				if strings.Contains(string(data), "@aggTrade") {
+					var a *WsAggTrade
+					var err error
+					//交易流处理
+					// if !ws.isGzip {
+					a, err = HandleWsCombinedAggTrade(ws.apiType, data)
+					// } else {
+					// 	a, err = HandleWsCombinedAggTradeGzip(ws.apiType, data)
+					// }
+					param := getAggTradeParam(a.Symbol)
+					if sub, ok := ws.aggTradeSubMap[param]; ok {
+						if err != nil {
+							sub.errChan <- err
+							continue
+						}
+						sub.resultChan <- *a
 					}
 					continue
 				}
@@ -474,7 +506,7 @@ func (ws *WsStreamClient) SubscribeLevelDepth(symbol string, level string, USpee
 	}
 }
 
-// 批量订阅有限档深度 如: "BTCUSDT","20","100ms"
+// 批量订阅有限档深度 如: []string{"BTCUSDT","ETHUSDT"},"20","100ms"
 func (ws *WsStreamClient) SubscribeLevelDepthMultiple(symbols []string, level string, USpeed string) (*Subscription[WsDepth], error) {
 	params := []string{}
 	for _, symbol := range symbols {
@@ -548,7 +580,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepth(symbol string, USpeed string) 
 	}
 }
 
-// 批量订阅增量深度 如: "BTCUSDT","100ms"
+// 批量订阅增量深度 如: []string{"BTCUSDT","ETHUSDT"},"100ms"
 func (ws *WsStreamClient) SubscribeIncrementDepthMultiple(symbols []string, USpeed string) (*Subscription[WsDepth], error) {
 	params := []string{}
 	for _, symbol := range symbols {
@@ -583,6 +615,80 @@ func (ws *WsStreamClient) SubscribeIncrementDepthMultiple(symbols []string, USpe
 		}
 		for _, param := range params {
 			ws.depthSubMap[param] = sub
+		}
+		return sub, nil
+	}
+}
+
+// 订阅归集交易流 如: "BTCUSDT"
+func (ws *WsStreamClient) SubscribeAggTrade(symbol string) (*Subscription[WsAggTrade], error) {
+	param := getAggTradeParam(symbol)
+	params := []string{param}
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeAggTrade Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeAggTrade Success: params:%v result:%v", doSub.Params, subResult)
+		sub := &Subscription[WsAggTrade]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: make(chan WsAggTrade),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
+		}
+
+		ws.aggTradeSubMap[param] = sub
+		return sub, nil
+	}
+}
+
+// 批量订阅归集交易流 如: []string{"BTCUSDT","ETHUSDT"}
+func (ws *WsStreamClient) SubscribeAggTradeMultiple(symbols []string) (*Subscription[WsAggTrade], error) {
+	params := []string{}
+	for _, symbol := range symbols {
+		param := getAggTradeParam(symbol)
+		params = append(params, param)
+	}
+	doSub, err := sendMsg[SubscribeResult](ws, 0, SUBSCRIBE, params)
+	if err != nil {
+		return nil, err
+	}
+	ws.commonSubMap[doSub.ID] = doSub
+
+	select {
+	case err := <-doSub.ErrChan():
+		log.Error("SubscribeAggTrade Error: ", err)
+		return nil, err
+	case subResult := <-doSub.ResultChan():
+		if subResult.Error != "" {
+			log.Error(subResult.Error)
+			return nil, fmt.Errorf(subResult.Error)
+		}
+		log.Debugf("SubscribeAggTrade Success: params:%v result:%v", doSub.Params, subResult)
+		sub := &Subscription[WsAggTrade]{
+			ID:         doSub.ID,
+			Method:     SUBSCRIBE,
+			Params:     params,
+			resultChan: make(chan WsAggTrade),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+			ws:         ws,
+		}
+		for _, param := range params {
+			ws.aggTradeSubMap[param] = sub
 		}
 		return sub, nil
 	}
@@ -761,4 +867,7 @@ func getIncrementDepthSubscribeParam(symbol string, USpeed string) string {
 		return fmt.Sprintf("%s@depth", strings.ToLower(symbol))
 	}
 
+}
+func getAggTradeParam(symbol string) string {
+	return fmt.Sprintf("%s@aggTrade", strings.ToLower(symbol))
 }
