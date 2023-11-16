@@ -610,7 +610,7 @@ type SpotOrderDeleteRes struct {
 
 type SpotMarginOrderDeleteRes struct {
 	Symbol                  string `json:"symbol"`                  // 交易对
-	OrderId                 int64  `json:"orderId"`                 // 系统的订单ID
+	OrderId                 string `json:"orderId"`                 // 系统的订单ID
 	OrigClientOrderId       string `json:"origClientOrderId"`       // 原始的客户端订单ID
 	ClientOrderId           string `json:"clientOrderId"`           // 客户自己设置的ID
 	Price                   string `json:"price"`                   // 订单价格
