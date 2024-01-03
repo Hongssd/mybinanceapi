@@ -502,7 +502,6 @@ func (api *FutureTickerPriceApi) Do() (*FutureTickerPriceRes, error) {
 	} else {
 		return binanceCallApiWithSecret[FutureTickerPriceRes](api.client.c, url, GET)
 	}
-
 }
 
 // binance FUTURE FutureTickerBookTicker rest当前最优挂单 (MARKET_DATA)

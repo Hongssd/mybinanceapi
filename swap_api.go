@@ -23,6 +23,8 @@ const (
 
 	//行情接口
 	SwapKlines
+	SwapTickerPrice //获取交易对最新价格
+	SwapDepth       //获取深度信息
 )
 
 var SwapApiMap = map[SwapApi]string{
@@ -48,7 +50,9 @@ var SwapApiMap = map[SwapApi]string{
 	SwapExchangeInfo: "/dapi/v1/exchangeInfo", //GET接口 交易规则和交易对信息
 
 	//行情接口
-	SwapKlines: "/dapi/v1/klines", //GET接口 获取K线数据
+	SwapKlines:      "/dapi/v1/klines",       //GET接口 获取K线数据
+	SwapTickerPrice: "/dapi/v1/ticker/price", //GET接口 获取交易对最新价格
+	SwapDepth:       "/dapi/v1/depth",        //GET接口 获取深度信息
 }
 
 //============GET接口
@@ -235,4 +239,32 @@ func (api *SwapKlinesApi) Do() (*KlinesRes, error) {
 	}
 	res2 := res.ConvertToRes()
 	return &res2, nil
+}
+
+// binance SWAP  SwapTickerPrice rest获取交易对最新价格
+func (client *SwapRestClient) NewSwapTickerPrice() *SwapTickerPriceApi {
+	return &SwapTickerPriceApi{
+		client: client,
+		req:    &SwapTickerPriceReq{},
+	}
+}
+func (api *SwapTickerPriceApi) Do() (*SwapTickerPriceRes, error) {
+	url := binanceHandlerRequestApi(SWAP, api.req, SwapApiMap[SwapTickerPrice])
+	return binanceCallApiWithSecret[SwapTickerPriceRes](api.client.c, url, GET)
+}
+
+// binance SWAP  SwapDepth rest获取深度信息
+func (client *SwapRestClient) NewSwapDepth() *SwapDepthApi {
+	return &SwapDepthApi{
+		client: client,
+		req:    &SwapDepthReq{},
+	}
+}
+func (api *SwapDepthApi) Do() (*SwapDepthRes, error) {
+	url := binanceHandlerRequestApi(SWAP, api.req, SwapApiMap[SwapDepth])
+	res, err := binanceCallApiWithSecret[SwapDepthResMiddle](api.client.c, url, GET)
+	if err != nil {
+		return nil, err
+	}
+	return res.ConvertToRes(), nil
 }

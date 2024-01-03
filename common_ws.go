@@ -162,7 +162,6 @@ func (ws *WsStreamClient) OpenConn() error {
 	}
 	apiUrl := handlerWsStreamRequestApi(ws.apiType, ws.isGzip)
 	if ws.conn == nil {
-
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
 		ws.conn = conn
 		ws.isClose = false
