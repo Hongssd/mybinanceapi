@@ -29,7 +29,7 @@ const (
 
 var (
 	// WebsocketTimeout is an interval for sending ping/pong messages if WebsocketKeepalive is enabled
-	WebsocketTimeout = time.Second * 60
+	WebsocketTimeout = time.Second * 10
 	// WebsocketKeepalive enables sending ping/pong messages to check the connection stability
 	WebsocketKeepalive      = true
 	SUBSCRIBE_INTERVAL_TIME = 500 * time.Millisecond //订阅间隔
