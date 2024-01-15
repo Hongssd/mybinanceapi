@@ -304,9 +304,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						time.Sleep(500 * time.Millisecond)
 						err = ws.OpenConn()
 					}
-					go func() {
-						ws.reSubscribeForReconnect()
-					}()
+					ws.reSubscribeForReconnect()
 				} else {
 					continue
 				}
