@@ -281,6 +281,7 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 			resultSub, err = sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
 		}
 		sub.ID = resultSub.ID
+		time.Sleep(100 * time.Second)
 	}
 	return nil
 }
