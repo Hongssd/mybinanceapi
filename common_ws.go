@@ -275,13 +275,11 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 	for _, sub := range ws.commonSubMap {
 		log.Infof("ReSubscribe:{%d,%s,%v}", sub.ID, sub.Method, sub.Params)
 		resultSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
-		for err != nil {
+		if err != nil {
 			log.Error(err)
-			time.Sleep(500 * time.Millisecond)
-			resultSub, err = sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
+			continue
 		}
 		sub.ID = resultSub.ID
-		time.Sleep(100 * time.Second)
 	}
 	return nil
 }
