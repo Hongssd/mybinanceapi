@@ -165,13 +165,13 @@ func (ws *WsStreamClient) OpenConn() error {
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
 		ws.conn = conn
 		ws.isClose = false
-		log.Debug("OpenConn success to ", apiUrl)
+		log.Info("OpenConn success to ", apiUrl)
 		ws.handleResult(ws.resultChan, ws.errChan)
 		return err
 	} else {
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
 		ws.conn = conn
-		log.Debug("Auto ReOpenConn success to ", apiUrl)
+		log.Info("Auto ReOpenConn success to ", apiUrl)
 		return err
 	}
 }
@@ -280,6 +280,7 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 			continue
 		}
 		sub.ID = resultSub.ID
+		time.Sleep(200 * time.Millisecond)
 	}
 	return nil
 }
@@ -303,7 +304,9 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						time.Sleep(500 * time.Millisecond)
 						err = ws.OpenConn()
 					}
-					ws.reSubscribeForReconnect()
+					go func() {
+						ws.reSubscribeForReconnect()
+					}()
 				} else {
 					continue
 				}
