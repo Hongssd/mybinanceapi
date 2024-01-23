@@ -274,13 +274,26 @@ func (ws *WsStreamClient) sendWsCloseToAllSub() {
 func (ws *WsStreamClient) reSubscribeForReconnect() error {
 	for _, sub := range ws.commonSubMap {
 		log.Infof("ReSubscribe:{%d,%s,%v}", sub.ID, sub.Method, sub.Params)
-		resultSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
+		doSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
+		ws.commonSubMap[doSub.ID] = doSub
+
+		select {
+		case err := <-doSub.ErrChan():
+			log.Error("SubscribeKline Error: ", err)
+			return err
+		case subResult := <-doSub.ResultChan():
+			if subResult.Error != "" {
+				log.Error(subResult.Error)
+				return fmt.Errorf(subResult.Error)
+			}
+			log.Debugf("SubscribeKline Success: params:%v result:%v", doSub.Params, subResult)
+		}
 		log.Infof("reSubscribe Success: {%d,%s,%v}", sub.ID, sub.Method, sub.Params)
-		sub.ID = resultSub.ID
+		sub.ID = doSub.ID
 		time.Sleep(500 * time.Millisecond)
 	}
 	return nil
@@ -302,7 +315,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					strings.Contains(err.Error(), "reset")) {
 					err := ws.OpenConn()
 					for err != nil {
-						time.Sleep(500 * time.Millisecond)
+						time.Sleep(1000 * time.Millisecond)
 						err = ws.OpenConn()
 					}
 					err = ws.reSubscribeForReconnect()
