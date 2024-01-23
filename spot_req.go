@@ -1269,6 +1269,90 @@ func (api *SpotAssetTransferGetApi) Timestamp(Timestamp int64) *SpotAssetTransfe
 	return api
 }
 
+// symbol	STRING	NO
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotAssetTradeFeeReq struct {
+	Symbol     *string `json:"symbol"`     //NO
+	RecvWindow *int64  `json:"recvWindow"` //NO
+	Timestamp  *int64  `json:"timestamp"`  //YES
+}
+
+type SpotAssetTradeFeeApi struct {
+	client *SpotRestClient
+	req    *SpotAssetTradeFeeReq
+}
+
+func (api *SpotAssetTradeFeeApi) Symbol(Symbol string) *SpotAssetTradeFeeApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SpotAssetTradeFeeApi) RecvWindow(RecvWindow int64) *SpotAssetTradeFeeApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotAssetTradeFeeApi) Timestamp(Timestamp int64) *SpotAssetTradeFeeApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// symbol	STRING	YES
+// orderId	LONG	NO	必须要和参数symbol一起使用.
+// startTime	LONG	NO
+// endTime	LONG	NO
+// fromId	LONG	NO	起始Trade id。 默认获取最新交易。
+// limit	INT	NO	默认 500; 最大 1000.
+// recvWindow	LONG	NO	赋值不能超过 60000
+// timestamp	LONG	YES
+type SpotMyTradesReq struct {
+	Symbol     *string `json:"symbol"`     //YES
+	OrderId    *int64  `json:"orderId"`    //NO
+	StartTime  *int64  `json:"startTime"`  //NO
+	EndTime    *int64  `json:"endTime"`    //NO
+	FromId     *int64  `json:"fromId"`     //NO
+	Limit      *int    `json:"limit"`      //NO	默认 500; 最大 1000.
+	RecvWindow *int64  `json:"recvWindow"` //NO	赋值不能超过 60000
+	Timestamp  *int64  `json:"timestamp"`  //YES
+}
+
+type SpotMyTradesApi struct {
+	client *SpotRestClient
+	req    *SpotMyTradesReq
+}
+
+func (api *SpotMyTradesApi) Symbol(Symbol string) *SpotMyTradesApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SpotMyTradesApi) OrderId(OrderId int64) *SpotMyTradesApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *SpotMyTradesApi) StartTime(StartTime int64) *SpotMyTradesApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *SpotMyTradesApi) EndTime(EndTime int64) *SpotMyTradesApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *SpotMyTradesApi) FromId(FromId int64) *SpotMyTradesApi {
+	api.req.FromId = GetPointer(FromId)
+	return api
+}
+func (api *SpotMyTradesApi) Limit(Limit int) *SpotMyTradesApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+func (api *SpotMyTradesApi) RecvWindow(RecvWindow int64) *SpotMyTradesApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotMyTradesApi) Timestamp(Timestamp int64) *SpotMyTradesApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
 // asset	STRING	NO	如不提供，返回所有asset 划转记录
 // type	INT	NO	1: transfer in, 2: transfer out; 如不提供，返回transfer out方向划转记录
 // startTime	LONG	NO

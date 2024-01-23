@@ -495,6 +495,65 @@ type SpotAssetTransferGetRow struct {
 	Timestamp int64  `json:"timestamp"`
 }
 
+// [
+//
+//	{
+//	    "symbol": "ADABNB",
+//	    "makerCommission": "0.001",
+//	    "takerCommission": "0.001"
+//	},
+//	{
+//	    "symbol": "BNBBTC",
+//	    "makerCommission": "0.001",
+//	    "takerCommission": "0.001"
+//	}
+//
+// ]
+type SpotAssetTradeFeeResRow struct {
+	Symbol          string `json:"symbol"`
+	MakerCommission string `json:"makerCommission"`
+	TakerCommission string `json:"takerCommission"`
+}
+
+type SpotAssetTradeFeeRes []SpotAssetTradeFeeResRow
+
+// [
+//
+//	{
+//	  "symbol": "BNBBTC", // 交易对
+//	  "id": 28457, // trade ID
+//	  "orderId": 100234, // 订单ID
+//	  "orderListId": -1, // OCO订单的ID，不然就是-1
+//	  "price": "4.00000100", // 成交价格
+//	  "qty": "12.00000000", // 成交量
+//	  "quoteQty": "48.000012", // 成交金额
+//	  "commission": "10.10000000", // 交易费金额
+//	  "commissionAsset": "BNB", // 交易费资产类型
+//	  "time": 1499865549590, // 交易时间
+//	  "isBuyer": true, // 是否是买家
+//	  "isMaker": false, // 是否是挂单方
+//	  "isBestMatch": true
+//	}
+//
+// ]
+type SpotMyTradesResRow struct {
+	Symbol          string `json:"symbol"`          // 交易对
+	Id              int64  `json:"id"`              // trade ID
+	OrderId         int64  `json:"orderId"`         // 订单ID
+	OrderListId     int64  `json:"orderListId"`     // OCO订单的ID，不然就是-1
+	Price           string `json:"price"`           // 成交价格
+	Qty             string `json:"qty"`             // 成交量
+	QuoteQty        string `json:"quoteQty"`        // 成交金额
+	Commission      string `json:"commission"`      // 交易费金额
+	CommissionAsset string `json:"commissionAsset"` // 交易费资产类型
+	Time            int64  `json:"time"`            // 交易时间
+	IsBuyer         bool   `json:"isBuyer"`         // 是否是买家
+	IsMaker         bool   `json:"isMaker"`         // 是否是挂单方
+	IsBestMatch     bool   `json:"isBestMatch"`
+}
+
+type SpotMyTradesRes []SpotMyTradesResRow
+
 type SpotSubAccountTransferSubUserHistoryRes []SpotSubAccountTransferSubUserHistoryResRow
 type SpotSubAccountTransferSubUserHistoryResRow struct {
 	CounterParty    string `json:"counterParty"`

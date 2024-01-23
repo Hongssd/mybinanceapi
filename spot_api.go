@@ -54,6 +54,10 @@ const (
 	SpotOrderDelete       //撤销订单 (TRADE)
 	SpotAssetTransferPost //用户万向划转 (USER_DATA)
 	SpotAssetTransferGet  //查询用户万向划转历史 (USER_DATA)
+	SpotAssetTradeFee     //查询用户交易手续费率 (USER_DATA)
+
+	//现货账户接口
+	SpotMyTrades //账户成交历史 (USER_DATA)
 
 	//通用接口
 	SpotPing         //测试服务器连通性
@@ -123,6 +127,10 @@ var SpotApiMap = map[SpotApi]string{
 	SpotOrderDelete:             "/api/v3/order",                     //DELETE接口 撤销订单 (TRADE)
 	SpotAssetTransferPost:       "/sapi/v1/asset/transfer",           //用户万向划转 (USER_DATA)
 	SpotAssetTransferGet:        "/sapi/v1/asset/transfer",           //查询用户万向划转历史 (USER_DATA)
+	SpotAssetTradeFee:           "/sapi/v1/asset/tradeFee",           //查询用户交易手续费率 (USER_DATA)
+
+	//现货账户接口
+	SpotMyTrades: "/api/v3/myTrades", //GET接口 账户成交历史 (USER_DATA)
 
 	//通用接口
 	SpotPing:         "/api/v3/ping",         //GET接口 测试连通性
@@ -628,6 +636,32 @@ func (api *SpotAssetTransferGetApi) Do() (*SpotAssetTransferGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli())
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTransferGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAssetTransferGetRes](api.client.c, url, GET)
+}
+
+// binance SPOT spotAssetTradeFee rest查询用户交易手续费率 (USER_DATA)
+func (client *SpotRestClient) NewSpotAssetTradeFee() *SpotAssetTradeFeeApi {
+	return &SpotAssetTradeFeeApi{
+		client: client,
+		req:    &SpotAssetTradeFeeReq{},
+	}
+}
+func (api *SpotAssetTradeFeeApi) Do() (*SpotAssetTradeFeeRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTradeFee], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAssetTradeFeeRes](api.client.c, url, GET)
+}
+
+// binance SPOT spotMyTrades rest账户成交历史 (USER_DATA)
+func (client *SpotRestClient) NewSpotMyTrades() *SpotMyTradesApi {
+	return &SpotMyTradesApi{
+		client: client,
+		req:    &SpotMyTradesReq{},
+	}
+}
+func (api *SpotMyTradesApi) Do() (*SpotMyTradesRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMyTrades], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotMyTradesRes](api.client.c, url, GET)
 }
 
 // binance SPOT spotTickerPrice rest价格 (NONE)
