@@ -277,10 +277,11 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 		resultSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
 		if err != nil {
 			log.Error(err)
-			continue
+			return err
 		}
+		log.Infof("reSubscribe Success: {%d,%s,%v}", sub.ID, sub.Method, sub.Params)
 		sub.ID = resultSub.ID
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
 	}
 	return nil
 }
@@ -304,7 +305,10 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						time.Sleep(500 * time.Millisecond)
 						err = ws.OpenConn()
 					}
-					ws.reSubscribeForReconnect()
+					err = ws.reSubscribeForReconnect()
+					if err != nil {
+						log.Error(err)
+					}
 				} else {
 					continue
 				}
