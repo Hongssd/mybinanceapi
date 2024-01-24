@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
@@ -47,6 +48,7 @@ type WsStreamClient struct {
 	resultChan     chan []byte
 	errChan        chan error
 	isClose        bool
+	reSubscribeMu  *sync.Mutex
 }
 
 // 订阅请求结构体
@@ -199,6 +201,7 @@ func (*MyBinance) NewSpotWsStreamClient() *SpotWsStreamClient {
 			klineSubMap:    make(map[string]*Subscription[WsKline]),
 			depthSubMap:    make(map[string]*Subscription[WsDepth]),
 			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
+			reSubscribeMu:  &sync.Mutex{},
 		},
 	}
 }
@@ -211,6 +214,7 @@ func (*MyBinance) NewFutureWsStreamClient() *FutureWsStreamClient {
 			klineSubMap:    make(map[string]*Subscription[WsKline]),
 			depthSubMap:    make(map[string]*Subscription[WsDepth]),
 			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
+			reSubscribeMu:  &sync.Mutex{},
 		},
 	}
 }
@@ -223,6 +227,7 @@ func (*MyBinance) NewSwapWsStreamClient() *SwapWsStreamClient {
 			klineSubMap:    make(map[string]*Subscription[WsKline]),
 			depthSubMap:    make(map[string]*Subscription[WsDepth]),
 			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
+			reSubscribeMu:  &sync.Mutex{},
 		},
 	}
 }
@@ -276,6 +281,8 @@ func (ws *WsStreamClient) sendWsCloseToAllSub() {
 }
 
 func (ws *WsStreamClient) reSubscribeForReconnect() error {
+	ws.reSubscribeMu.Lock()
+	defer ws.reSubscribeMu.Unlock()
 	for _, sub := range ws.commonSubMap {
 		log.Infof("ReSubscribe:{%d,%s,%v}", sub.ID, sub.Method, sub.Params)
 		doSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
@@ -347,7 +354,6 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						continue
 					}
 					ws.sendSubscribeResultToChan(result)
-					log.Info("sendSubscribeResultToChan: ", result)
 					continue
 				}
 
@@ -436,7 +442,7 @@ func (ws *WsStreamClient) SubscribeKline(symbol string, interval string) (*Subsc
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeKline Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeKline Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsKline]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -476,7 +482,7 @@ func (ws *WsStreamClient) SubscribeKlineMultiple(symbols []string, intervals []s
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeKline Success Params:%v Result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeKline Success Params:%v Result:%v", doSub.Params, subResult)
 		resultChan := make(chan WsKline)
 		errChan := make(chan error)
 		closeChan := make(chan struct{})
@@ -515,7 +521,7 @@ func (ws *WsStreamClient) SubscribeLevelDepth(symbol string, level string, USpee
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeLevelDepth Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeLevelDepth Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsDepth]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -553,7 +559,7 @@ func (ws *WsStreamClient) SubscribeLevelDepthMultiple(symbols []string, level st
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeLevelDepth Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeLevelDepth Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsDepth]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -589,7 +595,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepth(symbol string, USpeed string) 
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeIncrementDepth Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeIncrementDepth Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsDepth]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -628,7 +634,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepthMultiple(symbols []string, USpe
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeIncrementDepth Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeIncrementDepth Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsDepth]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -664,7 +670,7 @@ func (ws *WsStreamClient) SubscribeAggTrade(symbol string) (*Subscription[WsAggT
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeAggTrade Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeAggTrade Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsAggTrade]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -702,7 +708,7 @@ func (ws *WsStreamClient) SubscribeAggTradeMultiple(symbols []string) (*Subscrip
 			log.Error(subResult.Error)
 			return nil, fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("SubscribeAggTrade Success: params:%v result:%v", doSub.Params, subResult)
+		log.Infof("SubscribeAggTrade Success: params:%v result:%v", doSub.Params, subResult)
 		sub := &Subscription[WsAggTrade]{
 			ID:         doSub.ID,
 			Method:     SUBSCRIBE,
@@ -757,7 +763,7 @@ func (sub *Subscription[T]) Unsubscribe() error {
 			log.Error(subResult.Error)
 			return fmt.Errorf(subResult.Error)
 		}
-		log.Debugf("Unsubscribe Success Params:%v Result:%v", unSub.Params, subResult)
+		log.Infof("Unsubscribe Success Params:%v Result:%v", unSub.Params, subResult)
 
 		//取消订阅成功，给所有订阅消息的通道发送关闭信号
 		sub.ws.sendUnSubscribeSuccessToCloseChan(unSub.Params)
