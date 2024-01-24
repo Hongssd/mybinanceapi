@@ -77,6 +77,10 @@ type Subscription[T any] struct {
 	closeChan  chan struct{}   //接收订阅关闭的通道
 }
 
+func (ws *WsStreamClient) GetConn() *websocket.Conn {
+	return ws.conn
+}
+
 // 获取订阅结果
 func (sub *Subscription[T]) ResultChan() chan T {
 	return sub.resultChan
@@ -294,7 +298,8 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 		}
 		log.Infof("reSubscribe Success: {%d,%s,%v}", sub.ID, sub.Method, sub.Params)
 		sub.ID = doSub.ID
-		time.Sleep(500 * time.Millisecond)
+		delete(ws.commonSubMap, sub.ID)
+		time.Sleep(1000 * time.Millisecond)
 	}
 	return nil
 }
@@ -318,10 +323,13 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						time.Sleep(1000 * time.Millisecond)
 						err = ws.OpenConn()
 					}
-					err = ws.reSubscribeForReconnect()
-					if err != nil {
-						log.Error(err)
-					}
+					go func() {
+						err = ws.reSubscribeForReconnect()
+						if err != nil {
+							log.Error(err)
+						}
+					}()
+
 				} else {
 					continue
 				}
@@ -339,6 +347,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						continue
 					}
 					ws.sendSubscribeResultToChan(result)
+					log.Info("sendSubscribeResultToChan: ", result)
 					continue
 				}
 
