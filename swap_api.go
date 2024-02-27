@@ -15,6 +15,7 @@ const (
 	SwapAllOrders
 	SwapOrderPost
 	SwapOrderGet
+	SwapOrderDelete
 
 	//通用接口
 	SwapPing
@@ -41,9 +42,9 @@ var SwapApiMap = map[SwapApi]string{
 	SwapOpenOrders: "/dapi/v1/openOrders", //GET接口 (HMAC SHA256) 查询当前挂单 (USER_DATA)
 	SwapAllOrders:  "/dapi/v1/allOrders",  //GET接口 (HMAC SHA256) 查询所有订单 (USER_DATA)
 
-	SwapOrderPost: "/dapi/v1/order", //POST接口 (HMAC SHA256) 下单 (TRADE)
-	SwapOrderGet:  "/dapi/v1/order", //GET接口 (HMAC SHA256) 查询订单 (USER_DATA)
-
+	SwapOrderPost:   "/dapi/v1/order", //POST接口 (HMAC SHA256) 下单 (TRADE)
+	SwapOrderGet:    "/dapi/v1/order", //GET接口 (HMAC SHA256) 查询订单 (USER_DATA)
+	SwapOrderDelete: "/dapi/v1/order", //DELETE接口 (HMAC SHA256) 撤销订单 (TRADE)
 	//通用接口
 	SwapPing:         "/dapi/v1/ping",         //GET接口 测试连接
 	SwapServerTime:   "/dapi/v1/time",         //GET接口 获取服务器时间
@@ -224,6 +225,20 @@ func (api *SwapOrderGetApi) Do() (*SwapOrderGetRes, error) {
 	return binanceCallApiWithSecret[SwapOrderGetRes](api.client.c, url, GET)
 }
 
+// binance SWAP  SwapOrderDelete rest撤销订单 (TRADE)
+func (client *SwapRestClient) NewSwapOrderDelete() *SwapOrderDeleteApi {
+	return &SwapOrderDeleteApi{
+		client: client,
+		req:    &SwapOrderDeleteReq{},
+	}
+}
+func (api *SwapOrderDeleteApi) Do() (*SwapOrderDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderDelete], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapOrderDeleteRes](api.client.c, url, DELETE)
+}
+
+
 // binance SWAP  SwapKlines rest获取K线数据
 func (client *SwapRestClient) NewSwapKlines() *SwapKlinesApi {
 	return &SwapKlinesApi{
@@ -268,3 +283,5 @@ func (api *SwapDepthApi) Do() (*SwapDepthRes, error) {
 	}
 	return res.ConvertToRes(), nil
 }
+
+

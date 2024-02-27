@@ -285,6 +285,8 @@ type SwapAllOrdersRes []SwapOrderOrder
 
 type SwapOrderGetRes SwapOrderOrder
 
+type SwapOrderDeleteRes SwapOrderOrder
+
 type SwapOrderPostRes struct {
 	ClientOrderId string `json:"clientOrderId"` // 用户自定义的订单号
 	CumQty        string `json:"cumQty"`

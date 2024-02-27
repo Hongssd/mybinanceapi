@@ -379,6 +379,40 @@ func (api *SwapOrderGetApi) Timestamp(Timestamp int64) *SwapOrderGetApi {
 	return api
 }
 
+type SwapOrderDeleteReq struct {
+	Symbol            *string `json:"symbol"`            //YES 交易对
+	OrderId           *int64  `json:"orderId"`           //NO 系统订单号
+	OrigClientOrderId *string `json:"origClientOrderId"` //NO 用户自定义的订单号
+	RecvWindow        *int64  `json:"recvWindow"`        //NO
+	Timestamp         *int64  `json:"timestamp"`         //YES
+}
+
+type SwapOrderDeleteApi struct {
+	client *SwapRestClient
+	req    *SwapOrderDeleteReq
+}
+
+func (api *SwapOrderDeleteApi) Symbol(Symbol string) *SwapOrderDeleteApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SwapOrderDeleteApi) OrderId(OrderId int64) *SwapOrderDeleteApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *SwapOrderDeleteApi) OrigClientOrderId(OrigClientOrderId string) *SwapOrderDeleteApi {
+	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
+	return api
+}
+func (api *SwapOrderDeleteApi) Recvwindow(Recvwindow int64) *SwapOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(Recvwindow)
+	return api
+}
+func (api *SwapOrderDeleteApi) Timestamp(Timestamp int64) *SwapOrderDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
 type SwapKlinesReq struct {
 	Symbol    *string `json:"symbol"`    //YES
 	Interval  *string `json:"interval"`  //YES	详见枚举定义：K线间隔
