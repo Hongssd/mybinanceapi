@@ -673,7 +673,16 @@ func (client *SpotRestClient) NewSpotTickerPrice() *SpotTickerPriceApi {
 }
 func (api *SpotTickerPriceApi) Do() (*SpotTickerPriceRes, error) {
 	url := binanceHandlerRequestApi(SPOT, api.req, SpotApiMap[SpotTickerPrice])
-	return binanceCallApiWithSecret[SpotTickerPriceRes](api.client.c, url, GET)
+	if api.req.Symbol != nil && *api.req.Symbol != "" {
+		res, err := binanceCallApiWithSecret[SpotTickerPriceResRow](api.client.c, url, GET)
+		if err != nil {
+			return nil, err
+		}
+		return &SpotTickerPriceRes{*res}, nil
+	} else {
+		return binanceCallApiWithSecret[SpotTickerPriceRes](api.client.c, url, GET)
+	}
+
 }
 
 // binance SPOT spotKlines restK线数据 (NONE)

@@ -450,11 +450,12 @@ type SpotAllOrdersRes []SpotOrderOrder
 
 type SpotOrderGetRes SpotOrderOrder
 
-type SpotTickerPriceRes struct {
+type SpotTickerPriceResRow struct {
 	Symbol string `json:"symbol"` // 交易对
 	Price  string `json:"price"`  // 价格
 }
 
+type SpotTickerPriceRes []SpotTickerPriceResRow
 type SpotAssetTransferPostRes struct {
 	TranId int64 `json:"tranId"`
 }
