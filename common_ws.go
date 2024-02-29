@@ -20,6 +20,10 @@ const (
 	BINANCE_API_FUTURE_WS_STREAM      = "fstream.binance.com"
 	BINANCE_API_SWAP_WS_STREAM_GZIP   = "sdstream.binance.com"
 	BINANCE_API_FUTURE_WS_STREAM_GZIP = "sfstream.binance.com"
+
+	TEST_BINANCE_API_SPOT_WS_STREAM   = "testnet.binance.vision"
+	TEST_BINANCE_API_FUTURE_WS_STREAM = "fstream.binancefuture.com"
+	TEST_BINANCE_API_SWAP_WS_STREAM   = "dstream.binancefuture.com"
 )
 
 const (
@@ -836,23 +840,37 @@ func handlerWsStreamRequestApi(apiType ApiType, isGzip bool) string {
 func getWsApi(apiType ApiType, isGzip bool) string {
 	switch apiType {
 	case SPOT:
-		return BINANCE_API_SPOT_WS_STREAM
+		switch NowNetType {
+		case MAIN_NET:
+			return BINANCE_API_SPOT_WS_STREAM
+		case TEST_NET:
+			return TEST_BINANCE_API_SPOT_WS_STREAM
+		}
 	case SWAP:
-		if isGzip {
-			return BINANCE_API_SWAP_WS_STREAM_GZIP
-		} else {
-			return BINANCE_API_SWAP_WS_STREAM
+		switch NowNetType {
+		case MAIN_NET:
+			if isGzip {
+				return BINANCE_API_SWAP_WS_STREAM_GZIP
+			} else {
+				return BINANCE_API_SWAP_WS_STREAM
+			}
+		case TEST_NET:
+			return TEST_BINANCE_API_SWAP_WS_STREAM
 		}
 	case FUTURE:
-		if isGzip {
-			return BINANCE_API_FUTURE_WS_STREAM_GZIP
-		} else {
-			return BINANCE_API_FUTURE_WS_STREAM
+		switch NowNetType {
+		case MAIN_NET:
+			if isGzip {
+				return BINANCE_API_FUTURE_WS_STREAM_GZIP
+			} else {
+				return BINANCE_API_FUTURE_WS_STREAM
+			}
+		case TEST_NET:
+			return TEST_BINANCE_API_FUTURE_WS_STREAM
 		}
-	default:
-		log.Error("AccountType Error is ", apiType)
-		return ""
 	}
+	log.Error("AccountType Error is ", apiType)
+	return ""
 }
 
 // 发送ping/pong消息以检查连接稳定性

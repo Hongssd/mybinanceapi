@@ -99,11 +99,27 @@ type MyBinance struct {
 }
 
 const (
-	BINANCE_API_SPOT_HTTP   = "api.binance.com"
-	BINANCE_API_FUTURE_HTTP = "fapi.binance.com"
-	BINANCE_API_SWAP_HTTP   = "dapi.binance.com"
-	IS_GZIP                 = true
+	BINANCE_API_SPOT_HTTP        = "api.binance.com"
+	BINANCE_API_FUTURE_HTTP      = "fapi.binance.com"
+	BINANCE_API_SWAP_HTTP        = "dapi.binance.com"
+	TEST_BINANCE_API_SPOT_HTTP   = "testnet.binance.vision"
+	TEST_BINANCE_API_FUTURE_HTTP = "testnet.binancefuture.com"
+	TEST_BINANCE_API_SWAP_HTTP   = "testnet.binancefuture.com"
+	IS_GZIP                      = true
 )
+
+type NetType int
+
+const (
+	MAIN_NET NetType = iota
+	TEST_NET
+)
+
+var NowNetType = MAIN_NET
+
+func SetNetType(netType NetType) {
+	NowNetType = netType
+}
 
 type ApiType int
 
@@ -250,14 +266,28 @@ func binanceHandlerReq[T any](req *T) string {
 func BinanceGetRestHostByApiType(apiType ApiType) string {
 	switch apiType {
 	case SPOT:
-		return BINANCE_API_SPOT_HTTP
+		switch NowNetType {
+		case MAIN_NET:
+			return BINANCE_API_SPOT_HTTP
+		case TEST_NET:
+			return TEST_BINANCE_API_SPOT_HTTP
+		}
 	case FUTURE:
-		return BINANCE_API_FUTURE_HTTP
+		switch NowNetType {
+		case MAIN_NET:
+			return BINANCE_API_FUTURE_HTTP
+		case TEST_NET:
+			return TEST_BINANCE_API_FUTURE_HTTP
+		}
 	case SWAP:
-		return BINANCE_API_SWAP_HTTP
-	default:
-		return ""
+		switch NowNetType {
+		case MAIN_NET:
+			return BINANCE_API_SWAP_HTTP
+		case TEST_NET:
+			return TEST_BINANCE_API_SWAP_HTTP
+		}
 	}
+	return ""
 }
 
 func interfaceStringToFloat64(inter interface{}) float64 {
