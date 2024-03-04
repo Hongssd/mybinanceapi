@@ -183,7 +183,7 @@ func (*MyBinance) NewSwapRestClient(apiKey string, apiSecret string) *SwapRestCl
 
 var serverTimeDelta int64 = 0
 
-func setServerTimeDelta(delta int64) {
+func SetServerTimeDelta(delta int64) {
 	serverTimeDelta = delta
 }
 
