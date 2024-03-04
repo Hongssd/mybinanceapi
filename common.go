@@ -181,6 +181,12 @@ func (*MyBinance) NewSwapRestClient(apiKey string, apiSecret string) *SwapRestCl
 	return client
 }
 
+var serverTimeDelta int64 = 0
+
+func setServerTimeDelta(delta int64) {
+	serverTimeDelta = delta
+}
+
 // 通用鉴权接口调用
 func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, error) {
 	body, err := RequestWithHeader(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)

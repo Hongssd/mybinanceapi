@@ -65,7 +65,7 @@ func (client *SwapRestClient) NewSwapAccount() *SwapAccountApi {
 	}
 }
 func (api *SwapAccountApi) Do() (*SwapAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapAccountRes](api.client.c, url, GET)
 }
@@ -78,7 +78,7 @@ func (client *SwapRestClient) NewSwapPositionSideDualGet() *SwapPositionSideDual
 	}
 }
 func (api *SwapPositionSideDualGetApi) Do() (*SwapPositionSideDualGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapPositionSideDualGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapPositionSideDualGetRes](api.client.c, url, GET)
 }
@@ -91,7 +91,7 @@ func (client *SwapRestClient) NewSwapLeverageBracket() *SwapLeverageBracketApi {
 	}
 }
 func (api *SwapLeverageBracketApi) Do() (*SwapLeverageBracketRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapLeverageBracket], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapLeverageBracketRes](api.client.c, url, GET)
 }
@@ -105,7 +105,7 @@ func (client *SwapRestClient) NewSwapPositionSideDualPost() *SwapPositionSideDua
 	}
 }
 func (api *SwapPositionSideDualPostApi) Do() (*SwapPositionSideDualPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapPositionSideDualPost], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapPositionSideDualPostRes](api.client.c, url, POST)
 }
@@ -118,7 +118,7 @@ func (client *SwapRestClient) NewSwapLeverage() *SwapLeverageApi {
 	}
 }
 func (api *SwapLeverageApi) Do() (*SwapLeverageRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapLeverage], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapLeverageRes](api.client.c, url, POST)
 }
@@ -131,7 +131,7 @@ func (client *SwapRestClient) NewSwapMarginType() *SwapMarginTypeApi {
 	}
 }
 func (api *SwapMarginTypeApi) Do() (*SwapMarginTypeRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapMarginType], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapMarginTypeRes](api.client.c, url, POST)
 }
@@ -181,7 +181,7 @@ func (client *SwapRestClient) NewOpenOrders() *SwapOpenOrdersApi {
 	}
 }
 func (api *SwapOpenOrdersApi) Do() (*SwapOpenOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOpenOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapOpenOrdersRes](api.client.c, url, GET)
 }
@@ -194,7 +194,7 @@ func (client *SwapRestClient) NewAllOrders() *SwapAllOrdersApi {
 	}
 }
 func (api *SwapAllOrdersApi) Do() (*SwapAllOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapAllOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapAllOrdersRes](api.client.c, url, GET)
 }
@@ -207,7 +207,7 @@ func (client *SwapRestClient) NewSwapOrderPost() *SwapOrderPostApi {
 	}
 }
 func (api *SwapOrderPostApi) Do() (*SwapOrderPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderPost], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapOrderPostRes](api.client.c, url, POST)
 }
@@ -220,7 +220,7 @@ func (client *SwapRestClient) NewSwapOrderGet() *SwapOrderGetApi {
 	}
 }
 func (api *SwapOrderGetApi) Do() (*SwapOrderGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapOrderGetRes](api.client.c, url, GET)
 }
@@ -233,11 +233,10 @@ func (client *SwapRestClient) NewSwapOrderDelete() *SwapOrderDeleteApi {
 	}
 }
 func (api *SwapOrderDeleteApi) Do() (*SwapOrderDeleteRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapOrderDeleteRes](api.client.c, url, DELETE)
 }
-
 
 // binance SWAP  SwapKlines rest获取K线数据
 func (client *SwapRestClient) NewSwapKlines() *SwapKlinesApi {
@@ -283,5 +282,3 @@ func (api *SwapDepthApi) Do() (*SwapDepthRes, error) {
 	}
 	return res.ConvertToRes(), nil
 }
-
-

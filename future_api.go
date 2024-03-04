@@ -102,7 +102,7 @@ func (client *FutureRestClient) NewFutureAccount() *FutureAccountApi {
 	}
 }
 func (api *FutureAccountApi) Do() (*FutureAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureAccountRes](api.client.c, url, GET)
 }
@@ -115,7 +115,7 @@ func (client *FutureRestClient) NewFuturePositionSideDualGet() *FuturePositionSi
 	}
 }
 func (api *FuturePositionSideDualGetApi) Do() (*FuturePositionSideDualGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FuturePositionSideDualGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FuturePositionSideDualGetRes](api.client.c, url, GET)
 }
@@ -128,7 +128,7 @@ func (client *FutureRestClient) NewFutureMultiAssetsMarginGet() *FutureMultiAsse
 	}
 }
 func (api *FutureMultiAssetsMarginGetApi) Do() (*FutureMultiAssetsMarginGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureMultiAssetsMarginGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureMultiAssetsMarginGetRes](api.client.c, url, GET)
 }
@@ -141,7 +141,7 @@ func (client *FutureRestClient) NewFutureLeverageBracket() *FutureLeverageBracke
 	}
 }
 func (api *FutureLeverageBracketApi) Do() (*FutureLeverageBracketRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureLeverageBracket], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureLeverageBracketRes](api.client.c, url, GET)
 }
@@ -155,7 +155,7 @@ func (client *FutureRestClient) NewFuturePositionSideDualPost() *FuturePositionS
 	}
 }
 func (api *FuturePositionSideDualPostApi) Do() (*FuturePositionSideDualPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FuturePositionSideDualPost], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FuturePositionSideDualPostRes](api.client.c, url, POST)
 }
@@ -168,7 +168,7 @@ func (client *FutureRestClient) NewFutureMultiAssetsMarginPost() *FutureMultiAss
 	}
 }
 func (api *FutureMultiAssetsMarginPostApi) Do() (*FutureMultiAssetsMarginPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureMultiAssetsMarginPost], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureMultiAssetsMarginPostRes](api.client.c, url, POST)
 }
@@ -181,7 +181,7 @@ func (client *FutureRestClient) NewFutureLeverage() *FutureLeverageApi {
 	}
 }
 func (api *FutureLeverageApi) Do() (*FutureLeverageRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureLeverage], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureLeverageRes](api.client.c, url, POST)
 }
@@ -194,7 +194,7 @@ func (client *FutureRestClient) NewFutureMarginType() *FutureMarginTypeApi {
 	}
 }
 func (api *FutureMarginTypeApi) Do() (*FutureMarginTypeRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureMarginType], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureMarginTypeRes](api.client.c, url, POST)
 }
@@ -207,7 +207,7 @@ func (client *FutureRestClient) NewFutureCommissionRate() *FutureCommissionRateA
 	}
 }
 func (api *FutureCommissionRateApi) Do() (*FutureCommissionRateRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureCommissionRate], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureCommissionRateRes](api.client.c, url, GET)
 }
@@ -261,7 +261,7 @@ func (client *FutureRestClient) NewOpenOrders() *FutureOpenOrdersApi {
 }
 
 func (api *FutureOpenOrdersApi) Do() (*FutureOpenOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOpenOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureOpenOrdersRes](api.client.c, url, GET)
 }
@@ -275,7 +275,7 @@ func (client *FutureRestClient) NewAllOrders() *FutureAllOrdersApi {
 }
 
 func (api *FutureAllOrdersApi) Do() (*FutureAllOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureAllOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureAllOrdersRes](api.client.c, url, GET)
 }
@@ -289,7 +289,7 @@ func (client *FutureRestClient) NewFutureOrderPost() *FutureOrderPostApi {
 }
 
 func (api *FutureOrderPostApi) Do() (*FutureOrderPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOrderPost], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureOrderPostRes](api.client.c, url, POST)
 }
@@ -303,7 +303,7 @@ func (client *FutureRestClient) NewFutureOrderGet() *FutureOrderGetApi {
 }
 
 func (api *FutureOrderGetApi) Do() (*FutureOrderGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOrderGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureOrderGetRes](api.client.c, url, GET)
 }
@@ -317,7 +317,7 @@ func (client *FutureRestClient) NewFutureOrderDelete() *FutureOrderDeleteApi {
 }
 
 func (api *FutureOrderDeleteApi) Do() (*FutureOrderDeleteRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureOrderDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureOrderDeleteRes](api.client.c, url, DELETE)
 }
@@ -331,7 +331,7 @@ func (client *FutureRestClient) NewFutureBatchOrdersDelete() *FutureBatchOrdersD
 }
 
 func (api *FutureBatchOrdersDeleteApi) Do() (*FutureBatchOrdersDeleteRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureBatchOrdersDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureBatchOrdersDeleteRes](api.client.c, url, DELETE)
 }
@@ -345,7 +345,7 @@ func (client *FutureRestClient) NewFutureUserTrades() *FutureUserTradesApi {
 }
 
 func (api *FutureUserTradesApi) Do() (*FutureUserTradesRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureUserTrades], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureUserTradesRes](api.client.c, url, GET)
 }

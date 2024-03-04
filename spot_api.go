@@ -160,7 +160,7 @@ func (client *SpotRestClient) NewSubAccountList() *SpotSubAccountListApi {
 	}
 }
 func (api *SpotSubAccountListApi) Do() (*SubAccountListRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountList], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountListRes](api.client.c, url, GET)
 }
@@ -173,7 +173,7 @@ func (client *SpotRestClient) NewSubAccountUniversalTransferHistory() *SpotSubAc
 	}
 }
 func (api *SpotSubAccountUniversalTransferHistoryApi) Do() (*SubAccountUniversalTransferHistoryRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountUniversalTransferHistory], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountUniversalTransferHistoryRes](api.client.c, url, GET)
 }
@@ -186,7 +186,7 @@ func (client *SpotRestClient) NewSubAccountAssets() *SpotSubAccountAssetsApi {
 	}
 }
 func (api *SpotSubAccountAssetsApi) Do() (*SubAccountAssetsRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountAssets], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountAssetsRes](api.client.c, url, GET)
 }
@@ -199,7 +199,7 @@ func (client *SpotRestClient) NewSubAccountFuturesAccount() *SpotSubAccountFutur
 	}
 }
 func (api *SpotSubAccountFuturesAccountApi) Do() (*SubAccountFuturesAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountFuturesAccountRes](api.client.c, url, GET)
 }
@@ -212,7 +212,7 @@ func (client *SpotRestClient) NewSubAccountTransferSubUserHistory() *SpotSubAcco
 	}
 }
 func (api *SpotSubAccountTransferSubUserHistoryApi) Do() (*SpotSubAccountTransferSubUserHistoryRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountTransferSubUserHistory], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotSubAccountTransferSubUserHistoryRes](api.client.c, url, GET)
 }
@@ -225,7 +225,7 @@ func (client *SpotRestClient) NewSpotAccount() *SpotAccountApi {
 	}
 }
 func (api *SpotAccountApi) Do() (*SpotAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAccountRes](api.client.c, url, GET)
 }
@@ -238,7 +238,7 @@ func (client *SpotRestClient) NewSpotSubAccountApiIpRestriction() *SpotSubAccoun
 	}
 }
 func (api *SpotSubAccountApiIpRestrictionApi) Do() (*SpotSubAccountApiIpRestrictionRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountApiIpRestriction], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotSubAccountApiIpRestrictionRes](api.client.c, url, GET)
 }
@@ -252,7 +252,7 @@ func (client *SpotRestClient) NewSubAccountVirtualSubAccount() *SpotSubAccountVi
 	}
 }
 func (api *SpotSubAccountVirtualSubAccountApi) Do() (*SubAccountVirtualSubAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountVirtualSubAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountVirtualSubAccountRes](api.client.c, url, POST)
 }
@@ -265,7 +265,7 @@ func (client *SpotRestClient) NewSubAccountUniversalTransfer() *SpotSubAccountUn
 	}
 }
 func (api *SpotSubAccountUniversalTransferApi) Do() (*SubAccountUniversalTransferRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountUniversalTransfer], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountUniversalTransferRes](api.client.c, url, POST)
 }
@@ -278,7 +278,7 @@ func (client *SpotRestClient) NewSubAccountFuturesEnable() *SpotSubAccountFuture
 	}
 }
 func (api *SpotSubAccountFuturesEnableApi) Do() (*SubAccountFuturesEnableRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesEnable], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountFuturesEnableRes](api.client.c, url, POST)
 }
@@ -292,7 +292,7 @@ func (client *SpotRestClient) NewMarginAllPairs() *SpotMarginAllPairsApi {
 	}
 }
 func (api *SpotMarginAllPairsApi) Do() (*MarginAllPairsRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginAllPairs], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginAllPairsRes](api.client.c, url, GET)
 }
@@ -305,7 +305,7 @@ func (client *SpotRestClient) NewMarginIsolatedAllPairs() *SpotMarginIsolatedAll
 	}
 }
 func (api *SpotMarginIsolatedAllPairsApi) Do() (*MarginIsolatedAllPairsRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedAllPairs], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginIsolatedAllPairsRes](api.client.c, url, GET)
 }
@@ -318,7 +318,7 @@ func (client *SpotRestClient) NewMarginAccount() *SpotMarginAccountApi {
 	}
 }
 func (api *SpotMarginAccountApi) Do() (*MarginAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginAccountRes](api.client.c, url, GET)
 }
@@ -331,7 +331,7 @@ func (client *SpotRestClient) NewMarginIsolatedAccount() *SpotMarginIsolatedAcco
 	}
 }
 func (api *SpotMarginIsolatedAccountApi) Do() (*MarginIsolatedAccountRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginIsolatedAccountRes](api.client.c, url, GET)
 }
@@ -344,7 +344,7 @@ func (client *SpotRestClient) NewMarginMaxBorrowable() *SpotMarginMaxBorrowableA
 	}
 }
 func (api *SpotMarginMaxBorrowableApi) Do() (*MarginMaxBorrowableRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginMaxBorrowable], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginMaxBorrowableRes](api.client.c, url, GET)
 }
@@ -357,7 +357,7 @@ func (client *SpotRestClient) NewMarginMaxTransferable() *SpotMarginMaxTransfera
 	}
 }
 func (api *SpotMarginMaxTransferableApi) Do() (*MarginMaxTransferableRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginMaxTransferable], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginMaxTransferableRes](api.client.c, url, GET)
 }
@@ -370,7 +370,7 @@ func (client *SpotRestClient) NewMarginInterestHistory() *SpotMarginInterestHist
 	}
 }
 func (api *SpotMarginInterestHistoryApi) Do() (*MarginInterestHistoryRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginInterestHistory], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginInterestHistoryRes](api.client.c, url, GET)
 }
@@ -383,7 +383,7 @@ func (client *SpotRestClient) NewMarginOrderGet() *SpotMarginOrderGetApi {
 	}
 }
 func (api *SpotMarginOrderGetApi) Do() (*MarginOrderGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOrderGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginOrderGetRes](api.client.c, url, GET)
 }
@@ -396,7 +396,7 @@ func (client *SpotRestClient) NewMarginOrderDelete() *SpotMarginOrderDeleteApi {
 	}
 }
 func (api *SpotMarginOrderDeleteApi) Do() (*SpotMarginOrderDeleteRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOrderDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotMarginOrderDeleteRes](api.client.c, url, DELETE)
 }
@@ -409,7 +409,7 @@ func (client *SpotRestClient) NewMarginAllOrders() *SpotMarginAllOrdersApi {
 	}
 }
 func (api *SpotMarginAllOrdersApi) Do() (*MarginAllOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginAllOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginAllOrdersRes](api.client.c, url, GET)
 }
@@ -422,7 +422,7 @@ func (client *SpotRestClient) NewMarginOpenOrders() *SpotMarginOpenOrdersApi {
 	}
 }
 func (api *SpotMarginOpenOrdersApi) Do() (*MarginOpenOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOpenOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginOpenOrdersRes](api.client.c, url, GET)
 }
@@ -436,7 +436,7 @@ func (client *SpotRestClient) NewMarginTransfer() *SpotMarginTransferApi {
 	}
 }
 func (api *SpotMarginTransferApi) Do() (*MarginTransferRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginTransfer], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginTransferRes](api.client.c, url, POST)
 }
@@ -449,7 +449,7 @@ func (client *SpotRestClient) NewMarginIsolatedTransfer() *SpotMarginIsolatedTra
 	}
 }
 func (api *SpotMarginIsolatedTransferApi) Do() (*MarginIsolatedTransferRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedTransfer], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginIsolatedTransferRes](api.client.c, url, POST)
 }
@@ -462,7 +462,7 @@ func (client *SpotRestClient) NewMarginLoan() *SpotMarginLoanApi {
 	}
 }
 func (api *SpotMarginLoanApi) Do() (*MarginLoanRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginLoan], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginLoanRes](api.client.c, url, POST)
 }
@@ -475,7 +475,7 @@ func (client *SpotRestClient) NewMarginRepay() *SpotMarginRepayApi {
 	}
 }
 func (api *SpotMarginRepayApi) Do() (*MarginRepayRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginRepay], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginRepayRes](api.client.c, url, POST)
 }
@@ -489,7 +489,7 @@ func (client *SpotRestClient) NewSpotOrderPost() *SpotOrderPostApi {
 	}
 }
 func (api *SpotOrderPostApi) Do() (*SpotOrderPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderPost], api.client.c.ApiSecret)
 	log.Warn(url)
 	return binanceCallApiWithSecret[SpotOrderPostRes](api.client.c, url, POST)
@@ -503,7 +503,7 @@ func (client *SpotRestClient) NewSpotMarginOrderPost() *SpotMarginOrderPostApi {
 	}
 }
 func (api *SpotMarginOrderPostApi) Do() (*SpotMarginOrderPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginOrderPost], api.client.c.ApiSecret)
 	log.Debug(url)
 	return binanceCallApiWithSecret[SpotMarginOrderPostRes](api.client.c, url, POST)
@@ -518,7 +518,7 @@ func (client *SpotRestClient) NewAccountApiTradingStatus() *SpotAccountApiTradin
 	}
 }
 func (api *SpotAccountApiTradingStatusApi) Do() (*SpotAccountApiTradingStatusRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAccountApiTradingStatus], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAccountApiTradingStatusRes](api.client.c, url, GET)
 }
@@ -568,7 +568,7 @@ func (client *SpotRestClient) NewOpenOrders() *SpotOpenOrdersApi {
 	}
 }
 func (api *SpotOpenOrdersApi) Do() (*SpotOpenOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOpenOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotOpenOrdersRes](api.client.c, url, GET)
 }
@@ -581,7 +581,7 @@ func (client *SpotRestClient) NewAllOrders() *SpotAllOrdersApi {
 	}
 }
 func (api *SpotAllOrdersApi) Do() (*SpotAllOrdersRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAllOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAllOrdersRes](api.client.c, url, GET)
 }
@@ -594,7 +594,7 @@ func (client *SpotRestClient) NewSpotOrderGet() *SpotOrderGetApi {
 	}
 }
 func (api *SpotOrderGetApi) Do() (*SpotOrderGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotOrderGetRes](api.client.c, url, GET)
 }
@@ -607,7 +607,7 @@ func (client *SpotRestClient) NewSpotOrderDelete() *SpotOrderDeleteApi {
 	}
 }
 func (api *SpotOrderDeleteApi) Do() (*SpotOrderDeleteRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotOrderDeleteRes](api.client.c, url, DELETE)
 }
@@ -620,7 +620,7 @@ func (client *SpotRestClient) NewSpotAssetTransferPost() *SpotAssetTransferPostA
 	}
 }
 func (api *SpotAssetTransferPostApi) Do() (*SpotAssetTransferPostRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTransferPost], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAssetTransferPostRes](api.client.c, url, POST)
 }
@@ -633,7 +633,7 @@ func (client *SpotRestClient) NewSpotAssetTransferGet() *SpotAssetTransferGetApi
 	}
 }
 func (api *SpotAssetTransferGetApi) Do() (*SpotAssetTransferGetRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTransferGet], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAssetTransferGetRes](api.client.c, url, GET)
 }
@@ -646,7 +646,7 @@ func (client *SpotRestClient) NewSpotAssetTradeFee() *SpotAssetTradeFeeApi {
 	}
 }
 func (api *SpotAssetTradeFeeApi) Do() (*SpotAssetTradeFeeRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTradeFee], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAssetTradeFeeRes](api.client.c, url, GET)
 }
@@ -659,7 +659,7 @@ func (client *SpotRestClient) NewSpotMyTrades() *SpotMyTradesApi {
 	}
 }
 func (api *SpotMyTradesApi) Do() (*SpotMyTradesRes, error) {
-	api.Timestamp(time.Now().UnixMilli())
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMyTrades], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotMyTradesRes](api.client.c, url, GET)
 }
