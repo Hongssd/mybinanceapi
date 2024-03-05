@@ -26,6 +26,11 @@ const (
 	SwapKlines
 	SwapTickerPrice //获取交易对最新价格
 	SwapDepth       //获取深度信息
+
+	//Ws账户推送相关
+	SwapListenKeyPost //生成listenKey (USER_STREAM)
+	SwapListenKeyPut  //延长listenKey有效期 (USER_STREAM)
+	SwapListenKeyDel  //关闭listenKey (USER_STREAM)
 )
 
 var SwapApiMap = map[SwapApi]string{
@@ -54,6 +59,11 @@ var SwapApiMap = map[SwapApi]string{
 	SwapKlines:      "/dapi/v1/klines",       //GET接口 获取K线数据
 	SwapTickerPrice: "/dapi/v1/ticker/price", //GET接口 获取交易对最新价格
 	SwapDepth:       "/dapi/v1/depth",        //GET接口 获取深度信息
+
+	//Ws账户推送相关
+	SwapListenKeyPost: "/dapi/v1/listenKey", //POST接口 (HMAC SHA256) 创建listenKey (USER_STREAM)\
+	SwapListenKeyPut:  "/dapi/v1/listenKey", //PUT接口 (HMAC SHA256) 延长listenKey有效期 (USER_STREAM)
+	SwapListenKeyDel:  "/dapi/v1/listenKey", //DELETE接口 (HMAC SHA256) 关闭listenKey (USER_STREAM)
 }
 
 //============GET接口
@@ -281,4 +291,42 @@ func (api *SwapDepthApi) Do() (*SwapDepthRes, error) {
 		return nil, err
 	}
 	return res.ConvertToRes(), nil
+}
+
+//============Ws账户推送相关
+
+// binance SWAP  SwapListenKeyPost rest创建listenKey (USER_STREAM)
+func (client *SwapRestClient) NewSwapListenKeyPost() *SwapListenKeyPostApi {
+	return &SwapListenKeyPostApi{
+		client: client,
+		req:    &SwapListenKeyPostReq{},
+	}
+}
+func (api *SwapListenKeyPostApi) Do() (*SwapListenKeyPostRes, error) {
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapListenKeyPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapListenKeyPostRes](api.client.c, url, POST)
+}
+
+// binance SWAP  SwapListenKeyPut rest延长listenKey有效期 (USER_STREAM)
+func (client *SwapRestClient) NewSwapListenKeyPut() *SwapListenKeyPutApi {
+	return &SwapListenKeyPutApi{
+		client: client,
+		req:    &SwapListenKeyPutReq{},
+	}
+}
+func (api *SwapListenKeyPutApi) Do() (*SwapListenKeyPutRes, error) {
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapListenKeyPut], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapListenKeyPutRes](api.client.c, url, PUT)
+}
+
+// binance SWAP  SwapListenKeyDelete rest关闭listenKey (USER_STREAM)
+func (client *SwapRestClient) NewSwapListenKeyDelete() *SwapListenKeyDeleteApi {
+	return &SwapListenKeyDeleteApi{
+		client: client,
+		req:    &SwapListenKeyDeleteReq{},
+	}
+}
+func (api *SwapListenKeyDeleteApi) Do() (*SwapListenKeyDeleteRes, error) {
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapListenKeyDel], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapListenKeyDeleteRes](api.client.c, url, DELETE)
 }

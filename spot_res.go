@@ -843,3 +843,34 @@ type SpotTickerResRow struct {
 	LastId             int64  `json:"lastId"`             // 末笔成交id
 	Count              int64  `json:"count"`              // 成交笔数
 }
+
+// {
+// 	"listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
+//   }
+
+// 现货用户数据流
+type SpotUserDataStreamPostRes struct {
+	ListenKey string `json:"listenKey"`
+}
+
+type SpotUserDataStreamPutRes struct{}
+
+type SpotUserDataStreamDeleteRes struct{}
+
+// 现货杠杆用户数据流
+type SpotMarginUserDataStreamPostRes struct {
+	ListenKey string `json:"listenKey"`
+}
+
+type SpotMarginUserDataStreamPutRes struct{}
+
+type SpotMarginUserDataStreamDeleteRes struct{}
+
+// 现货逐仓杠杆用户数据流
+type SpotMarginIsolatedUserDataStreamPostRes struct {
+	ListenKey string `json:"listenKey"`
+}
+
+type SpotMarginIsolatedUserDataStreamPutRes struct{}
+
+type SpotMarginIsolatedUserDataStreamDeleteRes struct{}

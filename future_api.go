@@ -44,6 +44,11 @@ const (
 	FutureTickerPrice      //最新价格
 	FutureTickerBookTicker //当前最优挂单
 	FutureDataBasis        //基差数据
+
+	//Ws账户推送相关
+	FutureListenKeyPost   //生成listenKey (USER_STREAM)
+	FutureListenKeyPut    //延长listenKey有效期 (USER_STREAM)
+	FutureListenKeyDelete //关闭listenKey (USER_STREAM)
 )
 
 var FutureApiMap = map[FutureApi]string{
@@ -90,6 +95,11 @@ var FutureApiMap = map[FutureApi]string{
 	FutureTickerPrice:      "/fapi/v1/ticker/price",      //GET接口 最新价格
 	FutureTickerBookTicker: "/fapi/v1/ticker/bookTicker", //GET接口 当前最优挂单
 	FutureDataBasis:        "/futures/data/basis",        //GET接口 基差数据
+
+	//Ws账户推送相关
+	FutureListenKeyPost:   "/fapi/v1/listenKey", //POST接口 生成listenKey (USER_STREAM)
+	FutureListenKeyPut:    "/fapi/v1/listenKey", //PUT接口 延长listenKey有效期 (USER_STREAM)
+	FutureListenKeyDelete: "/fapi/v1/listenKey", //DELETE接口 关闭listenKey (USER_STREAM)
 
 }
 
@@ -534,4 +544,41 @@ func (client *FutureRestClient) NewFutureDataBasis() *FutureDataBasisApi {
 func (api *FutureDataBasisApi) Do() (*FutureDataBasisRes, error) {
 	url := binanceHandlerRequestApi(FUTURE, api.req, FutureApiMap[FutureDataBasis])
 	return binanceCallApiWithSecret[FutureDataBasisRes](api.client.c, url, GET)
+}
+
+//Ws账户推送相关
+// binance FUTURE FutureListenKeyPost rest生成listenKey (USER_STREAM)
+func (client *FutureRestClient) NewFutureListenKeyPost() *FutureListenKeyPostApi {
+	return &FutureListenKeyPostApi{
+		client: client,
+		req:    &FutureListenKeyPostReq{},
+	}
+}
+func (api *FutureListenKeyPostApi) Do() (*FutureListenKeyPostRes, error) {
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureListenKeyPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureListenKeyPostRes](api.client.c, url, POST)
+}
+
+// binance FUTURE FutureListenKeyPut rest延长listenKey有效期 (USER_STREAM)
+func (client *FutureRestClient) NewFutureListenKeyPut() *FutureListenKeyPutApi {
+	return &FutureListenKeyPutApi{
+		client: client,
+		req:    &FutureListenKeyPutReq{},
+	}
+}
+func (api *FutureListenKeyPutApi) Do() (*FutureListenKeyPutRes, error) {
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureListenKeyPut], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureListenKeyPutRes](api.client.c, url, PUT)
+}
+
+// binance FUTURE FutureListenKeyDelete rest关闭listenKey (USER_STREAM)
+func (client *FutureRestClient) NewFutureListenKeyDelete() *FutureListenKeyDeleteApi {
+	return &FutureListenKeyDeleteApi{
+		client: client,
+		req:    &FutureListenKeyDeleteReq{},
+	}
+}
+func (api *FutureListenKeyDeleteApi) Do() (*FutureListenKeyDeleteRes, error) {
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureListenKeyDelete], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureListenKeyDeleteRes](api.client.c, url, DELETE)
 }

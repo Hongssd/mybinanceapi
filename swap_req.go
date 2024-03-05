@@ -489,3 +489,22 @@ func (api *SwapDepthApi) Limit(Limit int) *SwapDepthApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
+
+type SwapListenKeyPostReq struct{}
+type SwapListenKeyPutReq struct{}
+type SwapListenKeyDeleteReq struct{}
+
+type SwapListenKeyPostApi struct {
+	client *SwapRestClient
+	req    *SwapListenKeyPostReq
+}
+
+type SwapListenKeyPutApi struct {
+	client *SwapRestClient
+	req    *SwapListenKeyPutReq
+}
+
+type SwapListenKeyDeleteApi struct {
+	client *SwapRestClient
+	req    *SwapListenKeyDeleteReq
+}

@@ -676,3 +676,11 @@ type FutureDataBasisResRow struct {
 	Pair                string `json:"pair"`
 	Timestamp           int64  `json:"timestamp"`
 }
+
+type FutureListenKeyPostRes struct {
+	ListenKey string `json:"listenKey"`
+}
+
+type FutureListenKeyPutRes struct{}
+
+type FutureListenKeyDeleteRes struct{}

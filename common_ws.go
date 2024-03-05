@@ -38,21 +38,44 @@ var (
 	// WebsocketKeepalive enables sending ping/pong messages to check the connection stability
 	WebsocketKeepalive      = true
 	SUBSCRIBE_INTERVAL_TIME = 500 * time.Millisecond //订阅间隔
+
+	ListenKeyRefreshInterval = 30 * time.Minute
+)
+
+type WsStreamPath int
+
+const (
+	WS_STREAM_PATH WsStreamPath = iota
+	WS_ACCOUNT_PATH
 )
 
 // 数据流订阅基础客户端
 type WsStreamClient struct {
-	apiType        ApiType
-	isGzip         bool
-	conn           *websocket.Conn
+	apiType ApiType
+	isGzip  bool
+	conn    *websocket.Conn
+
+	//行情订阅相关
 	commonSubMap   map[int64]*Subscription[SubscribeResult] //订阅的返回结果
 	klineSubMap    map[string]*Subscription[WsKline]
 	depthSubMap    map[string]*Subscription[WsDepth]
 	aggTradeSubMap map[string]*Subscription[WsAggTrade]
-	resultChan     chan []byte
-	errChan        chan error
-	isClose        bool
-	reSubscribeMu  *sync.Mutex
+
+	//账户推送相关
+	wsSpotPayloadMap   map[int64]*WsSpotPayload
+	wsFuturePayloadMap map[int64]*WsFuturePayload
+	wsSwapPayloadMap   map[int64]*WsSwapPayload
+
+	resultChan               chan []byte
+	errChan                  chan error
+	isClose                  bool
+	reSubscribeMu            *sync.Mutex
+	apiKey                   string
+	apiSecret                string
+	wsStreamPath             WsStreamPath
+	isListenWs               bool
+	listenKey                string
+	listenKeyRefreshStopChan *chan struct{}
 }
 
 // 订阅请求结构体
@@ -100,6 +123,71 @@ func (sub *Subscription[T]) ErrChan() chan error {
 // 获取关闭订阅信号
 func (sub *Subscription[T]) CloseChan() chan struct{} {
 	return sub.closeChan
+}
+
+type Payload[T any] struct {
+	resultChan chan T        //接收订阅结果的通道
+	errChan    chan error    //接收订阅错误的通道
+	closeChan  chan struct{} //接收订阅关闭的通道
+}
+
+func (p *Payload[T]) ResultChan() chan T {
+	return p.resultChan
+}
+
+func (p *Payload[T]) ErrChan() chan error {
+	return p.errChan
+}
+
+func (p *Payload[T]) CloseChan() chan struct{} {
+	return p.closeChan
+}
+
+type WsSpotPayload struct {
+	Ws                             *SpotWsStreamClient
+	Id                             int64
+	OutboundAccountPositionPayload *Payload[WsSpotPayloadOutboundAccountPosition]
+	BalanceUpdatePayload           *Payload[WsSpotPayloadBalanceUpdate]
+	ExecutionReportPayload         *Payload[WsSpotPayloadExecutionReport]
+}
+
+type WsFuturePayload struct {
+	Ws                      *FutureWsStreamClient
+	Id                      int64
+	AccountUpdatePayload    *Payload[WsFuturePayloadAccountUpdate]
+	OrderTradeUpdatePayload *Payload[WsFuturePayloadOrderTradeUpdate]
+}
+
+type WsSwapPayload struct {
+	Ws                      *SwapWsStreamClient
+	Id                      int64
+	AccountUpdatePayload    *Payload[WsSwapPayloadAccountUpdate]
+	OrderTradeUpdatePayload *Payload[WsSwapPayloadOrderTradeUpdate]
+}
+
+func (payload *WsSpotPayload) Close() {
+	if _, ok := payload.Ws.wsSpotPayloadMap[payload.Id]; ok {
+		delete(payload.Ws.wsSpotPayloadMap, payload.Id)
+		payload.OutboundAccountPositionPayload.closeChan <- struct{}{}
+		payload.BalanceUpdatePayload.closeChan <- struct{}{}
+		payload.ExecutionReportPayload.closeChan <- struct{}{}
+	}
+}
+
+func (payload *WsFuturePayload) Close() {
+	if _, ok := payload.Ws.wsFuturePayloadMap[payload.Id]; ok {
+		delete(payload.Ws.wsFuturePayloadMap, payload.Id)
+		payload.AccountUpdatePayload.closeChan <- struct{}{}
+		payload.OrderTradeUpdatePayload.closeChan <- struct{}{}
+	}
+}
+
+func (payload *WsSwapPayload) Close() {
+	if _, ok := payload.Ws.wsSwapPayloadMap[payload.Id]; ok {
+		delete(payload.Ws.wsSwapPayloadMap, payload.Id)
+		payload.AccountUpdatePayload.closeChan <- struct{}{}
+		payload.OrderTradeUpdatePayload.closeChan <- struct{}{}
+	}
 }
 
 func sendMsg[T any](ws *WsStreamClient, id int64, method string, params []string) (*Subscription[T], error) {
@@ -156,11 +244,331 @@ func (ws *WsStreamClient) Close() error {
 	close(ws.errChan)
 	ws.resultChan = nil
 	ws.errChan = nil
+	ws.initStructs()
+	return nil
+}
+
+func (ws *WsStreamClient) initStructs() {
 	ws.commonSubMap = make(map[int64]*Subscription[SubscribeResult])
 	ws.klineSubMap = make(map[string]*Subscription[WsKline])
 	ws.depthSubMap = make(map[string]*Subscription[WsDepth])
 	ws.aggTradeSubMap = make(map[string]*Subscription[WsAggTrade])
+
+	ws.wsSpotPayloadMap = make(map[int64]*WsSpotPayload)
+	ws.wsFuturePayloadMap = make(map[int64]*WsFuturePayload)
+	ws.wsSwapPayloadMap = make(map[int64]*WsSwapPayload)
+}
+
+type SpotWsType int
+
+const (
+	SPOT_WS_TYPE SpotWsType = iota
+	SPOT_MARGIN_WS_TYPE
+	SPOT_ISOLATED_MARGIN_WS_TYPE
+)
+
+func (ws *SpotWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string, spotWsType SpotWsType, isolatedSymbol ...string) (*SpotWsStreamClient, error) {
+	ws.wsStreamPath = WS_ACCOUNT_PATH
+	ws.apiKey = apiKey
+	ws.apiSecret = apiSecret
+	ws.spotWsType = spotWsType
+	ws.isListenWs = true
+	b := MyBinance{}
+	ws.client = b.NewSpotRestClient(apiKey, apiSecret)
+
+	err := ws.listenKeyPost()
+	if err != nil {
+		return nil, err
+	}
+	//创建一个协程定时刷新listenKey，如果已存在旧的刷新协程则不再创建
+	if ws.listenKeyRefreshStopChan == nil {
+		stopChan := make(chan struct{})
+		ws.listenKeyRefreshStopChan = &stopChan
+		go func() {
+			for {
+				select {
+				case <-time.After(ListenKeyRefreshInterval):
+					err := ws.listenKeyPut()
+					for err != nil {
+						log.Error(err)
+						time.Sleep(5 * time.Second)
+						if strings.Contains(err.Error(), "-1125") {
+							//如果是-1125错误，则Post更新
+							err = ws.listenKeyPost()
+						} else {
+							err = ws.listenKeyPut()
+						}
+					}
+				case <-*ws.listenKeyRefreshStopChan:
+					return
+				}
+			}
+		}()
+	}
+
+	return ws, nil
+}
+
+func (ws *SpotWsStreamClient) listenKeyPost() error {
+	//申请新的listenKey
+	switch ws.spotWsType {
+	case SPOT_WS_TYPE:
+		res, err := ws.client.NewSpotUserDataStreamPost().Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		ws.listenKey = res.ListenKey
+		log.Debug("listenKey:", ws.listenKey)
+	case SPOT_MARGIN_WS_TYPE:
+		res, err := ws.client.NewSpotMarginUserDataStreamPost().Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		ws.listenKey = res.ListenKey
+		log.Debug("listenKey:", ws.listenKey)
+	case SPOT_ISOLATED_MARGIN_WS_TYPE:
+		res, err := ws.client.NewSpotMarginIsolatedUserDataStreamPost().Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		ws.listenKey = res.ListenKey
+		log.Debug("listenKey:", ws.listenKey)
+	default:
+		return fmt.Errorf("spotWsType is not support")
+	}
 	return nil
+}
+
+func (ws *SpotWsStreamClient) listenKeyPut() error {
+	//申请新的listenKey
+	switch ws.spotWsType {
+	case SPOT_WS_TYPE:
+		_, err := ws.client.NewSpotUserDataStreamPut().ListenKey(ws.listenKey).Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	case SPOT_MARGIN_WS_TYPE:
+		_, err := ws.client.NewSpotMarginUserDataStreamPut().ListenKey(ws.listenKey).Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+	case SPOT_ISOLATED_MARGIN_WS_TYPE:
+		_, err := ws.client.NewSpotMarginIsolatedUserDataStreamPut().Symbol(ws.isolatedSymbol).ListenKey(ws.listenKey).Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	default:
+		return fmt.Errorf("spotWsType is not support")
+	}
+	return nil
+}
+
+func (ws *SpotWsStreamClient) listenKeyDelete() error {
+	switch ws.spotWsType {
+	case SPOT_WS_TYPE:
+		_, err := ws.client.NewSpotUserDataStreamDelete().ListenKey(ws.listenKey).Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	case SPOT_MARGIN_WS_TYPE:
+		_, err := ws.client.NewSpotMarginUserDataStreamDelete().ListenKey(ws.listenKey).Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+	case SPOT_ISOLATED_MARGIN_WS_TYPE:
+		_, err := ws.client.NewSpotMarginIsolatedUserDataStreamDelete().Symbol(ws.isolatedSymbol).ListenKey(ws.listenKey).Do()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	default:
+		return fmt.Errorf("spotWsType is not support")
+	}
+	return nil
+}
+
+func (ws *FutureWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string) (*FutureWsStreamClient, error) {
+	ws.wsStreamPath = WS_ACCOUNT_PATH
+	ws.apiKey = apiKey
+	ws.apiSecret = apiSecret
+	ws.isListenWs = true
+	b := MyBinance{}
+	ws.client = b.NewFutureRestClient(apiKey, apiSecret)
+
+	err := ws.listenKeyPost()
+	if err != nil {
+		return nil, err
+	}
+	//创建一个协程定时刷新listenKey，如果已存在旧的刷新协程则不再创建
+	if ws.listenKeyRefreshStopChan == nil {
+		stopChan := make(chan struct{})
+		ws.listenKeyRefreshStopChan = &stopChan
+		go func() {
+			for {
+				select {
+				case <-time.After(ListenKeyRefreshInterval):
+					err := ws.listenKeyPut()
+					for err != nil {
+						log.Error(err)
+						time.Sleep(5 * time.Second)
+						if strings.Contains(err.Error(), "-1125") {
+							//如果是-1125错误，则Post更新
+							err = ws.listenKeyPost()
+						} else {
+							err = ws.listenKeyPut()
+						}
+					}
+				case <-*ws.listenKeyRefreshStopChan:
+					return
+				}
+			}
+		}()
+	}
+
+	return ws, nil
+}
+
+func (ws *FutureWsStreamClient) listenKeyPost() error {
+	res, err := ws.client.NewFutureListenKeyPost().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	ws.listenKey = res.ListenKey
+	log.Debug("listenKey:", ws.listenKey)
+	return nil
+}
+
+func (ws *FutureWsStreamClient) listenKeyPut() error {
+	_, err := ws.client.NewFutureListenKeyPut().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (ws *FutureWsStreamClient) listenKeyDelete() error {
+	_, err := ws.client.NewFutureListenKeyDelete().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (ws *SwapWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string) (*SwapWsStreamClient, error) {
+	ws.wsStreamPath = WS_ACCOUNT_PATH
+	ws.apiKey = apiKey
+	ws.apiSecret = apiSecret
+	ws.isListenWs = true
+	b := MyBinance{}
+	ws.client = b.NewSwapRestClient(apiKey, apiSecret)
+
+	err := ws.listenKeyPost()
+	if err != nil {
+		return nil, err
+	}
+
+	//创建一个协程定时刷新listenKey，如果已存在旧的刷新协程则不再创建
+	if ws.listenKeyRefreshStopChan == nil {
+		stopChan := make(chan struct{})
+		ws.listenKeyRefreshStopChan = &stopChan
+		go func() {
+			for {
+				select {
+				case <-time.After(ListenKeyRefreshInterval):
+					err := ws.listenKeyPut()
+					for err != nil {
+						log.Error(err)
+						time.Sleep(5 * time.Second)
+						if strings.Contains(err.Error(), "-1125") {
+							//如果是-1125错误，则Post更新
+							err = ws.listenKeyPost()
+						} else {
+							err = ws.listenKeyPut()
+						}
+					}
+				case <-*ws.listenKeyRefreshStopChan:
+					return
+				}
+			}
+		}()
+	}
+
+	return ws, nil
+}
+
+func (ws *SwapWsStreamClient) listenKeyPost() error {
+	res, err := ws.client.NewSwapListenKeyPost().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	ws.listenKey = res.ListenKey
+	log.Debug("listenKey:", ws.listenKey)
+	return nil
+}
+
+func (ws *SwapWsStreamClient) listenKeyPut() error {
+	_, err := ws.client.NewSwapListenKeyPut().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (ws *SwapWsStreamClient) listenKeyDelete() error {
+	_, err := ws.client.NewSwapListenKeyDelete().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (ws *SpotWsStreamClient) Close() error {
+	if ws.isListenWs {
+		err := ws.listenKeyDelete()
+		if err != nil {
+			return err
+		}
+		*ws.listenKeyRefreshStopChan <- struct{}{}
+	}
+	return ws.WsStreamClient.Close()
+}
+
+func (ws *FutureWsStreamClient) Close() error {
+	if ws.isListenWs {
+		err := ws.listenKeyDelete()
+		if err != nil {
+			return err
+		}
+		*ws.listenKeyRefreshStopChan <- struct{}{}
+	}
+	return ws.WsStreamClient.Close()
+}
+
+func (ws *SwapWsStreamClient) Close() error {
+	if ws.isListenWs {
+		err := ws.listenKeyDelete()
+		if err != nil {
+			return err
+		}
+		*ws.listenKeyRefreshStopChan <- struct{}{}
+	}
+	return ws.WsStreamClient.Close()
 }
 
 func (ws *WsStreamClient) OpenConn() error {
@@ -170,7 +578,7 @@ func (ws *WsStreamClient) OpenConn() error {
 	if ws.errChan == nil {
 		ws.errChan = make(chan error)
 	}
-	apiUrl := handlerWsStreamRequestApi(ws.apiType, ws.isGzip)
+	apiUrl := handlerWsStreamRequestApi(ws.wsStreamPath, ws.listenKey, ws.apiType, ws.isGzip)
 	if ws.conn == nil {
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
 		ws.conn = conn
@@ -188,52 +596,54 @@ func (ws *WsStreamClient) OpenConn() error {
 
 type SpotWsStreamClient struct {
 	WsStreamClient
+	spotWsType     SpotWsType
+	isolatedSymbol string
+	client         *SpotRestClient
 }
 type FutureWsStreamClient struct {
 	WsStreamClient
+	client *FutureRestClient
 }
 type SwapWsStreamClient struct {
 	WsStreamClient
+	client *SwapRestClient
 }
 
 func (*MyBinance) NewSpotWsStreamClient() *SpotWsStreamClient {
-	return &SpotWsStreamClient{
+	ws := &SpotWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:        SPOT,
-			isGzip:         false,
-			commonSubMap:   make(map[int64]*Subscription[SubscribeResult]),
-			klineSubMap:    make(map[string]*Subscription[WsKline]),
-			depthSubMap:    make(map[string]*Subscription[WsDepth]),
-			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
-			reSubscribeMu:  &sync.Mutex{},
+			apiType:       SPOT,
+			isGzip:        false,
+			reSubscribeMu: &sync.Mutex{},
+			wsStreamPath:  WS_STREAM_PATH,
 		},
 	}
+	ws.initStructs()
+	return ws
 }
 func (*MyBinance) NewFutureWsStreamClient() *FutureWsStreamClient {
-	return &FutureWsStreamClient{
+	ws := &FutureWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:        FUTURE,
-			isGzip:         false,
-			commonSubMap:   make(map[int64]*Subscription[SubscribeResult]),
-			klineSubMap:    make(map[string]*Subscription[WsKline]),
-			depthSubMap:    make(map[string]*Subscription[WsDepth]),
-			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
-			reSubscribeMu:  &sync.Mutex{},
+			apiType:       FUTURE,
+			isGzip:        false,
+			reSubscribeMu: &sync.Mutex{},
+			wsStreamPath:  WS_STREAM_PATH,
 		},
 	}
+	ws.initStructs()
+	return ws
 }
 func (*MyBinance) NewSwapWsStreamClient() *SwapWsStreamClient {
-	return &SwapWsStreamClient{
+	ws := &SwapWsStreamClient{
 		WsStreamClient: WsStreamClient{
-			apiType:        SWAP,
-			isGzip:         false,
-			commonSubMap:   make(map[int64]*Subscription[SubscribeResult]),
-			klineSubMap:    make(map[string]*Subscription[WsKline]),
-			depthSubMap:    make(map[string]*Subscription[WsDepth]),
-			aggTradeSubMap: make(map[string]*Subscription[WsAggTrade]),
-			reSubscribeMu:  &sync.Mutex{},
+			apiType:       SWAP,
+			isGzip:        false,
+			reSubscribeMu: &sync.Mutex{},
+			wsStreamPath:  WS_STREAM_PATH,
 		},
 	}
+	ws.initStructs()
+	return ws
 }
 
 func (ws *WsStreamClient) sendSubscribeResultToChan(result SubscribeResult) {
@@ -348,7 +758,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				if !ok {
 					return
 				}
-				// log.Debug("receive result: ", string(data))
+				// log.Debugf("[%s] receive result: %s", ws.apiType.String(), string(data))
 				//处理订阅或查询订阅列表请求返回结果
 				if strings.Contains(string(data), "error") || strings.Contains(string(data), "result") {
 					result := SubscribeResult{}
@@ -362,6 +772,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				}
 
 				//处理正常数据的返回结果
+				//K线订阅
 				if strings.Contains(string(data), "@kline") {
 					var k *WsKline
 					var err error
@@ -382,6 +793,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					continue
 				}
 
+				//深度订阅
 				if strings.Contains(string(data), "@depth") {
 					var d *WsDepth
 					var err error
@@ -403,6 +815,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					continue
 				}
 
+				//归集交易流订阅
 				if strings.Contains(string(data), "@aggTrade") {
 					var a *WsAggTrade
 					var err error
@@ -421,6 +834,104 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						sub.resultChan <- *a
 					}
 					continue
+				}
+
+				//现货账户更新推送
+				if strings.Contains(string(data), "outboundAccountPosition") {
+					res, err := HandleWsPayloadResult[WsSpotPayloadOutboundAccountPosition](data)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+					for _, payload := range ws.wsSpotPayloadMap {
+						if payload.OutboundAccountPositionPayload != nil {
+							payload.OutboundAccountPositionPayload.resultChan <- *res
+						}
+					}
+				}
+
+				//现货余额更新推送
+				if strings.Contains(string(data), "balanceUpdate") {
+					res, err := HandleWsPayloadResult[WsSpotPayloadBalanceUpdate](data)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+					for _, payload := range ws.wsSpotPayloadMap {
+						if payload.BalanceUpdatePayload != nil {
+							payload.BalanceUpdatePayload.resultChan <- *res
+						}
+					}
+				}
+
+				//现货订单推送
+				if strings.Contains(string(data), "executionReport") {
+					res, err := HandleWsPayloadResult[WsSpotPayloadExecutionReport](data)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+					for _, payload := range ws.wsSpotPayloadMap {
+						if payload.ExecutionReportPayload != nil {
+							payload.ExecutionReportPayload.resultChan <- *res
+						}
+					}
+				}
+
+				//U本位合约及币本位合约 余额/仓位 更新推送
+				if strings.Contains(string(data), "ACCOUNT_UPDATE") {
+					switch ws.apiType {
+					case FUTURE:
+						res, err := HandleWsPayloadResult[WsFuturePayloadAccountUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						for _, payload := range ws.wsFuturePayloadMap {
+							if payload.AccountUpdatePayload != nil {
+								payload.AccountUpdatePayload.resultChan <- *res
+							}
+						}
+					case SWAP:
+						res, err := HandleWsPayloadResult[WsSwapPayloadAccountUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						for _, payload := range ws.wsSwapPayloadMap {
+							if payload.AccountUpdatePayload != nil {
+								payload.AccountUpdatePayload.resultChan <- *res
+							}
+						}
+					}
+				}
+
+				//U本位合约及币本位合约 订单/成交 更新推送
+				if strings.Contains(string(data), "ORDER_TRADE_UPDATE") {
+					switch ws.apiType {
+					case FUTURE:
+						res, err := HandleWsPayloadResult[WsFuturePayloadOrderTradeUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						for _, payload := range ws.wsFuturePayloadMap {
+							if payload.OrderTradeUpdatePayload != nil {
+								payload.OrderTradeUpdatePayload.resultChan <- *res
+							}
+						}
+					case SWAP:
+						res, err := HandleWsPayloadResult[WsSwapPayloadOrderTradeUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						for _, payload := range ws.wsSwapPayloadMap {
+							if payload.OrderTradeUpdatePayload != nil {
+								payload.OrderTradeUpdatePayload.resultChan <- *res
+							}
+						}
+					}
 				}
 			}
 		}
@@ -729,6 +1240,83 @@ func (ws *WsStreamClient) SubscribeAggTradeMultiple(symbols []string) (*Subscrip
 	}
 }
 
+func (ws *SpotWsStreamClient) CreatePayload() (*WsSpotPayload, error) {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return nil, err
+	}
+	id := node.Generate().Int64()
+	payload := &WsSpotPayload{
+		Ws: ws,
+		Id: id,
+		OutboundAccountPositionPayload: &Payload[WsSpotPayloadOutboundAccountPosition]{
+			resultChan: make(chan WsSpotPayloadOutboundAccountPosition),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		BalanceUpdatePayload: &Payload[WsSpotPayloadBalanceUpdate]{
+			resultChan: make(chan WsSpotPayloadBalanceUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		ExecutionReportPayload: &Payload[WsSpotPayloadExecutionReport]{
+			resultChan: make(chan WsSpotPayloadExecutionReport),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+	}
+	ws.wsSpotPayloadMap[id] = payload
+	return payload, nil
+}
+
+func (ws *FutureWsStreamClient) CreatePayload() (*WsFuturePayload, error) {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return nil, err
+	}
+	id := node.Generate().Int64()
+	payload := &WsFuturePayload{
+		Ws: ws,
+		Id: id,
+		AccountUpdatePayload: &Payload[WsFuturePayloadAccountUpdate]{
+			resultChan: make(chan WsFuturePayloadAccountUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		OrderTradeUpdatePayload: &Payload[WsFuturePayloadOrderTradeUpdate]{
+			resultChan: make(chan WsFuturePayloadOrderTradeUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+	}
+	ws.wsFuturePayloadMap[id] = payload
+	return payload, nil
+}
+
+func (ws *SwapWsStreamClient) CreatePayload() (*WsSwapPayload, error) {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return nil, err
+	}
+	id := node.Generate().Int64()
+	payload := &WsSwapPayload{
+		Ws: ws,
+		Id: id,
+		AccountUpdatePayload: &Payload[WsSwapPayloadAccountUpdate]{
+			resultChan: make(chan WsSwapPayloadAccountUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		OrderTradeUpdatePayload: &Payload[WsSwapPayloadOrderTradeUpdate]{
+			resultChan: make(chan WsSwapPayloadOrderTradeUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+	}
+	ws.wsSwapPayloadMap[id] = payload
+	return payload, nil
+}
+
 // 获取当前所有订阅
 func (ws *WsStreamClient) CurrentSubscribeList() ([]string, error) {
 	listSub, err := sendMsg[SubscribeResult](ws, 0, LIST_SUBSCRIPTIONS, []string{})
@@ -826,11 +1414,11 @@ func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan
 }
 
 // 获取数据流请求URL
-func handlerWsStreamRequestApi(apiType ApiType, isGzip bool) string {
+func handlerWsStreamRequestApi(wsStreamPath WsStreamPath, listenKey string, apiType ApiType, isGzip bool) string {
 	u := url.URL{
 		Scheme:   "wss",
 		Host:     getWsApi(apiType, isGzip),
-		Path:     "/stream",
+		Path:     getWsPath(wsStreamPath, listenKey),
 		RawQuery: "",
 	}
 	return u.String()
@@ -870,6 +1458,17 @@ func getWsApi(apiType ApiType, isGzip bool) string {
 		}
 	}
 	log.Error("AccountType Error is ", apiType)
+	return ""
+}
+
+func getWsPath(wsStreamPath WsStreamPath, listenKey string) string {
+	switch wsStreamPath {
+	case WS_STREAM_PATH:
+		return "/stream"
+	case WS_ACCOUNT_PATH:
+		return fmt.Sprintf("/ws/%s", listenKey)
+	}
+	log.Error("WsStreamPath Error is ", wsStreamPath)
 	return ""
 }
 
