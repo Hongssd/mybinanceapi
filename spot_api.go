@@ -311,7 +311,7 @@ func (api *SpotSubAccountFuturesEnableApi) Do() (*SubAccountFuturesEnableRes, er
 
 // ================以下为杠杆账户GET接口
 // binance SPOT杠杆接口  MarginAllPairs rest获取所有全仓杠杆交易对(MARKET_DATA)
-func (client *SpotRestClient) NewMarginAllPairs() *SpotMarginAllPairsApi {
+func (client *SpotRestClient) NewSpotMarginAllPairs() *SpotMarginAllPairsApi {
 	return &SpotMarginAllPairsApi{
 		client: client,
 		req:    &SpotMarginAllPairsReq{},
@@ -324,7 +324,7 @@ func (api *SpotMarginAllPairsApi) Do() (*MarginAllPairsRes, error) {
 }
 
 // binance SPOT杠杆接口  MarginIsolatedAllPairs rest获取所有逐仓杠杆交易对(MARKET_DATA)
-func (client *SpotRestClient) NewMarginIsolatedAllPairs() *SpotMarginIsolatedAllPairsApi {
+func (client *SpotRestClient) NewSpotMarginIsolatedAllPairs() *SpotMarginIsolatedAllPairsApi {
 	return &SpotMarginIsolatedAllPairsApi{
 		client: client,
 		req:    &SpotMarginIsolatedAllPairsReq{},
@@ -337,7 +337,7 @@ func (api *SpotMarginIsolatedAllPairsApi) Do() (*MarginIsolatedAllPairsRes, erro
 }
 
 // binance SPOT杠杆接口  MarginAccount rest查询全仓杠杆账户详情 (USER_DATA)
-func (client *SpotRestClient) NewMarginAccount() *SpotMarginAccountApi {
+func (client *SpotRestClient) NewSpotMarginAccount() *SpotMarginAccountApi {
 	return &SpotMarginAccountApi{
 		client: client,
 		req:    &SpotMarginAccountReq{},
@@ -350,7 +350,7 @@ func (api *SpotMarginAccountApi) Do() (*MarginAccountRes, error) {
 }
 
 // binance SPOT杠杆接口  MarginIsolatedAccount rest查询逐仓杠杆账户详情 (USER_DATA)
-func (client *SpotRestClient) NewMarginIsolatedAccount() *SpotMarginIsolatedAccountApi {
+func (client *SpotRestClient) NewSpotMarginIsolatedAccount() *SpotMarginIsolatedAccountApi {
 	return &SpotMarginIsolatedAccountApi{
 		client: client,
 		req:    &SpotMarginIsolatedAccountReq{},
@@ -363,7 +363,7 @@ func (api *SpotMarginIsolatedAccountApi) Do() (*MarginIsolatedAccountRes, error)
 }
 
 // binance SPOT杠杆接口 MarginMaxBorrowable rest查询最大可借 (MARKET_DATA)
-func (client *SpotRestClient) NewMarginMaxBorrowable() *SpotMarginMaxBorrowableApi {
+func (client *SpotRestClient) NewSpotMarginMaxBorrowable() *SpotMarginMaxBorrowableApi {
 	return &SpotMarginMaxBorrowableApi{
 		client: client,
 		req:    &SpotMarginMaxBorrowableReq{},
@@ -376,7 +376,7 @@ func (api *SpotMarginMaxBorrowableApi) Do() (*MarginMaxBorrowableRes, error) {
 }
 
 // binance SPOT杠杆接口  MarginMaxTransferable rest查询最大可转 (MARKET_DATA)
-func (client *SpotRestClient) NewMarginMaxTransferable() *SpotMarginMaxTransferableApi {
+func (client *SpotRestClient) NewSpotMarginMaxTransferable() *SpotMarginMaxTransferableApi {
 	return &SpotMarginMaxTransferableApi{
 		client: client,
 		req:    &SpotMarginMaxTransferableReq{},
@@ -389,7 +389,7 @@ func (api *SpotMarginMaxTransferableApi) Do() (*MarginMaxTransferableRes, error)
 }
 
 // binance SPOT杠杆接口 MarginInterestHistory rest获取杠杆账户借息历史 (USER_DATA)
-func (client *SpotRestClient) NewMarginInterestHistory() *SpotMarginInterestHistoryApi {
+func (client *SpotRestClient) NewSpotMarginInterestHistory() *SpotMarginInterestHistoryApi {
 	return &SpotMarginInterestHistoryApi{
 		client: client,
 		req:    &SpotMarginInterestHistoryReq{},
@@ -402,7 +402,7 @@ func (api *SpotMarginInterestHistoryApi) Do() (*MarginInterestHistoryRes, error)
 }
 
 // binance SPOT杠杆接口  MarginOrderGet rest查询杠杆账户订单 (USER_DATA)
-func (client *SpotRestClient) NewMarginOrderGet() *SpotMarginOrderGetApi {
+func (client *SpotRestClient) NewSpotMarginOrderGet() *SpotMarginOrderGetApi {
 	return &SpotMarginOrderGetApi{
 		client: client,
 		req:    &SpotMarginOrderGetReq{},
@@ -415,7 +415,7 @@ func (api *SpotMarginOrderGetApi) Do() (*MarginOrderGetRes, error) {
 }
 
 // binance SPOT杠杆接口  MarginOrderDelete rest撤销杠杆账户订单 (TRADE)
-func (client *SpotRestClient) NewMarginOrderDelete() *SpotMarginOrderDeleteApi {
+func (client *SpotRestClient) NewSpotMarginOrderDelete() *SpotMarginOrderDeleteApi {
 	return &SpotMarginOrderDeleteApi{
 		client: client,
 		req:    &SpotMarginOrderDeleteReq{},
@@ -428,7 +428,7 @@ func (api *SpotMarginOrderDeleteApi) Do() (*SpotMarginOrderDeleteRes, error) {
 }
 
 // binance  SPOT杠杆接口 MarginAllOrders rest查询杠杆账户全部订单 (USER_DATA)
-func (client *SpotRestClient) NewMarginAllOrders() *SpotMarginAllOrdersApi {
+func (client *SpotRestClient) NewSpotMarginAllOrders() *SpotMarginAllOrdersApi {
 	return &SpotMarginAllOrdersApi{
 		client: client,
 		req:    &SpotMarginAllOrdersReq{},
@@ -441,7 +441,7 @@ func (api *SpotMarginAllOrdersApi) Do() (*MarginAllOrdersRes, error) {
 }
 
 // binance SPOT杠杆接口 MarginOpenOrders  rest查询杠杆账户挂单记录 (USER_DATA)
-func (client *SpotRestClient) NewMarginOpenOrders() *SpotMarginOpenOrdersApi {
+func (client *SpotRestClient) NewSpotMarginOpenOrders() *SpotMarginOpenOrdersApi {
 	return &SpotMarginOpenOrdersApi{
 		client: client,
 		req:    &SpotMarginOpenOrdersReq{},
@@ -455,7 +455,7 @@ func (api *SpotMarginOpenOrdersApi) Do() (*MarginOpenOrdersRes, error) {
 
 // ================以下为杠杆账户POST接口
 // binance SPOT杠杆接口  MarginTransfer rest全仓杠杆账户划转 (MARGIN)
-func (client *SpotRestClient) NewMarginTransfer() *SpotMarginTransferApi {
+func (client *SpotRestClient) NewSpotMarginTransfer() *SpotMarginTransferApi {
 	return &SpotMarginTransferApi{
 		client: client,
 		req:    &SpotMarginTransferReq{},
@@ -468,7 +468,7 @@ func (api *SpotMarginTransferApi) Do() (*MarginTransferRes, error) {
 }
 
 // binance SPOT杠杆接口  MarginIsolatedTransfer rest逐仓杠杆账户划转 (MARGIN)
-func (client *SpotRestClient) NewMarginIsolatedTransfer() *SpotMarginIsolatedTransferApi {
+func (client *SpotRestClient) NewSpotMarginIsolatedTransfer() *SpotMarginIsolatedTransferApi {
 	return &SpotMarginIsolatedTransferApi{
 		client: client,
 		req:    &SpotMarginIsolatedTransferReq{},
@@ -481,7 +481,7 @@ func (api *SpotMarginIsolatedTransferApi) Do() (*MarginIsolatedTransferRes, erro
 }
 
 // binance SPOT杠杆接口 MarginLoan rest 杠杆账户借贷 (MARGIN) 支持逐仓和全仓
-func (client *SpotRestClient) NewMarginLoan() *SpotMarginLoanApi {
+func (client *SpotRestClient) NewSpotMarginLoan() *SpotMarginLoanApi {
 	return &SpotMarginLoanApi{
 		client: client,
 		req:    &SpotMarginLoanReq{},
@@ -494,7 +494,7 @@ func (api *SpotMarginLoanApi) Do() (*MarginLoanRes, error) {
 }
 
 // binance SPOT杠杆接口 MarginRepay rest 杠杆账户还贷 (MARGIN) 支持逐仓和全仓
-func (client *SpotRestClient) NewMarginRepay() *SpotMarginRepayApi {
+func (client *SpotRestClient) NewSpotMarginRepay() *SpotMarginRepayApi {
 	return &SpotMarginRepayApi{
 		client: client,
 		req:    &SpotMarginRepayReq{},

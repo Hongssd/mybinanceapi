@@ -273,6 +273,9 @@ func (ws *SpotWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string
 	ws.apiSecret = apiSecret
 	ws.spotWsType = spotWsType
 	ws.isListenWs = true
+	if len(isolatedSymbol) > 0 {
+		ws.isolatedSymbol = isolatedSymbol[0]
+	}
 	b := MyBinance{}
 	ws.client = b.NewSpotRestClient(apiKey, apiSecret)
 
@@ -329,7 +332,7 @@ func (ws *SpotWsStreamClient) listenKeyPost() error {
 		ws.listenKey = res.ListenKey
 		log.Debug("listenKey:", ws.listenKey)
 	case SPOT_ISOLATED_MARGIN_WS_TYPE:
-		res, err := ws.client.NewSpotMarginIsolatedUserDataStreamPost().Do()
+		res, err := ws.client.NewSpotMarginIsolatedUserDataStreamPost().Symbol(ws.isolatedSymbol).Do()
 		if err != nil {
 			log.Error(err)
 			return err
