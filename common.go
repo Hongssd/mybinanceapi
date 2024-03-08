@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"io"
+	"time"
 
 	"net/http"
 	"net/url"
@@ -22,7 +23,7 @@ import (
 const (
 	BIT_BASE_10 = 10
 	BIT_SIZE_64 = 64
-	BIT_SIZE_32 = 32
+	//BIT_SIZE_32 = 32
 )
 
 type RequestType string
@@ -42,6 +43,12 @@ func SetLogger(logger *logrus.Logger) {
 	log = logger
 }
 
+var httpTimeout = 100 * time.Second
+
+func SetHttpTimeout(timeout time.Duration) {
+	httpTimeout = timeout
+}
+
 func GetPointer[T any](v T) *T {
 	return &v
 }
@@ -54,9 +61,9 @@ func HmacSha256(secret, data string) string {
 }
 
 // Request 发送请求
-func Request(url string, method string, isGzip bool) ([]byte, error) {
-	return RequestWithHeader(url, method, map[string]string{}, isGzip)
-}
+//func Request(url string, method string, isGzip bool) ([]byte, error) {
+//	return RequestWithHeader(url, method, map[string]string{}, isGzip)
+//}
 
 func RequestWithHeader(url string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
 	req, err := http.NewRequest(method, url, nil)
@@ -67,7 +74,9 @@ func RequestWithHeader(url string, method string, headerMap map[string]string, i
 		req.Header.Set(k, v)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: httpTimeout,
+	}
 	if isGzip { // 请求 header 添加 gzip
 		req.Header.Add("Content-Encoding", "gzip")
 		req.Header.Add("Accept-Encoding", "gzip")
@@ -80,7 +89,12 @@ func RequestWithHeader(url string, method string, headerMap map[string]string, i
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Error(err)
+		}
+	}(resp.Body)
 
 	body := resp.Body
 	if resp.Header.Get("Content-Encoding") == "gzip" {
