@@ -21,6 +21,9 @@ const (
 	SpotSubAccountUniversalTransfer
 	SpotSubAccountFuturesEnable
 
+	//managed-subaccount
+	SpotManagedSubAccountQueryTransLog //查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
+
 	//杠杆账户接口
 	//GET
 	SpotMarginAllPairs
@@ -107,6 +110,8 @@ var SpotApiMap = map[SpotApi]string{
 	SpotSubAccountUniversalTransfer: "/sapi/v1/sub-account/universalTransfer", //POST接口 子母账户万能划转 (适用主账户)
 	SpotSubAccountFuturesEnable:     "/sapi/v1/sub-account/futures/enable",    //POST接口 为子账户开通Futures (适用主账户)
 
+	//managed-subaccount
+	SpotManagedSubAccountQueryTransLog: "/sapi/v1/managed-subaccount/query-trans-log", //GET接口 查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
 	//杠杆账户接口
 	//GET
 	SpotMarginAllPairs:         "/sapi/v1/margin/allPairs",          //GET 获取所有全仓杠杆交易对(MARKET_DATA)
@@ -307,6 +312,21 @@ func (api *SpotSubAccountFuturesEnableApi) Do() (*SubAccountFuturesEnableRes, er
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesEnable], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountFuturesEnableRes](api.client.c, url, POST)
+}
+
+
+//managed-subaccount
+// binance SPOT子母账户接口  ManagedSubAccountQueryTransLog rest查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
+func (client *SpotRestClient) NewManagedSubAccountQueryTransLog() *SpotManagedSubAccountQueryTransLogApi {
+	return &SpotManagedSubAccountQueryTransLogApi{
+		client: client,
+		req:    &SpotManagedSubAccountQueryTransLogReq{},
+	}
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) Do() (*ManagedSubAccountQueryTransLogRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotManagedSubAccountQueryTransLog], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[ManagedSubAccountQueryTransLogRes](api.client.c, url, GET)
 }
 
 // ================以下为杠杆账户GET接口

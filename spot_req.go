@@ -1916,3 +1916,60 @@ func (api *SpotMarginIsolatedUserDataStreamDeleteApi) ListenKey(ListenKey string
 	api.req.ListenKey = GetPointer(ListenKey)
 	return api
 }
+
+// startTime	LONG	YES	开始时间
+// endTime	LONG	YES	结束时间(开始时间结束时间间隔不能超过半年)
+// page	INT	YES	页数
+// limit	INT	YES	每页数量 (最大值: 500)
+// transfers	STRING	NO	划转方向 (FROM/TO)
+// transferFunctionAccountType	STRING	NO	划转账户类型 (SPOT/MARGIN/ISOLATED_MARGIN/USDT_FUTURE/COIN_FUTURE)
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotManagedSubAccountQueryTransLogReq struct {
+	StartTime                   *int64  `json:"startTime"`                   //YES	开始时间
+	EndTime                     *int64  `json:"endTime"`                     //YES	结束时间(开始时间结束时间间隔不能超过半年)
+	Page                        *int    `json:"page"`                        //YES	页数
+	Limit                       *int    `json:"limit"`                       //YES	每页数量 (最大值: 500)
+	Transfers                   *string `json:"transfers"`                   //NO	划转方向 (FROM/TO)
+	TransferFunctionAccountType *string `json:"transferFunctionAccountType"` //NO	划转账户类型 (SPOT/MARGIN/ISOLATED_MARGIN/USDT_FUTURE/COIN_FUTURE)
+	RecvWindow                  *int64  `json:"recvWindow"`                  //NO
+	Timestamp                   *int64  `json:"timestamp"`                   //YES
+}
+
+type SpotManagedSubAccountQueryTransLogApi struct {
+	client *SpotRestClient
+	req    *SpotManagedSubAccountQueryTransLogReq
+}
+
+func (api *SpotManagedSubAccountQueryTransLogApi) StartTime(StartTime int64) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) EndTime(EndTime int64) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) Page(Page int) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.Page = GetPointer(Page)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) Limit(Limit int) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) Transfers(Transfers string) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.Transfers = GetPointer(Transfers)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) TransferFunctionAccountType(TransferFunctionAccountType string) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.TransferFunctionAccountType = GetPointer(TransferFunctionAccountType)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) RecvWindow(RecvWindow int64) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotManagedSubAccountQueryTransLogApi) Timestamp(Timestamp int64) *SpotManagedSubAccountQueryTransLogApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

@@ -874,3 +874,50 @@ type SpotMarginIsolatedUserDataStreamPostRes struct {
 type SpotMarginIsolatedUserDataStreamPutRes struct{}
 
 type SpotMarginIsolatedUserDataStreamDeleteRes struct{}
+
+// {
+//     "managerSubTransferHistoryVos": [
+//         {
+//             "fromEmail": "test_0_virtual@kq3kno9imanagedsub.com",
+//             "fromAccountType": "SPOT",
+//             "toEmail": "wdywl0lddakh@test.com",
+//             "toAccountType": "SPOT",
+//             "asset": "BNB",
+//             "amount": "0.01",
+//             "scheduledData": 1679416673000,
+//             "createTime": 1679416673000,
+//             "status": "SUCCESS",
+//             "tranId": 91077779
+//         },
+//         {
+//             "fromEmail": "wdywl0lddakh@test.com",
+//             "fromAccountType": "SPOT",
+//             "toEmail": "test_0_virtual@kq3kno9imanagedsub.com",
+//             "toAccountType": "SPOT",
+//             "asset": "BNB",
+//             "amount": "1",
+//             "scheduledData": 1679416616000,
+//             "createTime": 1679416616000,
+//             "status": "SUCCESS",
+//             "tranId": 91077676
+//         }
+//     ],
+//     "count": 2
+// }
+
+type ManagedSubAccountQueryTransLogRes struct {
+	ManagerSubTransferHistoryVos []ManagerSubTransferHistoryVos `json:"managerSubTransferHistoryVos"`
+}
+
+type ManagerSubTransferHistoryVos struct {
+	FromEmail       string `json:"fromEmail"`
+	FromAccountType string `json:"fromAccountType"`
+	ToEmail         string `json:"toEmail"`
+	ToAccountType   string `json:"toAccountType"`
+	Asset           string `json:"asset"`
+	Amount          string `json:"amount"`
+	ScheduledData   int64  `json:"scheduledData"`
+	CreateTime      int64  `json:"createTime"`
+	Status          string `json:"status"`
+	TranId          int64  `json:"tranId"`
+}
