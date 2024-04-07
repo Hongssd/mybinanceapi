@@ -36,8 +36,8 @@ var (
 	// WebsocketTimeout is an interval for sending ping/pong messages if WebsocketKeepalive is enabled
 	WebsocketTimeout = time.Second * 10
 	// WebsocketKeepalive enables sending ping/pong messages to check the connection stability
-	WebsocketKeepalive      = true
-	SUBSCRIBE_INTERVAL_TIME = 500 * time.Millisecond //订阅间隔
+	WebsocketKeepalive = true
+	//SUBSCRIBE_INTERVAL_TIME = 500 * time.Millisecond //订阅间隔
 
 	ListenKeyRefreshInterval = 30 * time.Minute
 )
@@ -240,8 +240,8 @@ func (ws *WsStreamClient) Close() error {
 
 	//初始化连接状态
 	ws.conn = nil
-	close(ws.resultChan)
-	close(ws.errChan)
+	//close(ws.resultChan)
+	//close(ws.errChan)
 	ws.resultChan = nil
 	ws.errChan = nil
 	ws.initStructs()
@@ -906,7 +906,9 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 								payload.AccountUpdatePayload.resultChan <- *res
 							}
 						}
+					default:
 					}
+
 				}
 
 				//U本位合约及币本位合约 订单/成交 更新推送
@@ -934,6 +936,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 								payload.OrderTradeUpdatePayload.resultChan <- *res
 							}
 						}
+					default:
 					}
 				}
 			}
@@ -1399,7 +1402,11 @@ func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan
 					errChan <- err
 					return
 				}
-				reader.Close()
+				err = reader.Close()
+				if err != nil {
+					errChan <- err
+					return
+				}
 				resultChan <- unzipMessage
 			}
 		} else {
@@ -1495,7 +1502,10 @@ func keepAlive(c *websocket.Conn, timeout time.Duration) {
 			}
 			<-ticker.C
 			if time.Since(lastResponse) > timeout {
-				c.Close()
+				err := c.Close()
+				if err != nil {
+					return
+				}
 				return
 			}
 		}
