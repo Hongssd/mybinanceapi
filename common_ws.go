@@ -55,16 +55,27 @@ type WsStreamClient struct {
 	isGzip  bool
 	conn    *websocket.Conn
 
+	////行情订阅相关
+	//commonSubMap   map[int64]*Subscription[SubscribeResult] //订阅的返回结果
+	//klineSubMap    map[string]*Subscription[WsKline]
+	//depthSubMap    map[string]*Subscription[WsDepth]
+	//aggTradeSubMap map[string]*Subscription[WsAggTrade]
+	//
+	////账户推送相关
+	//wsSpotPayloadMap   map[int64]*WsSpotPayload
+	//wsFuturePayloadMap map[int64]*WsFuturePayload
+	//wsSwapPayloadMap   map[int64]*WsSwapPayload
+
 	//行情订阅相关
-	commonSubMap   map[int64]*Subscription[SubscribeResult] //订阅的返回结果
-	klineSubMap    map[string]*Subscription[WsKline]
-	depthSubMap    map[string]*Subscription[WsDepth]
-	aggTradeSubMap map[string]*Subscription[WsAggTrade]
+	commonSubMap   MySyncMap[int64, *Subscription[SubscribeResult]] //订阅的返回结果
+	klineSubMap    MySyncMap[string, *Subscription[WsKline]]
+	depthSubMap    MySyncMap[string, *Subscription[WsDepth]]
+	aggTradeSubMap MySyncMap[string, *Subscription[WsAggTrade]]
 
 	//账户推送相关
-	wsSpotPayloadMap   map[int64]*WsSpotPayload
-	wsFuturePayloadMap map[int64]*WsFuturePayload
-	wsSwapPayloadMap   map[int64]*WsSwapPayload
+	wsSpotPayloadMap   MySyncMap[int64, *WsSpotPayload]
+	wsFuturePayloadMap MySyncMap[int64, *WsFuturePayload]
+	wsSwapPayloadMap   MySyncMap[int64, *WsSwapPayload]
 
 	resultChan               chan []byte
 	errChan                  chan error
@@ -166,8 +177,8 @@ type WsSwapPayload struct {
 }
 
 func (payload *WsSpotPayload) Close() {
-	if _, ok := payload.Ws.wsSpotPayloadMap[payload.Id]; ok {
-		delete(payload.Ws.wsSpotPayloadMap, payload.Id)
+	if _, ok := payload.Ws.wsSpotPayloadMap.Load(payload.Id); ok {
+		payload.Ws.wsSpotPayloadMap.Delete(payload.Id)
 		payload.OutboundAccountPositionPayload.closeChan <- struct{}{}
 		payload.BalanceUpdatePayload.closeChan <- struct{}{}
 		payload.ExecutionReportPayload.closeChan <- struct{}{}
@@ -175,16 +186,16 @@ func (payload *WsSpotPayload) Close() {
 }
 
 func (payload *WsFuturePayload) Close() {
-	if _, ok := payload.Ws.wsFuturePayloadMap[payload.Id]; ok {
-		delete(payload.Ws.wsFuturePayloadMap, payload.Id)
+	if _, ok := payload.Ws.wsFuturePayloadMap.Load(payload.Id); ok {
+		payload.Ws.wsFuturePayloadMap.Delete(payload.Id)
 		payload.AccountUpdatePayload.closeChan <- struct{}{}
 		payload.OrderTradeUpdatePayload.closeChan <- struct{}{}
 	}
 }
 
 func (payload *WsSwapPayload) Close() {
-	if _, ok := payload.Ws.wsSwapPayloadMap[payload.Id]; ok {
-		delete(payload.Ws.wsSwapPayloadMap, payload.Id)
+	if _, ok := payload.Ws.wsSwapPayloadMap.Load(payload.Id); ok {
+		payload.Ws.wsSwapPayloadMap.Delete(payload.Id)
 		payload.AccountUpdatePayload.closeChan <- struct{}{}
 		payload.OrderTradeUpdatePayload.closeChan <- struct{}{}
 	}
@@ -249,14 +260,22 @@ func (ws *WsStreamClient) Close() error {
 }
 
 func (ws *WsStreamClient) initStructs() {
-	ws.commonSubMap = make(map[int64]*Subscription[SubscribeResult])
-	ws.klineSubMap = make(map[string]*Subscription[WsKline])
-	ws.depthSubMap = make(map[string]*Subscription[WsDepth])
-	ws.aggTradeSubMap = make(map[string]*Subscription[WsAggTrade])
+	//ws.commonSubMap = make(map[int64]*Subscription[SubscribeResult])
+	//ws.klineSubMap = make(map[string]*Subscription[WsKline])
+	//ws.depthSubMap = make(map[string]*Subscription[WsDepth])
+	//ws.aggTradeSubMap = make(map[string]*Subscription[WsAggTrade])
+	//
+	//ws.wsSpotPayloadMap = make(map[int64]*WsSpotPayload)
+	//ws.wsFuturePayloadMap = make(map[int64]*WsFuturePayload)
+	//ws.wsSwapPayloadMap = make(map[int64]*WsSwapPayload)
+	ws.commonSubMap = NewMySyncMap[int64, *Subscription[SubscribeResult]]()
+	ws.klineSubMap = NewMySyncMap[string, *Subscription[WsKline]]()
+	ws.depthSubMap = NewMySyncMap[string, *Subscription[WsDepth]]()
+	ws.aggTradeSubMap = NewMySyncMap[string, *Subscription[WsAggTrade]]()
 
-	ws.wsSpotPayloadMap = make(map[int64]*WsSpotPayload)
-	ws.wsFuturePayloadMap = make(map[int64]*WsFuturePayload)
-	ws.wsSwapPayloadMap = make(map[int64]*WsSwapPayload)
+	ws.wsSpotPayloadMap = NewMySyncMap[int64, *WsSpotPayload]()
+	ws.wsFuturePayloadMap = NewMySyncMap[int64, *WsFuturePayload]()
+	ws.wsSwapPayloadMap = NewMySyncMap[int64, *WsSwapPayload]()
 }
 
 type SpotWsType int
@@ -651,11 +670,11 @@ func (*MyBinance) NewSwapWsStreamClient() *SwapWsStreamClient {
 
 func (ws *WsStreamClient) sendSubscribeResultToChan(result SubscribeResult) {
 	if result.Error != "" {
-		if sub, ok := ws.commonSubMap[result.Id]; ok {
+		if sub, ok := ws.commonSubMap.Load(result.Id); ok {
 			sub.errChan <- fmt.Errorf("errHandler: %s===%v", result.Error, sub.Params)
 		}
 	} else {
-		if sub, ok := ws.commonSubMap[result.Id]; ok {
+		if sub, ok := ws.commonSubMap.Load(result.Id); ok {
 			sub.resultChan <- result
 		}
 	}
@@ -664,22 +683,22 @@ func (ws *WsStreamClient) sendSubscribeResultToChan(result SubscribeResult) {
 func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(params []string) {
 	isCloseMap := map[int64]bool{}
 	for _, param := range params {
-		if sub, ok := ws.klineSubMap[param]; ok {
-			delete(ws.klineSubMap, param)
+		if sub, ok := ws.klineSubMap.Load(param); ok {
+			ws.klineSubMap.Delete(param)
 			if _, ok2 := isCloseMap[sub.ID]; ok2 {
 				continue
 			}
 			sub.closeChan <- struct{}{}
 			isCloseMap[sub.ID] = true
-		} else if sub, ok := ws.depthSubMap[param]; ok {
-			delete(ws.depthSubMap, param)
+		} else if sub, ok := ws.depthSubMap.Load(param); ok {
+			ws.depthSubMap.Delete(param)
 			if _, ok2 := isCloseMap[sub.ID]; ok2 {
 				continue
 			}
 			sub.closeChan <- struct{}{}
 			isCloseMap[sub.ID] = true
-		} else if sub, ok := ws.aggTradeSubMap[param]; ok {
-			delete(ws.aggTradeSubMap, param)
+		} else if sub, ok := ws.aggTradeSubMap.Load(param); ok {
+			ws.aggTradeSubMap.Delete(param)
 			if _, ok2 := isCloseMap[sub.ID]; ok2 {
 				continue
 			}
@@ -691,41 +710,47 @@ func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(params []string) {
 
 func (ws *WsStreamClient) sendWsCloseToAllSub() {
 	params := []string{}
-	for _, sub := range ws.commonSubMap {
+	ws.commonSubMap.Range(func(_ int64, sub *Subscription[SubscribeResult]) bool {
 		params = append(params, sub.Params...)
-	}
+		return true
+	})
 	ws.sendUnSubscribeSuccessToCloseChan(params)
 }
 
 func (ws *WsStreamClient) reSubscribeForReconnect() error {
 	ws.reSubscribeMu.Lock()
 	defer ws.reSubscribeMu.Unlock()
-	for _, sub := range ws.commonSubMap {
+	var wErr error
+	ws.commonSubMap.Range(func(_ int64, sub *Subscription[SubscribeResult]) bool {
 		log.Infof("ReSubscribe:{%d,%s,%v}", sub.ID, sub.Method, sub.Params)
 		doSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
 		if err != nil {
 			log.Error(err)
-			return err
+			wErr = err
+			return false
 		}
-		ws.commonSubMap[doSub.ID] = doSub
+		ws.commonSubMap.Store(doSub.ID, doSub)
 
 		select {
 		case err := <-doSub.ErrChan():
 			log.Error("SubscribeKline Error: ", err)
-			return err
+			wErr = err
+			return false
 		case subResult := <-doSub.ResultChan():
 			if subResult.Error != "" {
 				log.Error(subResult.Error)
-				return fmt.Errorf(subResult.Error)
+				wErr = fmt.Errorf(subResult.Error)
 			}
 			log.Debugf("SubscribeKline Success: params:%v result:%v", doSub.Params, subResult)
 		}
 		log.Infof("reSubscribe Success: {%d,%s,%v}", sub.ID, sub.Method, sub.Params)
 		sub.ID = doSub.ID
-		delete(ws.commonSubMap, sub.ID)
+		ws.commonSubMap.Delete(sub.ID)
 		time.Sleep(1000 * time.Millisecond)
-	}
-	return nil
+		return true
+	})
+
+	return wErr
 }
 
 func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan error) {
@@ -786,7 +811,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					// 	k, err = HandleWsCombinedKlineGzip(ws.apiType, data)
 					// }
 					param := getKlineSubscribeParam(k.Symbol, k.Interval)
-					if sub, ok := ws.klineSubMap[param]; ok {
+					if sub, ok := ws.klineSubMap.Load(param); ok {
 						if err != nil {
 							sub.errChan <- err
 							continue
@@ -808,7 +833,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					// }
 					param := getLevelDepthSubscribeParam(d.Symbol, d.Level, d.USpeed)
 					// log.Warn(param)
-					if sub, ok := ws.depthSubMap[param]; ok {
+					if sub, ok := ws.depthSubMap.Load(param); ok {
 						if err != nil {
 							sub.errChan <- err
 							continue
@@ -829,7 +854,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					// 	a, err = HandleWsCombinedAggTradeGzip(ws.apiType, data)
 					// }
 					param := getAggTradeParam(a.Symbol)
-					if sub, ok := ws.aggTradeSubMap[param]; ok {
+					if sub, ok := ws.aggTradeSubMap.Load(param); ok {
 						if err != nil {
 							sub.errChan <- err
 							continue
@@ -846,11 +871,12 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						log.Error(err)
 						continue
 					}
-					for _, payload := range ws.wsSpotPayloadMap {
+					ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
 						if payload.OutboundAccountPositionPayload != nil {
 							payload.OutboundAccountPositionPayload.resultChan <- *res
 						}
-					}
+						return true
+					})
 				}
 
 				//现货余额更新推送
@@ -860,11 +886,12 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						log.Error(err)
 						continue
 					}
-					for _, payload := range ws.wsSpotPayloadMap {
+					ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
 						if payload.BalanceUpdatePayload != nil {
 							payload.BalanceUpdatePayload.resultChan <- *res
 						}
-					}
+						return true
+					})
 				}
 
 				//现货订单推送
@@ -874,11 +901,12 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						log.Error(err)
 						continue
 					}
-					for _, payload := range ws.wsSpotPayloadMap {
+					ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
 						if payload.ExecutionReportPayload != nil {
 							payload.ExecutionReportPayload.resultChan <- *res
 						}
-					}
+						return true
+					})
 				}
 
 				//U本位合约及币本位合约 余额/仓位 更新推送
@@ -890,22 +918,25 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							log.Error(err)
 							continue
 						}
-						for _, payload := range ws.wsFuturePayloadMap {
+						ws.wsFuturePayloadMap.Range(func(_ int64, payload *WsFuturePayload) bool {
 							if payload.AccountUpdatePayload != nil {
 								payload.AccountUpdatePayload.resultChan <- *res
 							}
-						}
+							return true
+						})
+
 					case SWAP:
 						res, err := HandleWsPayloadResult[WsSwapPayloadAccountUpdate](data)
 						if err != nil {
 							log.Error(err)
 							continue
 						}
-						for _, payload := range ws.wsSwapPayloadMap {
+						ws.wsSwapPayloadMap.Range(func(_ int64, payload *WsSwapPayload) bool {
 							if payload.AccountUpdatePayload != nil {
 								payload.AccountUpdatePayload.resultChan <- *res
 							}
-						}
+							return true
+						})
 					default:
 					}
 
@@ -920,22 +951,25 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							log.Error(err)
 							continue
 						}
-						for _, payload := range ws.wsFuturePayloadMap {
+						ws.wsFuturePayloadMap.Range(func(_ int64, payload *WsFuturePayload) bool {
 							if payload.OrderTradeUpdatePayload != nil {
 								payload.OrderTradeUpdatePayload.resultChan <- *res
 							}
-						}
+							return true
+						})
 					case SWAP:
 						res, err := HandleWsPayloadResult[WsSwapPayloadOrderTradeUpdate](data)
 						if err != nil {
 							log.Error(err)
 							continue
 						}
-						for _, payload := range ws.wsSwapPayloadMap {
+						ws.wsSwapPayloadMap.Range(func(_ int64, payload *WsSwapPayload) bool {
 							if payload.OrderTradeUpdatePayload != nil {
 								payload.OrderTradeUpdatePayload.resultChan <- *res
 							}
-						}
+							return true
+						})
+
 					default:
 					}
 				}
@@ -952,7 +986,7 @@ func (ws *WsStreamClient) SubscribeKline(symbol string, interval string) (*Subsc
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -973,7 +1007,7 @@ func (ws *WsStreamClient) SubscribeKline(symbol string, interval string) (*Subsc
 			closeChan:  make(chan struct{}),
 			ws:         ws,
 		}
-		ws.klineSubMap[param] = sub
+		ws.klineSubMap.Store(param, sub)
 		return sub, nil
 	}
 }
@@ -992,7 +1026,7 @@ func (ws *WsStreamClient) SubscribeKlineMultiple(symbols []string, intervals []s
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1017,7 +1051,7 @@ func (ws *WsStreamClient) SubscribeKlineMultiple(symbols []string, intervals []s
 			ws:         ws,
 		}
 		for _, param := range params {
-			ws.klineSubMap[param] = sub
+			ws.klineSubMap.Store(param, sub)
 		}
 		return sub, nil
 	}
@@ -1031,7 +1065,7 @@ func (ws *WsStreamClient) SubscribeLevelDepth(symbol string, level string, USpee
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1053,7 +1087,7 @@ func (ws *WsStreamClient) SubscribeLevelDepth(symbol string, level string, USpee
 			ws:         ws,
 		}
 
-		ws.depthSubMap[param] = sub
+		ws.depthSubMap.Store(param, sub)
 		return sub, nil
 	}
 }
@@ -1069,7 +1103,7 @@ func (ws *WsStreamClient) SubscribeLevelDepthMultiple(symbols []string, level st
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1091,7 +1125,7 @@ func (ws *WsStreamClient) SubscribeLevelDepthMultiple(symbols []string, level st
 			ws:         ws,
 		}
 		for _, param := range params {
-			ws.depthSubMap[param] = sub
+			ws.depthSubMap.Store(param, sub)
 		}
 		return sub, nil
 	}
@@ -1105,7 +1139,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepth(symbol string, USpeed string) 
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1127,7 +1161,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepth(symbol string, USpeed string) 
 			ws:         ws,
 		}
 
-		ws.depthSubMap[param] = sub
+		ws.depthSubMap.Store(param, sub)
 		return sub, nil
 	}
 }
@@ -1144,7 +1178,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepthMultiple(symbols []string, USpe
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1166,7 +1200,7 @@ func (ws *WsStreamClient) SubscribeIncrementDepthMultiple(symbols []string, USpe
 			ws:         ws,
 		}
 		for _, param := range params {
-			ws.depthSubMap[param] = sub
+			ws.depthSubMap.Store(param, sub)
 		}
 		return sub, nil
 	}
@@ -1180,7 +1214,7 @@ func (ws *WsStreamClient) SubscribeAggTrade(symbol string) (*Subscription[WsAggT
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1202,7 +1236,7 @@ func (ws *WsStreamClient) SubscribeAggTrade(symbol string) (*Subscription[WsAggT
 			ws:         ws,
 		}
 
-		ws.aggTradeSubMap[param] = sub
+		ws.aggTradeSubMap.Store(param, sub)
 		return sub, nil
 	}
 }
@@ -1218,7 +1252,7 @@ func (ws *WsStreamClient) SubscribeAggTradeMultiple(symbols []string) (*Subscrip
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[doSub.ID] = doSub
+	ws.commonSubMap.Store(doSub.ID, doSub)
 
 	select {
 	case err := <-doSub.ErrChan():
@@ -1240,7 +1274,7 @@ func (ws *WsStreamClient) SubscribeAggTradeMultiple(symbols []string) (*Subscrip
 			ws:         ws,
 		}
 		for _, param := range params {
-			ws.aggTradeSubMap[param] = sub
+			ws.aggTradeSubMap.Store(param, sub)
 		}
 		return sub, nil
 	}
@@ -1271,7 +1305,7 @@ func (ws *SpotWsStreamClient) CreatePayload() (*WsSpotPayload, error) {
 			closeChan:  make(chan struct{}),
 		},
 	}
-	ws.wsSpotPayloadMap[id] = payload
+	ws.wsSpotPayloadMap.Store(id, payload)
 	return payload, nil
 }
 
@@ -1295,7 +1329,7 @@ func (ws *FutureWsStreamClient) CreatePayload() (*WsFuturePayload, error) {
 			closeChan:  make(chan struct{}),
 		},
 	}
-	ws.wsFuturePayloadMap[id] = payload
+	ws.wsFuturePayloadMap.Store(id, payload)
 	return payload, nil
 }
 
@@ -1319,7 +1353,7 @@ func (ws *SwapWsStreamClient) CreatePayload() (*WsSwapPayload, error) {
 			closeChan:  make(chan struct{}),
 		},
 	}
-	ws.wsSwapPayloadMap[id] = payload
+	ws.wsSwapPayloadMap.Store(id, payload)
 	return payload, nil
 }
 
@@ -1329,7 +1363,7 @@ func (ws *WsStreamClient) CurrentSubscribeList() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	ws.commonSubMap[listSub.ID] = listSub
+	ws.commonSubMap.Store(listSub.ID, listSub)
 	select {
 	case err := <-listSub.ErrChan():
 		log.Error("CurrentSubscribeList Error: ", err)
@@ -1340,7 +1374,7 @@ func (ws *WsStreamClient) CurrentSubscribeList() ([]string, error) {
 			return nil, fmt.Errorf(subResult.Error)
 		}
 		log.Debug("CurrentSubscribeList Success: ", subResult)
-		delete(ws.commonSubMap, listSub.ID)
+		ws.commonSubMap.Delete(listSub.ID)
 		return subResult.Result, nil
 	}
 }
@@ -1351,7 +1385,7 @@ func (sub *Subscription[T]) Unsubscribe() error {
 	if err != nil {
 		return err
 	}
-	sub.ws.commonSubMap[unSub.ID] = unSub
+	sub.ws.commonSubMap.Store(unSub.ID, unSub)
 
 	select {
 	case err := <-unSub.ErrChan():
@@ -1366,8 +1400,8 @@ func (sub *Subscription[T]) Unsubscribe() error {
 		//取消订阅成功，给所有订阅消息的通道发送关闭信号
 		sub.ws.sendUnSubscribeSuccessToCloseChan(unSub.Params)
 		//删除当前订阅列表中已存在的记录
-		delete(sub.ws.commonSubMap, unSub.ID)
-		delete(sub.ws.commonSubMap, sub.ID)
+		sub.ws.commonSubMap.Delete(unSub.ID)
+		sub.ws.commonSubMap.Delete(sub.ID)
 		return nil
 	}
 
