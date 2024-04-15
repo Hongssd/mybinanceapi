@@ -17,10 +17,11 @@ type WsKline struct {
 	Close                float64 `json:"close"`                        //收盘价
 	Volume               float64 `json:"volume"`                       //成交量
 	CloseTime            int64   `json:"close_time"`                   //收盘时间
-	TransactionVolume    float64 `json:"transaction_volume"`           // 成交额
+	TransactionVolume    float64 `json:"transaction_volume"`           //成交额
 	TransactionNumber    int64   `json:"transaction_number"`           //成交笔数
 	BuyTransactionVolume float64 `json:"buy_transaction_volume"`       //主动买入成交量
 	BuyTransactionAmount float64 `json:"buy_transaction_amount"`       //主动买入成交额
+	Confirm              bool    `json:"confirm"`                      //这根K线是否完结
 }
 
 func HandleWsCombinedKline(apiType ApiType, data []byte) (*WsKline, error) {
@@ -76,6 +77,7 @@ func HandleWsKlineMap(apiType ApiType, m map[string]interface{}) *WsKline {
 		TransactionNumber:    int64(m["n"].(float64)),
 		BuyTransactionVolume: interfaceStringToFloat64(m["V"]),
 		BuyTransactionAmount: interfaceStringToFloat64(m["Q"]),
+		Confirm:              m["x"].(bool),
 	}
 	return &myKline
 }
