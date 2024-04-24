@@ -87,6 +87,8 @@ type WsStreamClient struct {
 	isListenWs               bool
 	listenKey                string
 	listenKeyRefreshStopChan *chan struct{}
+
+	AutoReConnectTimes int //自动重连次数
 }
 
 // 订阅请求结构体
@@ -762,6 +764,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					return
 				}
 				log.Error(err)
+
 				//错误处理 重连等
 				//ws标记为非关闭 且返回错误包含EOF、close、reset时自动重连
 				if !ws.isClose && (strings.Contains(err.Error(), "EOF") ||
@@ -772,6 +775,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						time.Sleep(1000 * time.Millisecond)
 						err = ws.OpenConn()
 					}
+					ws.AutoReConnectTimes += 1
 					go func() {
 						err = ws.reSubscribeForReconnect()
 						if err != nil {
