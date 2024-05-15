@@ -779,9 +779,10 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				if !ws.isClose && (strings.Contains(err.Error(), "EOF") ||
 					strings.Contains(err.Error(), "close") ||
 					strings.Contains(err.Error(), "reset")) {
+					log.Error("意外断连,5秒后自动重连: ", err.Error())
+					time.Sleep(5 * time.Second)
 					err := ws.OpenConn()
 					for err != nil {
-						log.Error("意外断连,5秒后自动重连: ", err.Error())
 						time.Sleep(5000 * time.Millisecond)
 						err = ws.OpenConn()
 					}
