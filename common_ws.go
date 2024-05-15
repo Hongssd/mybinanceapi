@@ -605,17 +605,23 @@ func (ws *WsStreamClient) OpenConn() error {
 	apiUrl := handlerWsStreamRequestApi(ws.wsStreamPath, ws.listenKey, ws.apiType, ws.isGzip)
 	if ws.conn == nil {
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
+		if err != nil {
+			return err
+		}
 		ws.conn = conn
 		ws.isClose = false
 		log.Info("OpenConn success to ", apiUrl)
 		ws.handleResult(ws.resultChan, ws.errChan)
-		return err
+
 	} else {
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
+		if err != nil {
+			return err
+		}
 		ws.conn = conn
 		log.Info("Auto ReOpenConn success to ", apiUrl)
-		return err
 	}
+	return nil
 }
 
 type SpotWsStreamClient struct {
@@ -720,17 +726,22 @@ func (ws *WsStreamClient) sendWsCloseToAllSub() {
 }
 
 func (ws *WsStreamClient) reSubscribeForReconnect() error {
-	ws.reSubscribeMu.Lock()
-	defer ws.reSubscribeMu.Unlock()
+	if ws.reSubscribeMu.TryLock() {
+		defer ws.reSubscribeMu.Unlock()
+	} else {
+		return nil
+	}
+
 	var wErr error
 	ws.commonSubMap.Range(func(_ int64, sub *Subscription[SubscribeResult]) bool {
 		log.Infof("ReSubscribe:{%d,%s,%v}", sub.ID, sub.Method, sub.Params)
-		doSub, err := sendMsg[SubscribeResult](ws, 0, sub.Method, sub.Params)
+		doSub, err := sendMsg[SubscribeResult](ws, sub.ID, sub.Method, sub.Params)
 		if err != nil {
 			log.Error(err)
 			wErr = err
 			return false
 		}
+
 		ws.commonSubMap.Store(doSub.ID, doSub)
 
 		select {
@@ -746,8 +757,6 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 			log.Debugf("SubscribeKline Success: params:%v result:%v", doSub.Params, subResult)
 		}
 		log.Infof("reSubscribe Success: {%d,%s,%v}", sub.ID, sub.Method, sub.Params)
-		sub.ID = doSub.ID
-		ws.commonSubMap.Delete(sub.ID)
 		time.Sleep(1000 * time.Millisecond)
 		return true
 	})
@@ -772,7 +781,8 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					strings.Contains(err.Error(), "reset")) {
 					err := ws.OpenConn()
 					for err != nil {
-						time.Sleep(1000 * time.Millisecond)
+						log.Error("意外断连,5秒后自动重连: ", err.Error())
+						time.Sleep(5000 * time.Millisecond)
 						err = ws.OpenConn()
 					}
 					ws.AutoReConnectTimes += 1
