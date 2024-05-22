@@ -84,7 +84,7 @@ func RequestWithHeader(url string, method string, headerMap map[string]string, i
 	}
 	req.Close = true
 
-	log.Debug(req.URL.String())
+	log.Debug(method, ": ", req.URL.String())
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -227,7 +227,7 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 		RawQuery: query + "&signature=" + sign,
 	}
 	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
-	// log.Debug(u.String())
+	log.Warn(u.String())
 	return u.String()
 }
 
@@ -257,6 +257,7 @@ func binanceHandlerReq[T any](req *T) string {
 	count := v.NumField()
 	for i := 0; i < count; i++ {
 		paramName := t.Field(i).Tag.Get("json")
+		paramName = strings.ReplaceAll(paramName, ",omitempty", "")
 		switch v.Field(i).Elem().Kind() {
 		case reflect.String:
 			paramBuffer.WriteString(paramName + "=" + v.Field(i).Elem().String() + "&")
