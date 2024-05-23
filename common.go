@@ -227,7 +227,7 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 		RawQuery: query + "&signature=" + sign,
 	}
 	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
-	log.Warn(u.String())
+	//log.Warn(u.String())
 	return u.String()
 }
 

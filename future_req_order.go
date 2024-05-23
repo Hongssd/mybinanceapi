@@ -1,6 +1,9 @@
 package mybinanceapi
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+	"strconv"
+)
 
 type FutureOpenOrdersReq struct {
 	Symbol     *string `json:"symbol"` //No	交易对
@@ -168,7 +171,7 @@ func (api *FutureOrderPostApi) Timestamp(Timestamp int64) *FutureOrderPostApi {
 
 type FutureOrderPutReq struct {
 	Symbol            *string          `json:"symbol"`                      //YES	交易对
-	OrderId           *int64           `json:"orderId,omitempty"`           //NO	系统订单号
+	OrderId           *string          `json:"orderId,omitempty"`           //NO	系统订单号
 	OrigClientOrderId *string          `json:"origClientOrderId,omitempty"` //NO	用户自定义的订单号
 	Side              *string          `json:"side"`                        //YES	买卖方向 SELL, BUY; side需要和原订单相同
 	Quantity          *decimal.Decimal `json:"quantity"`                    //YES	下单数量,使用closePosition不支持此参数。
@@ -187,7 +190,8 @@ func (api *FutureOrderPutApi) Symbol(Symbol string) *FutureOrderPutApi {
 	return api
 }
 func (api *FutureOrderPutApi) OrderId(OrderId int64) *FutureOrderPutApi {
-	api.req.OrderId = GetPointer(OrderId)
+	orderIdStr := strconv.FormatInt(OrderId, BIT_BASE_10)
+	api.req.OrderId = GetPointer(orderIdStr)
 	return api
 }
 func (api *FutureOrderPutApi) OrigClientOrderId(OrigClientOrderId string) *FutureOrderPutApi {
