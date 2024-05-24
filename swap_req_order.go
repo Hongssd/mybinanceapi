@@ -2,175 +2,11 @@ package mybinanceapi
 
 import "github.com/shopspring/decimal"
 
-type SwapAccountReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
-	Timestamp  *int64 `json:"timestamp"`
-}
-type SwapAccountApi struct {
-	client *SwapRestClient
-	req    *SwapAccountReq
-}
-
-func (api *SwapAccountApi) Recvwindow(Recvwindow int64) *SwapAccountApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
-	return api
-}
-func (api *SwapAccountApi) Timestamp(Timestamp int64) *SwapAccountApi {
-	api.req.Timestamp = GetPointer(Timestamp)
-	return api
-}
-
-type SwapPositionSideDualGetReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
-	Timestamp  *int64 `json:"timestamp"`
-}
-type SwapPositionSideDualGetApi struct {
-	client *SwapRestClient
-	req    *SwapPositionSideDualGetReq
-}
-
-func (api *SwapPositionSideDualGetApi) Recvwindow(Recvwindow int64) *SwapPositionSideDualGetApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
-	return api
-}
-func (api *SwapPositionSideDualGetApi) Timestamp(Timestamp int64) *SwapPositionSideDualGetApi {
-	api.req.Timestamp = GetPointer(Timestamp)
-	return api
-}
-
-type SwapPositionSideDualPostReq struct {
-	DualSidePosition *string `json:"dualSidePosition"` //YES "true": 双向持仓模式；"false": 单向持仓模式
-	Recvwindow       *int64  `json:"recvWindow"`
-	Timestamp        *int64  `json:"timestamp"`
-}
-
-type SwapPositionSideDualPostApi struct {
-	client *SwapRestClient
-	req    *SwapPositionSideDualPostReq
-}
-
-func (api *SwapPositionSideDualPostApi) DualSidePosition(DualSidePosition string) *SwapPositionSideDualPostApi {
-	api.req.DualSidePosition = GetPointer(DualSidePosition)
-	return api
-}
-func (api *SwapPositionSideDualPostApi) Recvwindow(Recvwindow int64) *SwapPositionSideDualPostApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
-	return api
-}
-func (api *SwapPositionSideDualPostApi) Timestamp(Timestamp int64) *SwapPositionSideDualPostApi {
-	api.req.Timestamp = GetPointer(Timestamp)
-	return api
-}
-
-type SwapLeverageReq struct {
-	Symbol     *string `json:"symbol"`   //YES	交易对
-	Leverage   *int64  `json:"leverage"` //YES	目标杠杆倍数：1 到 125 整数
-	Recvwindow *int64  `json:"recvWindow"`
-	Timestamp  *int64  `json:"timestamp"`
-}
-
-type SwapLeverageApi struct {
-	client *SwapRestClient
-	req    *SwapLeverageReq
-}
-
-func (api *SwapLeverageApi) Symbol(Symbol string) *SwapLeverageApi {
-	api.req.Symbol = GetPointer(Symbol)
-	return api
-}
-func (api *SwapLeverageApi) Leverage(Leverage int64) *SwapLeverageApi {
-	api.req.Leverage = GetPointer(Leverage)
-	return api
-}
-func (api *SwapLeverageApi) Recvwindow(Recvwindow int64) *SwapLeverageApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
-	return api
-}
-func (api *SwapLeverageApi) Timestamp(Timestamp int64) *SwapLeverageApi {
-	api.req.Timestamp = GetPointer(Timestamp)
-	return api
-}
-
-type SwapMarginTypeReq struct {
-	Symbol     *string `json:"symbol"`     //YES	交易对
-	MarginType *string `json:"marginType"` //YES	保证金模式 ISOLATED(逐仓), CROSSED(全仓)
-	Recvwindow *int64  `json:"recvWindow"`
-	Timestamp  *int64  `json:"timestamp"`
-}
-
-type SwapMarginTypeApi struct {
-	client *SwapRestClient
-	req    *SwapMarginTypeReq
-}
-
-func (api *SwapMarginTypeApi) Symbol(Symbol string) *SwapMarginTypeApi {
-	api.req.Symbol = GetPointer(Symbol)
-	return api
-}
-func (api *SwapMarginTypeApi) MarginType(MarginType string) *SwapMarginTypeApi {
-	api.req.MarginType = GetPointer(MarginType)
-	return api
-}
-func (api *SwapMarginTypeApi) Recvwindow(Recvwindow int64) *SwapMarginTypeApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
-	return api
-}
-func (api *SwapMarginTypeApi) Timestamp(Timestamp int64) *SwapMarginTypeApi {
-	api.req.Timestamp = GetPointer(Timestamp)
-	return api
-}
-
-type SwapLeverageBracketReq struct {
-	Symbol     *string `json:"symbol"` //No	交易对
-	Recvwindow *int64  `json:"recvWindow"`
-	Timestamp  *int64  `json:"timestamp"`
-}
-
-type SwapLeverageBracketApi struct {
-	client *SwapRestClient
-	req    *SwapLeverageBracketReq
-}
-
-func (api *SwapLeverageBracketApi) Symbol(Symbol string) *SwapLeverageBracketApi {
-	api.req.Symbol = GetPointer(Symbol)
-	return api
-}
-func (api *SwapLeverageBracketApi) Recvwindow(Recvwindow int64) *SwapLeverageBracketApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
-	return api
-}
-func (api *SwapLeverageBracketApi) Timestamp(Timestamp int64) *SwapLeverageBracketApi {
-	api.req.Timestamp = GetPointer(Timestamp)
-	return api
-}
-
-type SwapPingReq struct {
-}
-type SwapPingApi struct {
-	client *SwapRestClient
-	req    *SwapPingReq
-}
-
-type SwapServerTimeReq struct {
-}
-type SwapServerTimeApi struct {
-	client *SwapRestClient
-	req    *SwapServerTimeReq
-}
-
-type SwapExchangeInfoReq struct {
-}
-type SwapExchangeInfoApi struct {
-	client *SwapRestClient
-	req    *SwapExchangeInfoReq
-}
-
 type SwapOpenOrdersReq struct {
 	Symbol     *string `json:"symbol"` //No	交易对
 	Recvwindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
-
 type SwapOpenOrdersApi struct {
 	client *SwapRestClient
 	req    *SwapOpenOrdersReq
@@ -189,13 +25,6 @@ func (api *SwapOpenOrdersApi) Timestamp(Timestamp int64) *SwapOpenOrdersApi {
 	return api
 }
 
-// symbol	STRING	YES	交易对
-// orderId	LONG	NO	只返回此orderID及之后的订单，缺省返回最近的订单
-// startTime	LONG	NO	起始时间
-// endTime	LONG	NO	结束时间
-// limit	INT	NO	返回的结果集数量 默认值:500 最大值:1000
-// recvWindow	LONG	NO
-// timestamp	LONG	YES
 type SwapAllOrdersReq struct {
 	Symbol     *string `json:"symbol"`    //YES	交易对
 	OrderId    *int64  `json:"orderId"`   //NO	只返回此orderID及之后的订单，缺省返回最近的订单
@@ -205,7 +34,6 @@ type SwapAllOrdersReq struct {
 	Recvwindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
-
 type SwapAllOrdersApi struct {
 	client *SwapRestClient
 	req    *SwapAllOrdersReq
@@ -260,7 +88,6 @@ type SwapOrderPostReq struct {
 	Recvwindow       *int64           `json:"recvWindow"`       //No
 	Timestamp        *int64           `json:"timestamp"`        //Yes
 }
-
 type SwapOrderPostApi struct {
 	client *SwapRestClient
 	req    *SwapOrderPostReq
@@ -302,7 +129,6 @@ func (api *SwapOrderPostApi) StopPrice(StopPrice decimal.Decimal) *SwapOrderPost
 	api.req.StopPrice = GetPointer(StopPrice)
 	return api
 }
-
 func (api *SwapOrderPostApi) ClosePosition(ClosePosition string) *SwapOrderPostApi {
 	api.req.ClosePosition = GetPointer(ClosePosition)
 	return api
@@ -340,11 +166,6 @@ func (api *SwapOrderPostApi) Timestamp(Timestamp int64) *SwapOrderPostApi {
 	return api
 }
 
-// symbol	STRING	YES	交易对
-// orderId	LONG	NO	系统订单号
-// origClientOrderId	STRING	NO	用户自定义的订单号
-// recvWindow	LONG	NO
-// timestamp	LONG	YES
 type SwapOrderGetReq struct {
 	Symbol            *string `json:"symbol"`            //YES 交易对
 	OrderId           *int64  `json:"orderId"`           //NO 系统订单号
@@ -352,7 +173,6 @@ type SwapOrderGetReq struct {
 	RecvWindow        *int64  `json:"recvWindow"`        //NO
 	Timestamp         *int64  `json:"timestamp"`         //YES
 }
-
 type SwapOrderGetApi struct {
 	client *SwapRestClient
 	req    *SwapOrderGetReq
@@ -386,7 +206,6 @@ type SwapOrderDeleteReq struct {
 	RecvWindow        *int64  `json:"recvWindow"`        //NO
 	Timestamp         *int64  `json:"timestamp"`         //YES
 }
-
 type SwapOrderDeleteApi struct {
 	client *SwapRestClient
 	req    *SwapOrderDeleteReq
@@ -411,100 +230,4 @@ func (api *SwapOrderDeleteApi) Recvwindow(Recvwindow int64) *SwapOrderDeleteApi 
 func (api *SwapOrderDeleteApi) Timestamp(Timestamp int64) *SwapOrderDeleteApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
-}
-
-type SwapKlinesReq struct {
-	Symbol    *string `json:"symbol"`    //YES
-	Interval  *string `json:"interval"`  //YES	详见枚举定义：K线间隔
-	StartTime *int64  `json:"startTime"` //NO
-	EndTime   *int64  `json:"endTime"`   //NO
-	Limit     *int    `json:"limit"`     //NO	默认 500; 最大 1000.
-}
-
-type SwapKlinesApi struct {
-	client *SwapRestClient
-	req    *SwapKlinesReq
-}
-
-func (api *SwapKlinesApi) Symbol(Symbol string) *SwapKlinesApi {
-	api.req.Symbol = GetPointer(Symbol)
-	return api
-}
-func (api *SwapKlinesApi) Interval(Interval string) *SwapKlinesApi {
-	api.req.Interval = GetPointer(Interval)
-	return api
-}
-func (api *SwapKlinesApi) StartTime(StartTime int64) *SwapKlinesApi {
-	api.req.StartTime = GetPointer(StartTime)
-	return api
-}
-func (api *SwapKlinesApi) EndTime(EndTime int64) *SwapKlinesApi {
-	api.req.EndTime = GetPointer(EndTime)
-	return api
-}
-func (api *SwapKlinesApi) Limit(Limit int) *SwapKlinesApi {
-	api.req.Limit = GetPointer(Limit)
-	return api
-}
-
-// symbol	STRING	NO	交易对
-// pair	STRING	NO	标的交易对
-type SwapTickerPriceReq struct {
-	Symbol *string `json:"symbol"` //NO	交易对
-	Pair   *string `json:"pair"`   //NO	标的交易对
-}
-
-type SwapTickerPriceApi struct {
-	client *SwapRestClient
-	req    *SwapTickerPriceReq
-}
-
-func (api *SwapTickerPriceApi) Symbol(Symbol string) *SwapTickerPriceApi {
-	api.req.Symbol = GetPointer(Symbol)
-	return api
-}
-func (api *SwapTickerPriceApi) Pair(Pair string) *SwapTickerPriceApi {
-	api.req.Pair = GetPointer(Pair)
-	return api
-}
-
-// symbol	STRING	YES	交易对
-// limit	INT	NO	默认 500; 可选值:[5, 10, 20, 50, 100, 500, 1000]
-
-type SwapDepthReq struct {
-	Symbol *string `json:"symbol"` //YES	交易对
-	Limit  *int    `json:"limit"`  //NO	默认 500; 可选值:[5, 10, 20, 50, 100, 500, 1000]
-}
-
-type SwapDepthApi struct {
-	client *SwapRestClient
-	req    *SwapDepthReq
-}
-
-func (api *SwapDepthApi) Symbol(Symbol string) *SwapDepthApi {
-	api.req.Symbol = GetPointer(Symbol)
-	return api
-}
-func (api *SwapDepthApi) Limit(Limit int) *SwapDepthApi {
-	api.req.Limit = GetPointer(Limit)
-	return api
-}
-
-type SwapListenKeyPostReq struct{}
-type SwapListenKeyPutReq struct{}
-type SwapListenKeyDeleteReq struct{}
-
-type SwapListenKeyPostApi struct {
-	client *SwapRestClient
-	req    *SwapListenKeyPostReq
-}
-
-type SwapListenKeyPutApi struct {
-	client *SwapRestClient
-	req    *SwapListenKeyPutReq
-}
-
-type SwapListenKeyDeleteApi struct {
-	client *SwapRestClient
-	req    *SwapListenKeyDeleteReq
 }
