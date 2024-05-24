@@ -249,8 +249,10 @@ func (ws *WsStreamClient) Close() error {
 		return err
 	}
 	//手动关闭成功，给所有订阅发送关闭信号
-	ws.sendWsCloseToAllSub()
+	go ws.sendWsCloseToAllSub()
 
+	//等待5秒，如果还有订阅未关闭，则强制关闭
+	time.Sleep(5 * time.Second)
 	//初始化连接状态
 	ws.conn = nil
 	//close(ws.resultChan)
