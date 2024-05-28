@@ -4,7 +4,7 @@ import "github.com/shopspring/decimal"
 
 type SwapOpenOrdersReq struct {
 	Symbol     *string `json:"symbol"` //No	交易对
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SwapOpenOrdersApi struct {
@@ -16,8 +16,8 @@ func (api *SwapOpenOrdersApi) Symbol(Symbol string) *SwapOpenOrdersApi {
 	api.req.Symbol = GetPointer(Symbol)
 	return api
 }
-func (api *SwapOpenOrdersApi) Recvwindow(Recvwindow int64) *SwapOpenOrdersApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SwapOpenOrdersApi) RecvWindow(RecvWindow int64) *SwapOpenOrdersApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SwapOpenOrdersApi) Timestamp(Timestamp int64) *SwapOpenOrdersApi {
@@ -31,7 +31,7 @@ type SwapAllOrdersReq struct {
 	StartTime  *int64  `json:"startTime"` //NO	起始时间
 	EndTime    *int64  `json:"endTime"`   //NO	结束时间
 	Limit      *int64  `json:"limit"`     //NO	返回的结果集数量 默认值:500 最大值:1000
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SwapAllOrdersApi struct {
@@ -59,8 +59,8 @@ func (api *SwapAllOrdersApi) Limit(Limit int64) *SwapAllOrdersApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
-func (api *SwapAllOrdersApi) Recvwindow(Recvwindow int64) *SwapAllOrdersApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SwapAllOrdersApi) RecvWindow(RecvWindow int64) *SwapAllOrdersApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SwapAllOrdersApi) Timestamp(Timestamp int64) *SwapAllOrdersApi {
@@ -85,7 +85,7 @@ type SwapOrderPostReq struct {
 	WorkingType      *string          `json:"workingType"`      //No	stopPrice 触发类型: MARK_PRICE(标记价格), CONTRACT_PRICE(合约最新价). 默认 CONTRACT_PRICE
 	PriceProtect     *string          `json:"priceProtect"`     //No	条件单触发保护："TRUE","FALSE", 默认"FALSE". 仅 STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET 需要此参数
 	NewOrderRespType *string          `json:"newOrderRespType"` //No	"ACK", "RESULT", 默认 "ACK"
-	Recvwindow       *int64           `json:"recvWindow"`       //No
+	RecvWindow       *int64           `json:"recvWindow"`       //No
 	Timestamp        *int64           `json:"timestamp"`        //Yes
 }
 type SwapOrderPostApi struct {
@@ -157,8 +157,8 @@ func (api *SwapOrderPostApi) NewOrderRespType(NewOrderRespType string) *SwapOrde
 	api.req.NewOrderRespType = GetPointer(NewOrderRespType)
 	return api
 }
-func (api *SwapOrderPostApi) Recvwindow(Recvwindow int64) *SwapOrderPostApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SwapOrderPostApi) RecvWindow(RecvWindow int64) *SwapOrderPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SwapOrderPostApi) Timestamp(Timestamp int64) *SwapOrderPostApi {
@@ -190,8 +190,8 @@ func (api *SwapOrderGetApi) OrigClientOrderId(OrigClientOrderId string) *SwapOrd
 	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
 	return api
 }
-func (api *SwapOrderGetApi) Recvwindow(Recvwindow int64) *SwapOrderGetApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *SwapOrderGetApi) RecvWindow(RecvWindow int64) *SwapOrderGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SwapOrderGetApi) Timestamp(Timestamp int64) *SwapOrderGetApi {
@@ -223,11 +223,65 @@ func (api *SwapOrderDeleteApi) OrigClientOrderId(OrigClientOrderId string) *Swap
 	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
 	return api
 }
-func (api *SwapOrderDeleteApi) Recvwindow(Recvwindow int64) *SwapOrderDeleteApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *SwapOrderDeleteApi) RecvWindow(RecvWindow int64) *SwapOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SwapOrderDeleteApi) Timestamp(Timestamp int64) *SwapOrderDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SwapUserTradesReq struct {
+	Symbol     *string `json:"symbol"`     //NO	交易对
+	Pair       *string `json:"pair"`       //NO	标的交易对
+	OrderId    *string `json:"orderId"`    //NO	订单号
+	StartTime  *int64  `json:"startTime"`  //NO	起始时间
+	EndTime    *int64  `json:"endTime"`    //NO	结束时间
+	FromId     *int64  `json:"fromId"`     //NO	返回该fromId及之后的成交,缺省返回最近的成交,仅支持配合symbol使用
+	Limit      *int    `json:"limit"`      //NO	返回的结果集数量 默认值:50 最大值:1000
+	RecvWindow *int64  `json:"recvWindow"` //NO
+	Timestamp  *int64  `json:"timestamp"`  //YES
+}
+
+type SwapUserTradesApi struct {
+	client *SwapRestClient
+	req    *SwapUserTradesReq
+}
+
+func (api *SwapUserTradesApi) Symbol(Symbol string) *SwapUserTradesApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SwapUserTradesApi) Pair(Pair string) *SwapUserTradesApi {
+	api.req.Pair = GetPointer(Pair)
+	return api
+}
+func (api *SwapUserTradesApi) OrderId(OrderId string) *SwapUserTradesApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *SwapUserTradesApi) StartTime(StartTime int64) *SwapUserTradesApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *SwapUserTradesApi) EndTime(EndTime int64) *SwapUserTradesApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *SwapUserTradesApi) FromId(FromId int64) *SwapUserTradesApi {
+	api.req.FromId = GetPointer(FromId)
+	return api
+}
+func (api *SwapUserTradesApi) Limit(Limit int) *SwapUserTradesApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+func (api *SwapUserTradesApi) RecvWindow(RecvWindow int64) *SwapUserTradesApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapUserTradesApi) Timestamp(Timestamp int64) *SwapUserTradesApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }

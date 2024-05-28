@@ -2,7 +2,7 @@ package mybinanceapi
 
 // FutureAccount
 type FutureAccountReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type FutureAccountApi struct {
@@ -10,8 +10,8 @@ type FutureAccountApi struct {
 	req    *FutureAccountReq
 }
 
-func (api *FutureAccountApi) Recvwindow(Recvwindow int64) *FutureAccountApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureAccountApi) RecvWindow(RecvWindow int64) *FutureAccountApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureAccountApi) Timestamp(Timestamp int64) *FutureAccountApi {
@@ -21,7 +21,7 @@ func (api *FutureAccountApi) Timestamp(Timestamp int64) *FutureAccountApi {
 
 // FuturePositionSideDualGet
 type FuturePositionSideDualGetReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type FuturePositionSideDualGetApi struct {
@@ -29,8 +29,8 @@ type FuturePositionSideDualGetApi struct {
 	req    *FuturePositionSideDualGetReq
 }
 
-func (api *FuturePositionSideDualGetApi) Recvwindow(Recvwindow int64) *FuturePositionSideDualGetApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FuturePositionSideDualGetApi) RecvWindow(RecvWindow int64) *FuturePositionSideDualGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FuturePositionSideDualGetApi) Timestamp(Timestamp int64) *FuturePositionSideDualGetApi {
@@ -40,7 +40,7 @@ func (api *FuturePositionSideDualGetApi) Timestamp(Timestamp int64) *FuturePosit
 
 // FutureMultiAssetsMarginGet
 type FutureMultiAssetsMarginGetReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type FutureMultiAssetsMarginGetApi struct {
@@ -48,8 +48,8 @@ type FutureMultiAssetsMarginGetApi struct {
 	req    *FutureMultiAssetsMarginGetReq
 }
 
-func (api *FutureMultiAssetsMarginGetApi) Recvwindow(Recvwindow int64) *FutureMultiAssetsMarginGetApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureMultiAssetsMarginGetApi) RecvWindow(RecvWindow int64) *FutureMultiAssetsMarginGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureMultiAssetsMarginGetApi) Timestamp(Timestamp int64) *FutureMultiAssetsMarginGetApi {
@@ -60,7 +60,7 @@ func (api *FutureMultiAssetsMarginGetApi) Timestamp(Timestamp int64) *FutureMult
 // FuturePositionSideDualPost
 type FuturePositionSideDualPostReq struct {
 	DualSidePosition *string `json:"dualSidePosition"` //YES "true": 双向持仓模式；"false": 单向持仓模式
-	Recvwindow       *int64  `json:"recvWindow"`
+	RecvWindow       *int64  `json:"recvWindow"`
 	Timestamp        *int64  `json:"timestamp"`
 }
 
@@ -73,8 +73,8 @@ func (api *FuturePositionSideDualPostApi) DualSidePosition(DualSidePosition stri
 	api.req.DualSidePosition = GetPointer(DualSidePosition)
 	return api
 }
-func (api *FuturePositionSideDualPostApi) Recvwindow(Recvwindow int64) *FuturePositionSideDualPostApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FuturePositionSideDualPostApi) RecvWindow(RecvWindow int64) *FuturePositionSideDualPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FuturePositionSideDualPostApi) Timestamp(Timestamp int64) *FuturePositionSideDualPostApi {
@@ -85,7 +85,7 @@ func (api *FuturePositionSideDualPostApi) Timestamp(Timestamp int64) *FuturePosi
 // FutureMultiAssetsMarginPost
 type FutureMultiAssetsMarginPostReq struct {
 	MultiAssetsMargin *string `json:"multiAssetsMargin"` //YES "true": 联合保证金模式开启；"false": 联合保证金模式关闭
-	Recvwindow        *int64  `json:"recvWindow"`
+	RecvWindow        *int64  `json:"recvWindow"`
 	Timestamp         *int64  `json:"timestamp"`
 }
 
@@ -98,8 +98,8 @@ func (api *FutureMultiAssetsMarginPostApi) MultiAssetsMargin(MultiAssetsMargin s
 	api.req.MultiAssetsMargin = GetPointer(MultiAssetsMargin)
 	return api
 }
-func (api *FutureMultiAssetsMarginPostApi) Recvwindow(Recvwindow int64) *FutureMultiAssetsMarginPostApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureMultiAssetsMarginPostApi) RecvWindow(RecvWindow int64) *FutureMultiAssetsMarginPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureMultiAssetsMarginPostApi) Timestamp(Timestamp int64) *FutureMultiAssetsMarginPostApi {
@@ -111,7 +111,7 @@ func (api *FutureMultiAssetsMarginPostApi) Timestamp(Timestamp int64) *FutureMul
 type FutureLeverageReq struct {
 	Symbol     *string `json:"symbol"`   //YES	交易对
 	Leverage   *int64  `json:"leverage"` //YES	目标杠杆倍数：1 到 125 整数
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 
@@ -128,8 +128,8 @@ func (api *FutureLeverageApi) Leverage(Leverage int64) *FutureLeverageApi {
 	api.req.Leverage = GetPointer(Leverage)
 	return api
 }
-func (api *FutureLeverageApi) Recvwindow(Recvwindow int64) *FutureLeverageApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureLeverageApi) RecvWindow(RecvWindow int64) *FutureLeverageApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureLeverageApi) Timestamp(Timestamp int64) *FutureLeverageApi {
@@ -141,7 +141,7 @@ func (api *FutureLeverageApi) Timestamp(Timestamp int64) *FutureLeverageApi {
 type FutureMarginTypeReq struct {
 	Symbol     *string `json:"symbol"`     //YES	交易对
 	MarginType *string `json:"marginType"` //YES	保证金模式 ISOLATED(逐仓), CROSSED(全仓)
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 
@@ -158,8 +158,8 @@ func (api *FutureMarginTypeApi) MarginType(MarginType string) *FutureMarginTypeA
 	api.req.MarginType = GetPointer(MarginType)
 	return api
 }
-func (api *FutureMarginTypeApi) Recvwindow(Recvwindow int64) *FutureMarginTypeApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureMarginTypeApi) RecvWindow(RecvWindow int64) *FutureMarginTypeApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureMarginTypeApi) Timestamp(Timestamp int64) *FutureMarginTypeApi {
@@ -170,7 +170,7 @@ func (api *FutureMarginTypeApi) Timestamp(Timestamp int64) *FutureMarginTypeApi 
 // FutureLeverageBracket
 type FutureLeverageBracketReq struct {
 	Symbol     *string `json:"symbol"` //No	交易对
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 
@@ -183,8 +183,8 @@ func (api *FutureLeverageBracketApi) Symbol(Symbol string) *FutureLeverageBracke
 	api.req.Symbol = GetPointer(Symbol)
 	return api
 }
-func (api *FutureLeverageBracketApi) Recvwindow(Recvwindow int64) *FutureLeverageBracketApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureLeverageBracketApi) RecvWindow(RecvWindow int64) *FutureLeverageBracketApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureLeverageBracketApi) Timestamp(Timestamp int64) *FutureLeverageBracketApi {

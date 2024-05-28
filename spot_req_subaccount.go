@@ -7,7 +7,7 @@ type SpotSubAccountListReq struct {
 	Isfreeze   *string `json:"isFreeze"`
 	Page       *int    `json:"page"`
 	Limit      *int    `json:"limit"`
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SpotSubAccountListApi struct {
@@ -35,8 +35,8 @@ func (api *SpotSubAccountListApi) Limit(Limit int) *SpotSubAccountListApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
-func (api *SpotSubAccountListApi) Recvwindow(Recvwindow int64) *SpotSubAccountListApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountListApi) RecvWindow(RecvWindow int64) *SpotSubAccountListApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountListApi) Timestamp(Timestamp int64) *SpotSubAccountListApi {
@@ -52,7 +52,7 @@ type SpotSubAccountUniversalTransferHistoryReq struct {
 	EndTime      *int64  `json:"endTime"`      //NO
 	Page         *int    `json:"page"`         //NO	默认 1
 	Limit        *int    `json:"limit"`        //NO	默认 500, 最大 500
-	Recvwindow   *int64  `json:"recvWindow"`
+	RecvWindow   *int64  `json:"recvWindow"`
 	Timestamp    *int64  `json:"timestamp"`
 }
 type SpotSubAccountUniversalTransferHistoryApi struct {
@@ -88,8 +88,8 @@ func (api *SpotSubAccountUniversalTransferHistoryApi) Limit(Limit int) *SpotSubA
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
-func (api *SpotSubAccountUniversalTransferHistoryApi) Recvwindow(Recvwindow int64) *SpotSubAccountUniversalTransferHistoryApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountUniversalTransferHistoryApi) RecvWindow(RecvWindow int64) *SpotSubAccountUniversalTransferHistoryApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountUniversalTransferHistoryApi) Timestamp(Timestamp int64) *SpotSubAccountUniversalTransferHistoryApi {
@@ -99,7 +99,7 @@ func (api *SpotSubAccountUniversalTransferHistoryApi) Timestamp(Timestamp int64)
 
 type SpotSubAccountAssetsReq struct {
 	Email      *string `json:"email"` //YES	子账户邮箱 备注
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SpotSubAccountAssetsApi struct {
@@ -111,8 +111,8 @@ func (api *SpotSubAccountAssetsApi) Email(Email string) *SpotSubAccountAssetsApi
 	api.req.Email = GetPointer(Email)
 	return api
 }
-func (api *SpotSubAccountAssetsApi) Recvwindow(Recvwindow int64) *SpotSubAccountAssetsApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountAssetsApi) RecvWindow(RecvWindow int64) *SpotSubAccountAssetsApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountAssetsApi) Timestamp(Timestamp int64) *SpotSubAccountAssetsApi {
@@ -151,7 +151,7 @@ func (api *SpotSubAccountFuturesAccountApi) Timestamp(Timestamp int64) *SpotSubA
 type SpotSubAccountApiIpRestrictionReq struct {
 	Email            *string `json:"email"`            //YES	Sub-account email
 	SubAccountApiKey *string `json:"subAccountApiKey"` //YES
-	Recvwindow       *int64  `json:"recvWindow"`
+	RecvWindow       *int64  `json:"recvWindow"`
 	Timestamp        *int64  `json:"timestamp"`
 }
 type SpotSubAccountApiIpRestrictionApi struct {
@@ -167,8 +167,8 @@ func (api *SpotSubAccountApiIpRestrictionApi) SubAccountApiKey(SubAccountApiKey 
 	api.req.SubAccountApiKey = GetPointer(SubAccountApiKey)
 	return api
 }
-func (api *SpotSubAccountApiIpRestrictionApi) Recvwindow(Recvwindow int64) *SpotSubAccountApiIpRestrictionApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountApiIpRestrictionApi) RecvWindow(RecvWindow int64) *SpotSubAccountApiIpRestrictionApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountApiIpRestrictionApi) Timestamp(Timestamp int64) *SpotSubAccountApiIpRestrictionApi {
@@ -274,7 +274,7 @@ func (api *SpotManagedSubAccountQueryTransLogApi) Timestamp(Timestamp int64) *Sp
 
 type SpotSubAccountVirtualSubAccountReq struct {
 	SubAccountString *string `json:"subAccountString"`
-	Recvwindow       *int64  `json:"recvWindow"`
+	RecvWindow       *int64  `json:"recvWindow"`
 	Timestamp        *int64  `json:"timestamp"`
 }
 type SpotSubAccountVirtualSubAccountApi struct {
@@ -286,8 +286,8 @@ func (api *SpotSubAccountVirtualSubAccountApi) SubAccountString(SubAccountString
 	api.req.SubAccountString = GetPointer(SubAccountString)
 	return api
 }
-func (api *SpotSubAccountVirtualSubAccountApi) Recvwindow(Recvwindow int64) *SpotSubAccountVirtualSubAccountApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountVirtualSubAccountApi) RecvWindow(RecvWindow int64) *SpotSubAccountVirtualSubAccountApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountVirtualSubAccountApi) Timestamp(Timestamp int64) *SpotSubAccountVirtualSubAccountApi {
@@ -304,7 +304,7 @@ type SpotSubAccountUniversalTransferReq struct {
 	Symbol          *string          `json:"symbol"`          //NO	仅在ISOLATED_MARGIN类型下使用
 	Asset           *string          `json:"asset"`           //YES
 	Amount          *decimal.Decimal `json:"amount"`          //YES
-	Recvwindow      *int64           `json:"recvWindow"`
+	RecvWindow      *int64           `json:"recvWindow"`
 	Timestamp       *int64           `json:"timestamp"`
 }
 type SpotSubAccountUniversalTransferApi struct {
@@ -344,8 +344,8 @@ func (api *SpotSubAccountUniversalTransferApi) Amount(Amount decimal.Decimal) *S
 	api.req.Amount = GetPointer(Amount)
 	return api
 }
-func (api *SpotSubAccountUniversalTransferApi) Recvwindow(Recvwindow int64) *SpotSubAccountUniversalTransferApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountUniversalTransferApi) RecvWindow(RecvWindow int64) *SpotSubAccountUniversalTransferApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountUniversalTransferApi) Timestamp(Timestamp int64) *SpotSubAccountUniversalTransferApi {
@@ -355,7 +355,7 @@ func (api *SpotSubAccountUniversalTransferApi) Timestamp(Timestamp int64) *SpotS
 
 type SpotSubAccountFuturesEnableReq struct {
 	Email      *string `json:"email"` //YES	子账户邮箱 备注
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SpotSubAccountFuturesEnableApi struct {
@@ -367,8 +367,8 @@ func (api *SpotSubAccountFuturesEnableApi) Email(Email string) *SpotSubAccountFu
 	api.req.Email = GetPointer(Email)
 	return api
 }
-func (api *SpotSubAccountFuturesEnableApi) Recvwindow(Recvwindow int64) *SpotSubAccountFuturesEnableApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotSubAccountFuturesEnableApi) RecvWindow(RecvWindow int64) *SpotSubAccountFuturesEnableApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotSubAccountFuturesEnableApi) Timestamp(Timestamp int64) *SpotSubAccountFuturesEnableApi {

@@ -7,7 +7,7 @@ import (
 
 type FutureOpenOrdersReq struct {
 	Symbol     *string `json:"symbol"` //No	交易对
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type FutureOpenOrdersApi struct {
@@ -19,8 +19,8 @@ func (api *FutureOpenOrdersApi) Symbol(Symbol string) *FutureOpenOrdersApi {
 	api.req.Symbol = GetPointer(Symbol)
 	return api
 }
-func (api *FutureOpenOrdersApi) Recvwindow(Recvwindow int64) *FutureOpenOrdersApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureOpenOrdersApi) RecvWindow(RecvWindow int64) *FutureOpenOrdersApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureOpenOrdersApi) Timestamp(Timestamp int64) *FutureOpenOrdersApi {
@@ -34,7 +34,7 @@ type FutureAllOrdersReq struct {
 	StartTime  *int64  `json:"startTime"` //No	起始时间
 	EndTime    *int64  `json:"endTime"`   //No	结束时间
 	Limit      *int64  `json:"limit"`     //No	返回的结果集数量 默认值:500 最大值:1000
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type FutureAllOrdersApi struct {
@@ -62,8 +62,8 @@ func (api *FutureAllOrdersApi) Limit(Limit int64) *FutureAllOrdersApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
-func (api *FutureAllOrdersApi) Recvwindow(Recvwindow int64) *FutureAllOrdersApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureAllOrdersApi) RecvWindow(RecvWindow int64) *FutureAllOrdersApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureAllOrdersApi) Timestamp(Timestamp int64) *FutureAllOrdersApi {
@@ -88,7 +88,7 @@ type FutureOrderPostReq struct {
 	WorkingType      *string          `json:"workingType,omitempty"`      //No	stopPrice 触发类型: MARK_PRICE(标记价格), CONTRACT_PRICE(合约最新价). 默认 CONTRACT_PRICE
 	PriceProtect     *string          `json:"priceProtect,omitempty"`     //No	条件单触发保护："TRUE","FALSE", 默认"FALSE". 仅 STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET 需要此参数
 	NewOrderRespType *string          `json:"newOrderRespType,omitempty"` //No	"ACK", "RESULT", 默认 "ACK"
-	Recvwindow       *int64           `json:"recvWindow,omitempty"`       //No
+	RecvWindow       *int64           `json:"recvWindow,omitempty"`       //No
 	Timestamp        *int64           `json:"timestamp,omitempty"`        //Yes
 }
 type FutureOrderPostApi struct {
@@ -160,8 +160,8 @@ func (api *FutureOrderPostApi) NewOrderRespType(NewOrderRespType string) *Future
 	api.req.NewOrderRespType = GetPointer(NewOrderRespType)
 	return api
 }
-func (api *FutureOrderPostApi) Recvwindow(Recvwindow int64) *FutureOrderPostApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *FutureOrderPostApi) RecvWindow(RecvWindow int64) *FutureOrderPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureOrderPostApi) Timestamp(Timestamp int64) *FutureOrderPostApi {
@@ -214,8 +214,8 @@ func (api *FutureOrderPutApi) PriceMatch(PriceMatch string) *FutureOrderPutApi {
 	api.req.PriceMatch = GetPointer(PriceMatch)
 	return api
 }
-func (api *FutureOrderPutApi) Recvwindow(Recvwindow int64) *FutureOrderPutApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureOrderPutApi) RecvWindow(RecvWindow int64) *FutureOrderPutApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureOrderPutApi) Timestamp(Timestamp int64) *FutureOrderPutApi {
@@ -247,8 +247,8 @@ func (api *FutureOrderGetApi) OrigClientOrderId(OrigClientOrderId string) *Futur
 	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
 	return api
 }
-func (api *FutureOrderGetApi) Recvwindow(Recvwindow int64) *FutureOrderGetApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureOrderGetApi) RecvWindow(RecvWindow int64) *FutureOrderGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureOrderGetApi) Timestamp(Timestamp int64) *FutureOrderGetApi {
@@ -280,8 +280,8 @@ func (api *FutureOrderDeleteApi) OrigClientOrderId(OrigClientOrderId string) *Fu
 	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
 	return api
 }
-func (api *FutureOrderDeleteApi) Recvwindow(Recvwindow int64) *FutureOrderDeleteApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureOrderDeleteApi) RecvWindow(RecvWindow int64) *FutureOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureOrderDeleteApi) Timestamp(Timestamp int64) *FutureOrderDeleteApi {
@@ -315,8 +315,8 @@ func (api *FutureBatchOrdersPostApi) SetOrders(orderApi []*FutureOrderPostApi) *
 	}
 	return api
 }
-func (api *FutureBatchOrdersPostApi) Recvwindow(Recvwindow int64) *FutureBatchOrdersPostApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureBatchOrdersPostApi) RecvWindow(RecvWindow int64) *FutureBatchOrdersPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureBatchOrdersPostApi) Timestamp(Timestamp int64) *FutureBatchOrdersPostApi {
@@ -350,8 +350,8 @@ func (api *FutureBatchOrdersPutApi) SetOrders(orderApi []*FutureOrderPutApi) *Fu
 	}
 	return api
 }
-func (api *FutureBatchOrdersPutApi) Recvwindow(Recvwindow int64) *FutureBatchOrdersPutApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureBatchOrdersPutApi) RecvWindow(RecvWindow int64) *FutureBatchOrdersPutApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureBatchOrdersPutApi) Timestamp(Timestamp int64) *FutureBatchOrdersPutApi {
@@ -383,8 +383,8 @@ func (api *FutureBatchOrdersDeleteApi) OrigClientOrderIdList(OrigClientOrderIdLi
 	api.req.OrigClientOrderIdList = GetPointer(OrigClientOrderIdList)
 	return api
 }
-func (api *FutureBatchOrdersDeleteApi) Recvwindow(Recvwindow int64) *FutureBatchOrdersDeleteApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureBatchOrdersDeleteApi) RecvWindow(RecvWindow int64) *FutureBatchOrdersDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureBatchOrdersDeleteApi) Timestamp(Timestamp int64) *FutureBatchOrdersDeleteApi {
@@ -431,8 +431,8 @@ func (api *FutureUserTradesApi) Limit(Limit int64) *FutureUserTradesApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
-func (api *FutureUserTradesApi) Recvwindow(Recvwindow int64) *FutureUserTradesApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureUserTradesApi) RecvWindow(RecvWindow int64) *FutureUserTradesApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureUserTradesApi) Timestamp(Timestamp int64) *FutureUserTradesApi {
@@ -454,8 +454,8 @@ func (api *FutureCommissionRateApi) Symbol(Symbol string) *FutureCommissionRateA
 	api.req.Symbol = GetPointer(Symbol)
 	return api
 }
-func (api *FutureCommissionRateApi) Recvwindow(Recvwindow int64) *FutureCommissionRateApi {
-	api.req.RecvWindow = GetPointer(Recvwindow)
+func (api *FutureCommissionRateApi) RecvWindow(RecvWindow int64) *FutureCommissionRateApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *FutureCommissionRateApi) Timestamp(Timestamp int64) *FutureCommissionRateApi {

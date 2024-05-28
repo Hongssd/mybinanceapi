@@ -17,6 +17,7 @@ const (
 	SwapOrderPost   //下单 (TRADE)
 	SwapOrderGet    //查询订单 (USER_DATA)
 	SwapOrderDelete //撤销订单 (TRADE)
+	SwapUserTrades  //查询账户成交记录 (USER_DATA)
 
 	//通用接口
 	SwapPing         //测试连接
@@ -50,6 +51,7 @@ var SwapApiMap = map[SwapApi]string{
 	SwapOrderPost:   "/dapi/v1/order",      //POST接口 (HMAC SHA256) 下单 (TRADE)
 	SwapOrderGet:    "/dapi/v1/order",      //GET接口 (HMAC SHA256) 查询订单 (USER_DATA)
 	SwapOrderDelete: "/dapi/v1/order",      //DELETE接口 (HMAC SHA256) 撤销订单 (TRADE)
+	SwapUserTrades:  "/dapi/v1/userTrades", //GET接口 (HMAC SHA256) 查询账户成交记录 (USER_DATA)
 
 	//通用接口
 	SwapPing:         "/dapi/v1/ping",         //GET接口 测试连接

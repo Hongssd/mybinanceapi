@@ -21,7 +21,7 @@ func (api *SpotAccountApiTradingStatusApi) Timestamp(Timestamp int64) *SpotAccou
 }
 
 type SpotAccountReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SpotAccountApi struct {
@@ -29,8 +29,8 @@ type SpotAccountApi struct {
 	req    *SpotAccountReq
 }
 
-func (api *SpotAccountApi) Recvwindow(Recvwindow int64) *SpotAccountApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotAccountApi) RecvWindow(RecvWindow int64) *SpotAccountApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotAccountApi) Timestamp(Timestamp int64) *SpotAccountApi {

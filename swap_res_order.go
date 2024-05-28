@@ -53,3 +53,23 @@ type SwapOrderPostRes struct {
 type SwapOrderGetRes SwapOrderOrder
 
 type SwapOrderDeleteRes SwapOrderOrder
+
+type SwapUserTradesRes []SwapUserTrade
+type SwapUserTrade struct {
+	Symbol          string `json:"symbol"`          // 交易对
+	Id              int    `json:"id"`              // 交易ID
+	OrderId         int    `json:"orderId"`         // 订单ID
+	Pair            string `json:"pair"`            // 标的交易对
+	Side            string `json:"side"`            // 买卖方向
+	Price           string `json:"price"`           // 成交价
+	Qty             string `json:"qty"`             // 成交量(张数)
+	RealizedPnl     string `json:"realizedPnl"`     // 实现盈亏
+	MarginAsset     string `json:"marginAsset"`     // 保证金币种
+	BaseQty         string `json:"baseQty"`         // 成交额(标的数量)
+	Commission      string `json:"commission"`      // 手续费
+	CommissionAsset string `json:"commissionAsset"` // 手续费单位
+	Time            int64  `json:"time"`            // 时间
+	PositionSide    string `json:"positionSide"`    // 持仓方向
+	Buyer           bool   `json:"buyer"`           // 是否是买方
+	Maker           bool   `json:"maker"`           // 是否是挂单方
+}

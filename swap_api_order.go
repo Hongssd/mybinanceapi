@@ -67,3 +67,16 @@ func (api *SwapOrderDeleteApi) Do() (*SwapOrderDeleteRes, error) {
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapOrderDeleteRes](api.client.c, url, DELETE)
 }
+
+// binance SWAP  SwapUserTrades rest查询账户成交记录 (USER_DATA)
+func (client *SwapRestClient) NewSwapUserTrades() *SwapUserTradesApi {
+	return &SwapUserTradesApi{
+		client: client,
+		req:    &SwapUserTradesReq{},
+	}
+}
+func (api *SwapUserTradesApi) Do() (*SwapUserTradesRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapUserTrades], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapUserTradesRes](api.client.c, url, GET)
+}

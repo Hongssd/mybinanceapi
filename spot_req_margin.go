@@ -3,7 +3,7 @@ package mybinanceapi
 import "github.com/shopspring/decimal"
 
 type SpotMarginAllPairsReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SpotMarginAllPairsApi struct {
@@ -11,8 +11,8 @@ type SpotMarginAllPairsApi struct {
 	req    *SpotMarginAllPairsReq
 }
 
-func (api *SpotMarginAllPairsApi) Recvwindow(Recvwindow int64) *SpotMarginAllPairsApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginAllPairsApi) RecvWindow(RecvWindow int64) *SpotMarginAllPairsApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginAllPairsApi) Timestamp(Timestamp int64) *SpotMarginAllPairsApi {
@@ -21,7 +21,7 @@ func (api *SpotMarginAllPairsApi) Timestamp(Timestamp int64) *SpotMarginAllPairs
 }
 
 type SpotMarginIsolatedAllPairsReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SpotMarginIsolatedAllPairsApi struct {
@@ -29,8 +29,8 @@ type SpotMarginIsolatedAllPairsApi struct {
 	req    *SpotMarginIsolatedAllPairsReq
 }
 
-func (api *SpotMarginIsolatedAllPairsApi) Recvwindow(Recvwindow int64) *SpotMarginIsolatedAllPairsApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginIsolatedAllPairsApi) RecvWindow(RecvWindow int64) *SpotMarginIsolatedAllPairsApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginIsolatedAllPairsApi) Timestamp(Timestamp int64) *SpotMarginIsolatedAllPairsApi {
@@ -39,7 +39,7 @@ func (api *SpotMarginIsolatedAllPairsApi) Timestamp(Timestamp int64) *SpotMargin
 }
 
 type SpotMarginAccountReq struct {
-	Recvwindow *int64 `json:"recvWindow"`
+	RecvWindow *int64 `json:"recvWindow"`
 	Timestamp  *int64 `json:"timestamp"`
 }
 type SpotMarginAccountApi struct {
@@ -47,8 +47,8 @@ type SpotMarginAccountApi struct {
 	req    *SpotMarginAccountReq
 }
 
-func (api *SpotMarginAccountApi) Recvwindow(Recvwindow int64) *SpotMarginAccountApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginAccountApi) RecvWindow(RecvWindow int64) *SpotMarginAccountApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginAccountApi) Timestamp(Timestamp int64) *SpotMarginAccountApi {
@@ -58,7 +58,7 @@ func (api *SpotMarginAccountApi) Timestamp(Timestamp int64) *SpotMarginAccountAp
 
 type SpotMarginIsolatedAccountReq struct {
 	Symbols    *string `json:"symbols"` //NO	最多可以传5个symbol; 由","分隔的字符串表示. e.g. "BTCUSDT,BNBUSDT,ADAUSDT"
-	Recvwindow *int64  `json:"recvWindow"`
+	RecvWindow *int64  `json:"recvWindow"`
 	Timestamp  *int64  `json:"timestamp"`
 }
 type SpotMarginIsolatedAccountApi struct {
@@ -70,8 +70,8 @@ func (api *SpotMarginIsolatedAccountApi) Symbols(Symbols string) *SpotMarginIsol
 	api.req.Symbols = GetPointer(Symbols)
 	return api
 }
-func (api *SpotMarginIsolatedAccountApi) Recvwindow(Recvwindow int64) *SpotMarginIsolatedAccountApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginIsolatedAccountApi) RecvWindow(RecvWindow int64) *SpotMarginIsolatedAccountApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginIsolatedAccountApi) Timestamp(Timestamp int64) *SpotMarginIsolatedAccountApi {
@@ -82,7 +82,7 @@ func (api *SpotMarginIsolatedAccountApi) Timestamp(Timestamp int64) *SpotMarginI
 type SpotMarginMaxBorrowableReq struct {
 	Asset          *string `json:"asset"`          //YES 币种, 比如, BTC
 	IsolatedSymbol *string `json:"isolatedSymbol"` //NO 逐仓交易对，适用于逐仓查询
-	Recvwindow     *int64  `json:"recvWindow"`     //NO 赋值不能大于 60000
+	RecvWindow     *int64  `json:"recvWindow"`     //NO 赋值不能大于 60000
 	Timestamp      *int64  `json:"timestamp"`      //YES
 }
 type SpotMarginMaxBorrowableApi struct {
@@ -98,8 +98,8 @@ func (api *SpotMarginMaxBorrowableApi) IsolatedSymbol(IsolatedSymbol string) *Sp
 	api.req.IsolatedSymbol = GetPointer(IsolatedSymbol)
 	return api
 }
-func (api *SpotMarginMaxBorrowableApi) Recvwindow(Recvwindow int64) *SpotMarginMaxBorrowableApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginMaxBorrowableApi) RecvWindow(RecvWindow int64) *SpotMarginMaxBorrowableApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginMaxBorrowableApi) Timestamp(Timestamp int64) *SpotMarginMaxBorrowableApi {
@@ -110,7 +110,7 @@ func (api *SpotMarginMaxBorrowableApi) Timestamp(Timestamp int64) *SpotMarginMax
 type SpotMarginMaxTransferableReq struct {
 	Asset          *string `json:"asset"`          //YES 币种, 比如, BTC
 	IsolatedSymbol *string `json:"isolatedSymbol"` //NO 逐仓交易对，适用于逐仓查询
-	Recvwindow     *int64  `json:"recvWindow"`     //NO 赋值不能大于 60000
+	RecvWindow     *int64  `json:"recvWindow"`     //NO 赋值不能大于 60000
 	Timestamp      *int64  `json:"timestamp"`      //YES
 }
 type SpotMarginMaxTransferableApi struct {
@@ -126,8 +126,8 @@ func (api *SpotMarginMaxTransferableApi) IsolatedSymbol(IsolatedSymbol string) *
 	api.req.IsolatedSymbol = GetPointer(IsolatedSymbol)
 	return api
 }
-func (api *SpotMarginMaxTransferableApi) Recvwindow(Recvwindow int64) *SpotMarginMaxTransferableApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginMaxTransferableApi) RecvWindow(RecvWindow int64) *SpotMarginMaxTransferableApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginMaxTransferableApi) Timestamp(Timestamp int64) *SpotMarginMaxTransferableApi {
@@ -143,7 +143,7 @@ type SpotMarginInterestHistoryReq struct {
 	Current        *int64  `json:"current"`        //NO	当前查询页。 开始值 1. 默认:1
 	Size           *int64  `json:"size"`           //NO	默认:10 最大:100
 	Archived       *string `json:"archived"`       //NO	默认: false. 查询6个月以前的数据，需要设为 true
-	Recvwindow     *int64  `json:"recvWindow"`     //NO 赋值不能大于 60000
+	RecvWindow     *int64  `json:"recvWindow"`     //NO 赋值不能大于 60000
 	Timestamp      *int64  `json:"timestamp"`      //YES
 }
 type SpotMarginInterestHistoryApi struct {
@@ -179,8 +179,8 @@ func (api *SpotMarginInterestHistoryApi) Archived(Archived string) *SpotMarginIn
 	api.req.Archived = GetPointer(Archived)
 	return api
 }
-func (api *SpotMarginInterestHistoryApi) Recvwindow(Recvwindow int64) *SpotMarginInterestHistoryApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginInterestHistoryApi) RecvWindow(RecvWindow int64) *SpotMarginInterestHistoryApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginInterestHistoryApi) Timestamp(Timestamp int64) *SpotMarginInterestHistoryApi {
@@ -193,7 +193,7 @@ type SpotMarginOrderGetReq struct {
 	IsIsolated        *string `json:"isIsolated"`        //NO 	是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"
 	OrderId           *int64  `json:"orderId"`           //NO
 	OrigClientOrderId *string `json:"origClientOrderId"` //NO
-	Recvwindow        *int64  `json:"recvWindow"`        //NO 赋值不能大于 60000
+	RecvWindow        *int64  `json:"recvWindow"`        //NO 赋值不能大于 60000
 	Timestamp         *int64  `json:"timestamp"`         //YES
 }
 type SpotMarginOrderGetApi struct {
@@ -217,8 +217,8 @@ func (api *SpotMarginOrderGetApi) OrigClientOrderId(OrigClientOrderId string) *S
 	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
 	return api
 }
-func (api *SpotMarginOrderGetApi) Recvwindow(Recvwindow int64) *SpotMarginOrderGetApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginOrderGetApi) RecvWindow(RecvWindow int64) *SpotMarginOrderGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginOrderGetApi) Timestamp(Timestamp int64) *SpotMarginOrderGetApi {
@@ -369,7 +369,7 @@ type SpotMarginAllOrdersReq struct {
 	StartTime  *int64  `json:"startTime"`  //NO
 	EndTime    *int64  `json:"endTime"`    //NO
 	Limit      *int64  `json:"limit"`      //NO	默认 500;最大500.
-	Recvwindow *int64  `json:"recvWindow"` //NO 赋值不能大于 60000
+	RecvWindow *int64  `json:"recvWindow"` //NO 赋值不能大于 60000
 	Timestamp  *int64  `json:"timestamp"`  //YES
 }
 type SpotMarginAllOrdersApi struct {
@@ -401,8 +401,8 @@ func (api *SpotMarginAllOrdersApi) Limit(Limit int64) *SpotMarginAllOrdersApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
-func (api *SpotMarginAllOrdersApi) Recvwindow(Recvwindow int64) *SpotMarginAllOrdersApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginAllOrdersApi) RecvWindow(RecvWindow int64) *SpotMarginAllOrdersApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginAllOrdersApi) Timestamp(Timestamp int64) *SpotMarginAllOrdersApi {
@@ -413,7 +413,7 @@ func (api *SpotMarginAllOrdersApi) Timestamp(Timestamp int64) *SpotMarginAllOrde
 type SpotMarginOpenOrdersReq struct {
 	Symbol     *string `json:"symbol"`     //NO
 	IsIsolated *string `json:"isIsolated"` //NO 	是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"
-	Recvwindow *int64  `json:"recvWindow"` //NO 赋值不能大于 60000
+	RecvWindow *int64  `json:"recvWindow"` //NO 赋值不能大于 60000
 	Timestamp  *int64  `json:"timestamp"`  //YES
 }
 type SpotMarginOpenOrdersApi struct {
@@ -429,8 +429,8 @@ func (api *SpotMarginOpenOrdersApi) IsIsolated(IsIsolated string) *SpotMarginOpe
 	api.req.IsIsolated = GetPointer(IsIsolated)
 	return api
 }
-func (api *SpotMarginOpenOrdersApi) Recvwindow(Recvwindow int64) *SpotMarginOpenOrdersApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginOpenOrdersApi) RecvWindow(RecvWindow int64) *SpotMarginOpenOrdersApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginOpenOrdersApi) Timestamp(Timestamp int64) *SpotMarginOpenOrdersApi {
@@ -442,7 +442,7 @@ type SpotMarginTransferReq struct {
 	Asset      *string          `json:"asset"`      //YES 被划转的资产, 比如, BTC
 	Amount     *decimal.Decimal `json:"amount"`     //YES 划转数量
 	Type       *int             `json:"type"`       //YES 1: 主账户向全仓杠杆账户划转 2: 全仓杠杆账户向主账户划转
-	Recvwindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
+	RecvWindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
 	Timestamp  *int64           `json:"timestamp"`  //YES
 }
 type SpotMarginTransferApi struct {
@@ -462,8 +462,8 @@ func (api *SpotMarginTransferApi) Type(Type int) *SpotMarginTransferApi {
 	api.req.Type = GetPointer(Type)
 	return api
 }
-func (api *SpotMarginTransferApi) Recvwindow(Recvwindow int64) *SpotMarginTransferApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginTransferApi) RecvWindow(RecvWindow int64) *SpotMarginTransferApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginTransferApi) Timestamp(Timestamp int64) *SpotMarginTransferApi {
@@ -477,7 +477,7 @@ type SpotMarginIsolatedTransferReq struct {
 	TransFrom  *string          `json:"transFrom"`  //YES "SPOT", "ISOLATED_MARGIN"
 	TransTo    *string          `json:"transTo"`    //YES "SPOT", "ISOLATED_MARGIN"
 	Amount     *decimal.Decimal `json:"amount"`     //YES 划转数量
-	Recvwindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
+	RecvWindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
 	Timestamp  *int64           `json:"timestamp"`  //YES
 }
 type SpotMarginIsolatedTransferApi struct {
@@ -505,8 +505,8 @@ func (api *SpotMarginIsolatedTransferApi) Amount(Amount decimal.Decimal) *SpotMa
 	api.req.Amount = GetPointer(Amount)
 	return api
 }
-func (api *SpotMarginIsolatedTransferApi) Recvwindow(Recvwindow int64) *SpotMarginIsolatedTransferApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginIsolatedTransferApi) RecvWindow(RecvWindow int64) *SpotMarginIsolatedTransferApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginIsolatedTransferApi) Timestamp(Timestamp int64) *SpotMarginIsolatedTransferApi {
@@ -519,7 +519,7 @@ type SpotMarginLoanReq struct {
 	IsIsolated *string          `json:"isIsolated"` //NO 是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"
 	Symbol     *string          `json:"symbol"`     //NO 逐仓交易对，配合逐仓使用
 	Amount     *decimal.Decimal `json:"amount"`     //YES 划转数量
-	Recvwindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
+	RecvWindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
 	Timestamp  *int64           `json:"timestamp"`  //YES
 }
 type SpotMarginLoanApi struct {
@@ -543,8 +543,8 @@ func (api *SpotMarginLoanApi) Amount(Amount decimal.Decimal) *SpotMarginLoanApi 
 	api.req.Amount = GetPointer(Amount)
 	return api
 }
-func (api *SpotMarginLoanApi) Recvwindow(Recvwindow int64) *SpotMarginLoanApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginLoanApi) RecvWindow(RecvWindow int64) *SpotMarginLoanApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginLoanApi) Timestamp(Timestamp int64) *SpotMarginLoanApi {
@@ -557,7 +557,7 @@ type SpotMarginRepayReq struct {
 	IsIsolated *string          `json:"isIsolated"` //NO 是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"
 	Symbol     *string          `json:"symbol"`     //NO 逐仓交易对，配合逐仓使用
 	Amount     *decimal.Decimal `json:"amount"`     //YES 划转数量
-	Recvwindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
+	RecvWindow *int64           `json:"recvWindow"` //NO 赋值不能大于 60000
 	Timestamp  *int64           `json:"timestamp"`  //YES
 }
 type SpotMarginRepayApi struct {
@@ -581,8 +581,8 @@ func (api *SpotMarginRepayApi) Amount(Amount decimal.Decimal) *SpotMarginRepayAp
 	api.req.Amount = GetPointer(Amount)
 	return api
 }
-func (api *SpotMarginRepayApi) Recvwindow(Recvwindow int64) *SpotMarginRepayApi {
-	api.req.Recvwindow = GetPointer(Recvwindow)
+func (api *SpotMarginRepayApi) RecvWindow(RecvWindow int64) *SpotMarginRepayApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api
 }
 func (api *SpotMarginRepayApi) Timestamp(Timestamp int64) *SpotMarginRepayApi {
