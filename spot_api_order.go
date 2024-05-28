@@ -69,6 +69,20 @@ func (api *SpotOrderDeleteApi) Do() (*SpotOrderDeleteRes, error) {
 	return binanceCallApiWithSecret[SpotOrderDeleteRes](api.client.c, url, DELETE)
 }
 
+// binance SPOT orderCancelReplace rest撤消挂单再下单 (TRADE)
+func (client *SpotRestClient) NewSpotOrderCancelReplace() *SpotOrderCancelReplaceApi {
+	return &SpotOrderCancelReplaceApi{
+		client: client,
+		req:    &SpotOrderCancelReplaceReq{},
+	}
+}
+func (api *SpotOrderCancelReplaceApi) Do() (*SpotOrderCancelReplaceRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderCancelReplace], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotOrderCancelReplaceRes](api.client.c, url, POST)
+
+}
+
 // binance SPOT spotMyTrades rest账户成交历史 (USER_DATA)
 func (client *SpotRestClient) NewSpotMyTrades() *SpotMyTradesApi {
 	return &SpotMyTradesApi{

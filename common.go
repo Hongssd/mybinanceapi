@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"io"
+	"sort"
 	"sync"
 	"time"
 
@@ -246,7 +247,6 @@ func binanceHandlerRequestApi[T any](apiType ApiType, request *T, name string) s
 
 func binanceHandlerReq[T any](req *T) string {
 	var paramBuffer bytes.Buffer
-
 	t := reflect.TypeOf(req)
 	v := reflect.ValueOf(req)
 	if v.IsNil() {
@@ -282,6 +282,60 @@ func binanceHandlerReq[T any](req *T) string {
 			log.Errorf("req type error %s:%s", paramName, v.Field(i).Elem().Kind())
 		}
 	}
+	return strings.TrimRight(paramBuffer.String(), "&")
+}
+
+func binanceHandlerWsApiReq[T any](req *T) string {
+	var paramBuffer bytes.Buffer
+	t := reflect.TypeOf(req)
+	v := reflect.ValueOf(req)
+	if v.IsNil() {
+		return ""
+	}
+	t = t.Elem()
+	v = v.Elem()
+	count := v.NumField()
+
+	sortMap := map[string]int{}
+	sortName := make([]string, 0)
+	for i := 0; i < count; i++ {
+		paramName := t.Field(i).Tag.Get("json")
+		paramName = strings.ReplaceAll(paramName, ",omitempty", "")
+		sortName = append(sortName, paramName)
+		sortMap[paramName] = i
+	}
+
+	sort.Strings(sortName)
+	for _, name := range sortName {
+		if i, ok := sortMap[name]; ok {
+			paramName := t.Field(i).Tag.Get("json")
+			paramName = strings.ReplaceAll(paramName, ",omitempty", "")
+			switch v.Field(i).Elem().Kind() {
+			case reflect.String:
+				paramBuffer.WriteString(paramName + "=" + v.Field(i).Elem().String() + "&")
+			case reflect.Int, reflect.Int64:
+				paramBuffer.WriteString(paramName + "=" + strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10) + "&")
+			case reflect.Float32, reflect.Float64:
+				paramBuffer.WriteString(paramName + "=" + decimal.NewFromFloat(v.Field(i).Elem().Float()).String() + "&")
+			case reflect.Bool:
+				paramBuffer.WriteString(paramName + "=" + strconv.FormatBool(v.Field(i).Elem().Bool()) + "&")
+			case reflect.Struct:
+				sv := reflect.ValueOf(v.Field(i).Interface())
+				ToStringMethod := sv.MethodByName("String")
+				params := make([]reflect.Value, 0)
+				result := ToStringMethod.Call(params)
+				paramBuffer.WriteString(paramName + "=" + result[0].String() + "&")
+			case reflect.Slice:
+				s := v.Field(i).Interface()
+				d, _ := json.Marshal(s)
+				paramBuffer.WriteString(paramName + "=" + url.QueryEscape(string(d)) + "&")
+			case reflect.Invalid:
+			default:
+				log.Errorf("req type error %s:%s", paramName, v.Field(i).Elem().Kind())
+			}
+		}
+	}
+
 	return strings.TrimRight(paramBuffer.String(), "&")
 }
 

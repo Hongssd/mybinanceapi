@@ -72,6 +72,13 @@ type SpotOrderDeleteRes struct {
 	SelfTradePreventionMode string `json:"selfTradePreventionMode"` // 自我交易预防模式
 }
 
+type SpotOrderCancelReplaceRes struct {
+	CancelResult     string             `json:"cancelResult"`
+	NewOrderResult   string             `json:"newOrderResult"`
+	CancelResponse   SpotOrderDeleteRes `json:"cancelResponse"`
+	NewOrderResponse SpotOrderPostRes   `json:"newOrderResponse"`
+}
+
 type SpotMyTradesResRow struct {
 	Symbol          string `json:"symbol"`          // 交易对
 	Id              int64  `json:"id"`              // trade ID

@@ -224,11 +224,11 @@ func (api *FutureOrderPutApi) Timestamp(Timestamp int64) *FutureOrderPutApi {
 }
 
 type FutureOrderGetReq struct {
-	Symbol            *string `json:"symbol"`            //YES 交易对
-	OrderId           *int64  `json:"orderId"`           //NO 系统订单号
-	OrigClientOrderId *string `json:"origClientOrderId"` //NO 用户自定义的订单号
-	RecvWindow        *int64  `json:"recvWindow"`        //NO
-	Timestamp         *int64  `json:"timestamp"`         //YES
+	Symbol            *string `json:"symbol"`                      //YES 交易对
+	OrderId           *int64  `json:"orderId,omitempty"`           //NO 系统订单号
+	OrigClientOrderId *string `json:"origClientOrderId,omitempty"` //NO 用户自定义的订单号
+	RecvWindow        *int64  `json:"recvWindow,omitempty"`        //NO
+	Timestamp         *int64  `json:"timestamp"`                   //YES
 }
 type FutureOrderGetApi struct {
 	client *FutureRestClient
@@ -257,11 +257,11 @@ func (api *FutureOrderGetApi) Timestamp(Timestamp int64) *FutureOrderGetApi {
 }
 
 type FutureOrderDeleteReq struct {
-	Symbol            *string `json:"symbol"`            //YES 交易对
-	OrderId           *int64  `json:"orderId"`           //NO 系统订单号
-	OrigClientOrderId *string `json:"origClientOrderId"` //NO 用户自定义的订单号
-	RecvWindow        *int64  `json:"recvWindow"`        //NO
-	Timestamp         *int64  `json:"timestamp"`         //YES
+	Symbol            *string `json:"symbol"`                      //YES 交易对
+	OrderId           *int64  `json:"orderId,omitempty"`           //NO 系统订单号
+	OrigClientOrderId *string `json:"origClientOrderId,omitempty"` //NO 用户自定义的订单号
+	RecvWindow        *int64  `json:"recvWindow,omitempty"`        //NO
+	Timestamp         *int64  `json:"timestamp"`                   //YES
 }
 type FutureOrderDeleteApi struct {
 	client *FutureRestClient

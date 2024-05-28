@@ -4,32 +4,27 @@ type FutureApi int
 
 const (
 	//账户接口
-	FutureAccount FutureApi = iota //GET接口 账户信息V2 (USER_DATA)
-
-	FuturePositionSideDualGet   //GET接口 (HMAC SHA256)查询持仓模式(USER_DATA)
-	FutureMultiAssetsMarginGet  //GET接口 (HMAC SHA256)查询联合保证金模式(USER_DATA)
-	FuturePositionSideDualPost  //POST接口 (HMAC SHA256)更改持仓模式(TRADE)
-	FutureMultiAssetsMarginPost //POST接口 (HMAC SHA256)更改联合保证金模式(TRADE)
-
-	FutureLeverage        //POST接口 (HMAC SHA256)调整开仓杠杆 (TRADE)
-	FutureMarginType      //POST接口 (HMAC SHA256)变换逐全仓模式 (TRADE)
-	FutureLeverageBracket //GET接口 杠杆分层标准 (USER_DATA)
+	FutureAccount               FutureApi = iota //GET接口 账户信息V2 (USER_DATA)
+	FuturePositionSideDualGet                    //GET接口 (HMAC SHA256)查询持仓模式(USER_DATA)
+	FutureMultiAssetsMarginGet                   //GET接口 (HMAC SHA256)查询联合保证金模式(USER_DATA)
+	FuturePositionSideDualPost                   //POST接口 (HMAC SHA256)更改持仓模式(TRADE)
+	FutureMultiAssetsMarginPost                  //POST接口 (HMAC SHA256)更改联合保证金模式(TRADE)
+	FutureLeverage                               //POST接口 (HMAC SHA256)调整开仓杠杆 (TRADE)
+	FutureMarginType                             //POST接口 (HMAC SHA256)变换逐全仓模式 (TRADE)
+	FutureLeverageBracket                        //GET接口 杠杆分层标准 (USER_DATA)
 
 	//交易接口
-	FutureOpenOrders //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)
-	FutureAllOrders  //GET接口 (HMAC SHA256)查询所有订单 (USER_DATA)
-
-	FutureOrderPost   //POST接口 (HMAC SHA256)下单 (TRADE)
-	FutureOrderPut    //PUT接口 (HMAC SHA256)修改订单 (TRADE)
-	FutureOrderGet    //GET接口 (HMAC SHA256)查询订单 (USER_DATA)
-	FutureOrderDelete //DELETE接口 (HMAC SHA256)撤销订单 (TRADE)
-
+	FutureOpenOrders        //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)
+	FutureAllOrders         //GET接口 (HMAC SHA256)查询所有订单 (USER_DATA)
+	FutureOrderPost         //POST接口 (HMAC SHA256)下单 (TRADE)
+	FutureOrderPut          //PUT接口 (HMAC SHA256)修改订单 (TRADE)
+	FutureOrderGet          //GET接口 (HMAC SHA256)查询订单 (USER_DATA)
+	FutureOrderDelete       //DELETE接口 (HMAC SHA256)撤销订单 (TRADE)
 	FutureBatchOrdersPost   //POST接口 (HMAC SHA256)批量下单 (TRADE)
 	FutureBatchOrdersPut    //PUT接口 (HMAC SHA256)批量修改订单 (TRADE)
 	FutureBatchOrdersDelete //DELETE接口 (HMAC SHA256)批量撤销订单 (TRADE)
-
-	FutureUserTrades     //GET接口 (HMAC SHA256)账户成交历史 (USER_DATA)
-	FutureCommissionRate //GET接口 (HMAC SHA256)查询用户当前的手续费率
+	FutureUserTrades        //GET接口 (HMAC SHA256)账户成交历史 (USER_DATA)
+	FutureCommissionRate    //GET接口 (HMAC SHA256)查询用户当前的手续费率
 
 	//通用接口
 	FuturePing         //GET接口 测试服务器连通性
