@@ -54,7 +54,10 @@ type SwapOrderPutRes SwapOrderPostRes
 
 type SwapOrderGetRes SwapOrderOrder
 
-type SwapOrderDeleteRes SwapOrderOrder
+type SwapOrderDeleteRes struct {
+	BinanceErrorRes
+	SwapOrderOrder
+}
 
 type SwapUserTradesRes []SwapUserTrade
 type SwapUserTrade struct {
