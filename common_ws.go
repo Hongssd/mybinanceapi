@@ -673,7 +673,7 @@ func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan
 					errChan <- err
 					return
 				}
-				log.Warn(string(message))
+				//log.Warn(string(message))
 				reader, err := gzip.NewReader(bytes.NewReader(message))
 				if err != nil {
 					errChan <- err

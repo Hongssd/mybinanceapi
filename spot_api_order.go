@@ -52,7 +52,7 @@ func (client *SpotRestClient) NewSpotOrderPost() *SpotOrderPostApi {
 func (api *SpotOrderPostApi) Do() (*SpotOrderPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotOrderPost], api.client.c.ApiSecret)
-	log.Warn(url)
+	//log.Warn(url)
 	return binanceCallApiWithSecret[SpotOrderPostRes](api.client.c, url, POST)
 }
 
