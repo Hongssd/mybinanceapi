@@ -69,24 +69,24 @@ func (api *SwapAllOrdersApi) Timestamp(Timestamp int64) *SwapAllOrdersApi {
 }
 
 type SwapOrderPostReq struct {
-	Symbol           *string          `json:"symbol"`           //Yes	交易对
-	Side             *string          `json:"side"`             //Yes	买卖方向 SELL, BUY
-	PositionSide     *string          `json:"positionSide"`     //No	持仓方向，单向持仓模式下非必填，默认且仅可填BOTH;在双向持仓模式下必填,且仅可选择 LONG 或 SHORT
-	Type             *string          `json:"type"`             //Yes	订单类型 LIMIT, MARKET, STOP, TAKE_PROFIT, STOP_MARKET, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET
-	ReduceOnly       *string          `json:"reduceOnly"`       //No	true, false; 非双开模式下默认false；双开模式下不接受此参数； 使用closePosition不支持此参数。
-	Quantity         *decimal.Decimal `json:"quantity"`         //No	下单数量,使用closePosition不支持此参数。
-	Price            *decimal.Decimal `json:"price"`            //No	委托价格
-	NewClientOrderId *string          `json:"newClientOrderId"` //No	用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则 ^[\.A-Z\:/a-z0-9_-]{1,36}$
-	StopPrice        *decimal.Decimal `json:"stopPrice"`        //No	触发价, 仅 STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET 需要此参数
-	ClosePosition    *string          `json:"closePosition"`    //No	true, false；触发后全部平仓，仅支持STOP_MARKET和TAKE_PROFIT_MARKET；不与quantity合用；自带只平仓效果，不与reduceOnly 合用
-	ActivationPrice  *decimal.Decimal `json:"activationPrice"`  //No	追踪止损激活价格，仅TRAILING_STOP_MARKET 需要此参数, 默认为下单当前市场价格(支持不同workingType)
-	CallbackRate     *decimal.Decimal `json:"callbackRate"`     //No	追踪止损回调比例，可取值范围[0.1, 5],其中 1代表1% ,仅TRAILING_STOP_MARKET 需要此参数
-	TimeInForce      *string          `json:"timeInForce"`      //No	有效方法
-	WorkingType      *string          `json:"workingType"`      //No	stopPrice 触发类型: MARK_PRICE(标记价格), CONTRACT_PRICE(合约最新价). 默认 CONTRACT_PRICE
-	PriceProtect     *string          `json:"priceProtect"`     //No	条件单触发保护："TRUE","FALSE", 默认"FALSE". 仅 STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET 需要此参数
-	NewOrderRespType *string          `json:"newOrderRespType"` //No	"ACK", "RESULT", 默认 "ACK"
-	RecvWindow       *int64           `json:"recvWindow"`       //No
-	Timestamp        *int64           `json:"timestamp"`        //Yes
+	Symbol           *string          `json:"symbol"`                     //Yes	交易对
+	Side             *string          `json:"side"`                       //Yes	买卖方向 SELL, BUY
+	PositionSide     *string          `json:"positionSide,omitempty"`     //No	持仓方向，单向持仓模式下非必填，默认且仅可填BOTH;在双向持仓模式下必填,且仅可选择 LONG 或 SHORT
+	Type             *string          `json:"type"`                       //Yes	订单类型 LIMIT, MARKET, STOP, TAKE_PROFIT, STOP_MARKET, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET
+	ReduceOnly       *string          `json:"reduceOnly,omitempty"`       //No	true, false; 非双开模式下默认false；双开模式下不接受此参数； 使用closePosition不支持此参数。
+	Quantity         *decimal.Decimal `json:"quantity,omitempty"`         //No	下单数量,使用closePosition不支持此参数。
+	Price            *decimal.Decimal `json:"price,omitempty"`            //No	委托价格
+	NewClientOrderId *string          `json:"newClientOrderId,omitempty"` //No	用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则 ^[\.A-Z\:/a-z0-9_-]{1,36}$
+	StopPrice        *decimal.Decimal `json:"stopPrice,omitempty"`        //No	触发价, 仅 STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET 需要此参数
+	ClosePosition    *string          `json:"closePosition,omitempty"`    //No	true, false；触发后全部平仓，仅支持STOP_MARKET和TAKE_PROFIT_MARKET；不与quantity合用；自带只平仓效果，不与reduceOnly 合用
+	ActivationPrice  *decimal.Decimal `json:"activationPrice,omitempty"`  //No	追踪止损激活价格，仅TRAILING_STOP_MARKET 需要此参数, 默认为下单当前市场价格(支持不同workingType)
+	CallbackRate     *decimal.Decimal `json:"callbackRate,omitempty"`     //No	追踪止损回调比例，可取值范围[0.1, 5],其中 1代表1% ,仅TRAILING_STOP_MARKET 需要此参数
+	TimeInForce      *string          `json:"timeInForce,omitempty"`      //No	有效方法
+	WorkingType      *string          `json:"workingType,omitempty"`      //No	stopPrice 触发类型: MARK_PRICE(标记价格), CONTRACT_PRICE(合约最新价). 默认 CONTRACT_PRICE
+	PriceProtect     *string          `json:"priceProtect,omitempty"`     //No	条件单触发保护："TRUE","FALSE", 默认"FALSE". 仅 STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET 需要此参数
+	NewOrderRespType *string          `json:"newOrderRespType,omitempty"` //No	"ACK", "RESULT", 默认 "ACK"
+	RecvWindow       *int64           `json:"recvWindow,omitempty"`       //No
+	Timestamp        *int64           `json:"timestamp,omitempty"`        //Yes
 }
 type SwapOrderPostApi struct {
 	client *SwapRestClient
@@ -162,6 +162,54 @@ func (api *SwapOrderPostApi) RecvWindow(RecvWindow int64) *SwapOrderPostApi {
 	return api
 }
 func (api *SwapOrderPostApi) Timestamp(Timestamp int64) *SwapOrderPostApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SwapOrderPutReq struct {
+	Symbol            *string          `json:"symbol"`                      //YES 交易对
+	OrderId           *string          `json:"orderId,omitempty"`           //NO 系统订单号
+	OrigClientOrderId *string          `json:"origClientOrderId,omitempty"` //NO 用户自定义的订单号
+	Side              *string          `json:"side"`                        //YES 买卖方向 SELL, BUY
+	Quantity          *decimal.Decimal `json:"quantity,omitempty"`          //NO 下单数量,使用closePosition不支持此参数。
+	Price             *decimal.Decimal `json:"price,omitempty"`             //NO 委托价格
+	RecvWindow        *int64           `json:"recvWindow,omitempty"`        //NO
+	Timestamp         *int64           `json:"timestamp,omitempty"`         //YES
+}
+type SwapOrderPutApi struct {
+	client *SwapRestClient
+	req    *SwapOrderPutReq
+}
+
+func (api *SwapOrderPutApi) Symbol(Symbol string) *SwapOrderPutApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SwapOrderPutApi) OrderId(OrderId string) *SwapOrderPutApi {
+	api.req.OrderId = GetPointer(OrderId)
+	return api
+}
+func (api *SwapOrderPutApi) OrigClientOrderId(OrigClientOrderId string) *SwapOrderPutApi {
+	api.req.OrigClientOrderId = GetPointer(OrigClientOrderId)
+	return api
+}
+func (api *SwapOrderPutApi) Side(Side string) *SwapOrderPutApi {
+	api.req.Side = GetPointer(Side)
+	return api
+}
+func (api *SwapOrderPutApi) Quantity(Quantity decimal.Decimal) *SwapOrderPutApi {
+	api.req.Quantity = GetPointer(Quantity)
+	return api
+}
+func (api *SwapOrderPutApi) Price(Price decimal.Decimal) *SwapOrderPutApi {
+	api.req.Price = GetPointer(Price)
+	return api
+}
+func (api *SwapOrderPutApi) RecvWindow(RecvWindow int64) *SwapOrderPutApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapOrderPutApi) Timestamp(Timestamp int64) *SwapOrderPutApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
@@ -243,7 +291,6 @@ type SwapUserTradesReq struct {
 	RecvWindow *int64  `json:"recvWindow"` //NO
 	Timestamp  *int64  `json:"timestamp"`  //YES
 }
-
 type SwapUserTradesApi struct {
 	client *SwapRestClient
 	req    *SwapUserTradesReq
@@ -282,6 +329,109 @@ func (api *SwapUserTradesApi) RecvWindow(RecvWindow int64) *SwapUserTradesApi {
 	return api
 }
 func (api *SwapUserTradesApi) Timestamp(Timestamp int64) *SwapUserTradesApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SwapBatchOrdersPostReq struct {
+	BatchOrders *[]SwapOrderPostReq `json:"batchOrders"` //YES	批量下单 最多支持5个
+	RecvWindow  *int64              `json:"recvWindow"`  //NO
+	Timestamp   *int64              `json:"timestamp"`   //YES
+}
+type SwapBatchOrdersPostApi struct {
+	client *SwapRestClient
+	req    *SwapBatchOrdersPostReq
+}
+
+func (api *SwapBatchOrdersPostApi) AddOrders(orderApis ...*SwapOrderPostApi) *SwapBatchOrdersPostApi {
+	if api.req.BatchOrders == nil {
+		api.req.BatchOrders = &[]SwapOrderPostReq{}
+	}
+	for _, order := range orderApis {
+		*api.req.BatchOrders = append(*api.req.BatchOrders, *order.req)
+	}
+	return api
+}
+func (api *SwapBatchOrdersPostApi) SetOrders(orderApi []*SwapOrderPostApi) *SwapBatchOrdersPostApi {
+	api.req.BatchOrders = &[]SwapOrderPostReq{}
+	for _, order := range orderApi {
+		*api.req.BatchOrders = append(*api.req.BatchOrders, *order.req)
+	}
+	return api
+}
+func (api *SwapBatchOrdersPostApi) RecvWindow(RecvWindow int64) *SwapBatchOrdersPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapBatchOrdersPostApi) Timestamp(Timestamp int64) *SwapBatchOrdersPostApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SwapBatchOrdersPutReq struct {
+	BatchOrders *[]SwapOrderPutReq `json:"batchOrders"` //YES	批量下单 最多支持5个
+	RecvWindow  *int64             `json:"recvWindow"`  //NO
+	Timestamp   *int64             `json:"timestamp"`   //YES
+}
+type SwapBatchOrdersPutApi struct {
+	client *SwapRestClient
+	req    *SwapBatchOrdersPutReq
+}
+
+func (api *SwapBatchOrdersPutApi) AddOrders(orderApi ...*SwapOrderPutApi) *SwapBatchOrdersPutApi {
+	if api.req.BatchOrders == nil {
+		api.req.BatchOrders = &[]SwapOrderPutReq{}
+	}
+	for _, order := range orderApi {
+		*api.req.BatchOrders = append(*api.req.BatchOrders, *order.req)
+	}
+	return api
+}
+func (api *SwapBatchOrdersPutApi) SetOrders(orderApi []*SwapOrderPutApi) *SwapBatchOrdersPutApi {
+	api.req.BatchOrders = &[]SwapOrderPutReq{}
+	for _, order := range orderApi {
+		*api.req.BatchOrders = append(*api.req.BatchOrders, *order.req)
+	}
+	return api
+}
+func (api *SwapBatchOrdersPutApi) RecvWindow(RecvWindow int64) *SwapBatchOrdersPutApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapBatchOrdersPutApi) Timestamp(Timestamp int64) *SwapBatchOrdersPutApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SwapBatchOrdersDeleteReq struct {
+	Symbol                *string   `json:"symbol"`                //YES 交易对
+	OrderIdList           *[]int64  `json:"orderIdList"`           //NO 系统订单号, 最多支持10个订单
+	OrigClientOrderIdList *[]string `json:"origClientOrderIdList"` //NO 用户自定义的订单号, 最多支持10个订单
+	RecvWindow            *int64    `json:"recvWindow"`            //NO
+	Timestamp             *int64    `json:"timestamp"`             //YES
+}
+type SwapBatchOrdersDeleteApi struct {
+	client *SwapRestClient
+	req    *SwapBatchOrdersDeleteReq
+}
+
+func (api *SwapBatchOrdersDeleteApi) Symbol(Symbol string) *SwapBatchOrdersDeleteApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SwapBatchOrdersDeleteApi) OrderIdList(OrderIdList []int64) *SwapBatchOrdersDeleteApi {
+	api.req.OrderIdList = GetPointer(OrderIdList)
+	return api
+}
+func (api *SwapBatchOrdersDeleteApi) OrigClientOrderIdList(OrigClientOrderIdList []string) *SwapBatchOrdersDeleteApi {
+	api.req.OrigClientOrderIdList = GetPointer(OrigClientOrderIdList)
+	return api
+}
+func (api *SwapBatchOrdersDeleteApi) RecvWindow(RecvWindow int64) *SwapBatchOrdersDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapBatchOrdersDeleteApi) Timestamp(Timestamp int64) *SwapBatchOrdersDeleteApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }

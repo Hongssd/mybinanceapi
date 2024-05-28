@@ -42,6 +42,19 @@ func (api *SwapOrderPostApi) Do() (*SwapOrderPostRes, error) {
 	return binanceCallApiWithSecret[SwapOrderPostRes](api.client.c, url, POST)
 }
 
+// binance SWAP  SwapOrderPut rest修改订单 (TRADE)
+func (client *SwapRestClient) NewSwapOrderPut() *SwapOrderPutApi {
+	return &SwapOrderPutApi{
+		client: client,
+		req:    &SwapOrderPutReq{},
+	}
+}
+func (api *SwapOrderPutApi) Do() (*SwapOrderPutRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapOrderPut], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapOrderPutRes](api.client.c, url, PUT)
+}
+
 // binance SWAP  SwapOrderGet	rest查询订单 (USER_DATA)
 func (client *SwapRestClient) NewSwapOrderGet() *SwapOrderGetApi {
 	return &SwapOrderGetApi{
@@ -79,4 +92,43 @@ func (api *SwapUserTradesApi) Do() (*SwapUserTradesRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapUserTrades], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapUserTradesRes](api.client.c, url, GET)
+}
+
+// binance SWAP  SwapBatchOrdersPost rest批量下单 (TRADE)
+func (client *SwapRestClient) NewSwapBatchOrdersPost() *SwapBatchOrdersPostApi {
+	return &SwapBatchOrdersPostApi{
+		client: client,
+		req:    &SwapBatchOrdersPostReq{},
+	}
+}
+func (api *SwapBatchOrdersPostApi) Do() (*SwapBatchOrdersPostRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapBatchOrdersPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapBatchOrdersPostRes](api.client.c, url, POST)
+}
+
+// binance SWAP  SwapBatchOrdersPut rest批量修改订单 (TRADE)
+func (client *SwapRestClient) NewSwapBatchOrdersPut() *SwapBatchOrdersPutApi {
+	return &SwapBatchOrdersPutApi{
+		client: client,
+		req:    &SwapBatchOrdersPutReq{},
+	}
+}
+func (api *SwapBatchOrdersPutApi) Do() (*SwapBatchOrdersPutRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapBatchOrdersPut], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapBatchOrdersPutRes](api.client.c, url, PUT)
+}
+
+// binance SWAP  SwapBatchOrdersDelete rest批量撤销订单 (TRADE)
+func (client *SwapRestClient) NewSwapBatchOrdersDelete() *SwapBatchOrdersDeleteApi {
+	return &SwapBatchOrdersDeleteApi{
+		client: client,
+		req:    &SwapBatchOrdersDeleteReq{},
+	}
+}
+func (api *SwapBatchOrdersDeleteApi) Do() (*SwapBatchOrdersDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapBatchOrdersDelete], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapBatchOrdersDeleteRes](api.client.c, url, DELETE)
 }

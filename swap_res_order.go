@@ -50,6 +50,8 @@ type SwapOrderPostRes struct {
 	OrigType      string `json:"origType"`    // 触发前订单类型
 }
 
+type SwapOrderPutRes SwapOrderPostRes
+
 type SwapOrderGetRes SwapOrderOrder
 
 type SwapOrderDeleteRes SwapOrderOrder
@@ -73,3 +75,17 @@ type SwapUserTrade struct {
 	Buyer           bool   `json:"buyer"`           // 是否是买方
 	Maker           bool   `json:"maker"`           // 是否是挂单方
 }
+
+type SwapBatchOrdersPostRes []SwapOrderPostResRow
+type SwapOrderPostResRow struct {
+	BinanceErrorRes
+	SwapOrderPostRes
+}
+
+type SwapBatchOrdersPutRes []SwapBatchOrdersPutResRow
+type SwapBatchOrdersPutResRow struct {
+	BinanceErrorRes
+	SwapOrderPutRes
+}
+
+type SwapBatchOrdersDeleteRes []SwapOrderDeleteRes
