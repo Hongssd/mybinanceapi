@@ -57,8 +57,8 @@ type SwapOrderDeleteRes SwapOrderOrder
 type SwapUserTradesRes []SwapUserTrade
 type SwapUserTrade struct {
 	Symbol          string `json:"symbol"`          // 交易对
-	Id              int    `json:"id"`              // 交易ID
-	OrderId         int    `json:"orderId"`         // 订单ID
+	Id              int64  `json:"id"`              // 交易ID
+	OrderId         int64  `json:"orderId"`         // 订单ID
 	Pair            string `json:"pair"`            // 标的交易对
 	Side            string `json:"side"`            // 买卖方向
 	Price           string `json:"price"`           // 成交价

@@ -235,11 +235,11 @@ func (api *SwapOrderDeleteApi) Timestamp(Timestamp int64) *SwapOrderDeleteApi {
 type SwapUserTradesReq struct {
 	Symbol     *string `json:"symbol"`     //NO	交易对
 	Pair       *string `json:"pair"`       //NO	标的交易对
-	OrderId    *string `json:"orderId"`    //NO	订单号
+	OrderId    *int64  `json:"orderId"`    //NO	订单号
 	StartTime  *int64  `json:"startTime"`  //NO	起始时间
 	EndTime    *int64  `json:"endTime"`    //NO	结束时间
 	FromId     *int64  `json:"fromId"`     //NO	返回该fromId及之后的成交,缺省返回最近的成交,仅支持配合symbol使用
-	Limit      *int    `json:"limit"`      //NO	返回的结果集数量 默认值:50 最大值:1000
+	Limit      *int64  `json:"limit"`      //NO	返回的结果集数量 默认值:50 最大值:1000
 	RecvWindow *int64  `json:"recvWindow"` //NO
 	Timestamp  *int64  `json:"timestamp"`  //YES
 }
@@ -257,7 +257,7 @@ func (api *SwapUserTradesApi) Pair(Pair string) *SwapUserTradesApi {
 	api.req.Pair = GetPointer(Pair)
 	return api
 }
-func (api *SwapUserTradesApi) OrderId(OrderId string) *SwapUserTradesApi {
+func (api *SwapUserTradesApi) OrderId(OrderId int64) *SwapUserTradesApi {
 	api.req.OrderId = GetPointer(OrderId)
 	return api
 }
@@ -273,7 +273,7 @@ func (api *SwapUserTradesApi) FromId(FromId int64) *SwapUserTradesApi {
 	api.req.FromId = GetPointer(FromId)
 	return api
 }
-func (api *SwapUserTradesApi) Limit(Limit int) *SwapUserTradesApi {
+func (api *SwapUserTradesApi) Limit(Limit int64) *SwapUserTradesApi {
 	api.req.Limit = GetPointer(Limit)
 	return api
 }
