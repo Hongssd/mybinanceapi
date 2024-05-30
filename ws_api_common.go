@@ -89,6 +89,8 @@ func sendApiMsg[T any, R any](ws *WsStreamClient, id int64, method string, param
 	if ws.wsApiWriterMu == nil {
 		ws.wsApiWriterMu = &sync.Mutex{}
 	}
+	ws.wsApiWriterMu.Lock()
+	defer ws.wsApiWriterMu.Unlock()
 
 	wsApiReq := WsApiReq[T]{
 		Id:     strconv.FormatInt(id, 10),
@@ -107,9 +109,9 @@ func sendApiMsg[T any, R any](ws *WsStreamClient, id int64, method string, param
 	if err != nil {
 		return nil, err
 	}
-	ws.wsApiWriterMu.Lock()
+
 	err = ws.conn.WriteMessage(websocket.TextMessage, data)
-	defer ws.wsApiWriterMu.Unlock()
+
 	if err != nil {
 		return nil, err
 	}
