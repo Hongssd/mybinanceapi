@@ -114,8 +114,8 @@ func sendApiMsg[T any, R any](ws *WsStreamClient, id int64, method string, param
 		return nil, err
 	}
 
-	//阻塞等待，且5秒后超时
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	//阻塞等待，且20秒后超时
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
 	resultChan := make(chan []byte, 1)
