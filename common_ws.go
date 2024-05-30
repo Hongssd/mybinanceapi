@@ -87,6 +87,7 @@ type WsStreamClient struct {
 
 	//wsApi交易相关
 	waitWsApiResultMap MySyncMap[string, WsApiResultChan]
+	wsApiWriterMu      *sync.Mutex
 
 	resultChan               chan []byte
 	errChan                  chan error
@@ -228,6 +229,7 @@ func (ws *WsStreamClient) initStructs() {
 	ws.wsSwapPayloadMap = NewMySyncMap[int64, *WsSwapPayload]()
 
 	ws.waitWsApiResultMap = NewMySyncMap[string, WsApiResultChan]()
+	ws.wsApiWriterMu = &sync.Mutex{}
 }
 
 func (ws *WsStreamClient) OpenConn() error {
