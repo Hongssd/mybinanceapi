@@ -83,7 +83,6 @@ func RequestWithHeader(url string, method string, headerMap map[string]string, i
 		req.Header.Add("Content-Encoding", "gzip")
 		req.Header.Add("Accept-Encoding", "gzip")
 	}
-	req.Close = true
 
 	log.Debug(method, ": ", req.URL.String())
 
