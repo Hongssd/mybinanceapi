@@ -132,3 +132,16 @@ func (api *SwapBatchOrdersDeleteApi) Do() (*SwapBatchOrdersDeleteRes, error) {
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapBatchOrdersDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapBatchOrdersDeleteRes](api.client.c, url, DELETE)
 }
+
+// binance SWAP  SwapCommissionRate rest查询用户当前的手续费率
+func (client *SwapRestClient) NewSwapCommissionRate() *SwapCommissionRateApi {
+	return &SwapCommissionRateApi{
+		client: client,
+		req:    &SwapCommissionRateReq{},
+	}
+}
+func (api *SwapCommissionRateApi) Do() (*SwapCommissionRateRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapCommissionRate], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapCommissionRateRes](api.client.c, url, GET)
+}

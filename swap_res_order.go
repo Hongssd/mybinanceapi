@@ -92,3 +92,9 @@ type SwapBatchOrdersPutResRow struct {
 }
 
 type SwapBatchOrdersDeleteRes []SwapOrderDeleteRes
+
+type SwapCommissionRateRes struct {
+	Symbol              string `json:"symbol"`
+	MakerCommissionRate string `json:"makerCommissionRate"`
+	TakerCommissionRate string `json:"takerCommissionRate"`
+}

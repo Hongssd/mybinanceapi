@@ -435,3 +435,30 @@ func (api *SwapBatchOrdersDeleteApi) Timestamp(Timestamp int64) *SwapBatchOrders
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+// symbol	STRING	YES
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SwapCommissionRateReq struct {
+	Symbol     *string `json:"symbol"`     //YES	交易对
+	RecvWindow *int64  `json:"recvWindow"` //NO
+	Timestamp  *int64  `json:"timestamp"`  //YES\
+}
+
+type SwapCommissionRateApi struct {
+	client *SwapRestClient
+	req    *SwapCommissionRateReq
+}
+
+func (api *SwapCommissionRateApi) Symbol(Symbol string) *SwapCommissionRateApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *SwapCommissionRateApi) RecvWindow(RecvWindow int64) *SwapCommissionRateApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapCommissionRateApi) Timestamp(Timestamp int64) *SwapCommissionRateApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
