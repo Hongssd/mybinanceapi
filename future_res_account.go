@@ -91,3 +91,23 @@ type FutureLeverageBracketResResultBrackets struct {
 	MaintMarginRatio decimal.Decimal `json:"maintMarginRatio"` // 该层对应的维持保证金率
 	Cum              decimal.Decimal `json:"cum"`              // 速算数
 }
+
+type FuturePositionRiskRes []FuturePositionRiskRow
+type FuturePositionRiskRow struct {
+	EntryPrice       string `json:"entryPrice"`       //开仓均价
+	BreakEvenPrice   string `json:"breakEvenPrice"`   //盈亏平衡价
+	MarginType       string `json:"marginType"`       //逐仓模式或全仓模式
+	IsAutoAddMargin  string `json:"isAutoAddMargin"`  //是否自动追加保证金
+	IsolatedMargin   string `json:"isolatedMargin"`   //逐仓保证金
+	Leverage         string `json:"leverage"`         //当前杠杆倍数
+	LiquidationPrice string `json:"liquidationPrice"` //参考强平价格
+	MarkPrice        string `json:"markPrice"`        //当前标记价格
+	MaxNotionalValue string `json:"maxNotionalValue"` //当前杠杆倍数允许的名义价值上限
+	PositionAmt      string `json:"positionAmt"`      //头寸数量，符号代表多空方向, 正数为多，负数为空
+	Notional         string `json:"notional"`         //名义价值
+	IsolatedWallet   string `json:"isolatedWallet"`   //逐仓钱包余额
+	Symbol           string `json:"symbol"`           //交易对
+	UnRealizedProfit string `json:"unRealizedProfit"` //持仓未实现盈亏
+	PositionSide     string `json:"positionSide"`     //持仓方向
+	UpdateTime       int64  `json:"updateTime"`       //更新时间
+}

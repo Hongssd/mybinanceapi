@@ -72,3 +72,22 @@ type SwapLeverageRes struct {
 }
 
 type SwapMarginTypeRes SwapCommonPostRes
+
+type SwapPositionRiskRes []SwapPositionRiskResRow
+type SwapPositionRiskResRow struct {
+	Symbol           string `json:"symbol"`           // 交易对
+	PositionAmt      string `json:"positionAmt"`      // 头寸数量, 符号代表多空方向, 正数为多, 负数为空
+	EntryPrice       string `json:"entryPrice"`       // 开仓均价
+	BreakEvenPrice   string `json:"breakEvenPrice"`   // 盈亏平衡价
+	MarkPrice        string `json:"markPrice"`        // 当前标记价格
+	UnRealizedProfit string `json:"unRealizedProfit"` // 持仓未实现盈亏
+	LiquidationPrice string `json:"liquidationPrice"` // 参考强平价格
+	Leverage         string `json:"leverage"`         // 当前杠杆倍数
+	MaxQty           string `json:"maxQty"`           // 当前杠杆倍数允许的数量上限(标的数量)
+	MarginType       string `json:"marginType"`       // 逐仓模式或全仓模式
+	IsolatedMargin   string `json:"isolatedMargin"`   // 逐仓保证金
+	IsAutoAddMargin  string `json:"isAutoAddMargin"`  // 是否自动追加保证金
+	PositionSide     string `json:"positionSide"`     // 持仓方向
+	NotionalValue    string `json:"notionalValue"`    // 名义价值
+	UpdateTime       int    `json:"updateTime"`       // 最新更新时间
+}

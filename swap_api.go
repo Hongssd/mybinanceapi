@@ -10,6 +10,7 @@ const (
 	SwapPositionSideDualPost                //更改持仓模式 (TRADE)
 	SwapLeverage                            //调整开仓杠杆 (TRADE)
 	SwapMarginType                          //变换逐全仓模式 (TRADE)
+	SwapPositionRisk                        //用户持仓风险 (USER_DATA)
 
 	//币合约订单接口
 	SwapOpenOrders     //查询当前挂单 (USER_DATA)
@@ -50,6 +51,7 @@ var SwapApiMap = map[SwapApi]string{
 	SwapPositionSideDualPost: "/dapi/v1/positionSide/dual", //POST接口 (HMAC SHA256) 更改持仓模式(TRADE)
 	SwapLeverage:             "/dapi/v1/leverage",          //POST接口 (HMAC SHA256) 调整开仓杠杆 (TRADE)
 	SwapMarginType:           "/dapi/v1/marginType",        //POST接口 (HMAC SHA256) 变换逐全仓模式 (TRADE)
+	SwapPositionRisk:         "/dapi/v1/positionRisk",      //GET接口 用户持仓风险V2 (USER_DATA)
 
 	//币合约订单接口
 	SwapOpenOrders:     "/dapi/v1/openOrders",     //GET接口 (HMAC SHA256) 查询当前挂单 (USER_DATA)

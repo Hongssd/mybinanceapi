@@ -106,3 +106,16 @@ func (api *FutureLeverageBracketApi) Do() (*FutureLeverageBracketRes, error) {
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureLeverageBracket], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureLeverageBracketRes](api.client.c, url, GET)
 }
+
+// binance FUTURE  FuturePositionRisk rest用户持仓风险V2 (USER_DATA)
+func (client *FutureRestClient) NewFuturePositionRisk() *FuturePositionRiskApi {
+	return &FuturePositionRiskApi{
+		client: client,
+		req:    &FuturePositionRiskReq{},
+	}
+}
+func (api *FuturePositionRiskApi) Do() (*FuturePositionRiskRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FuturePositionRisk], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FuturePositionRiskRes](api.client.c, url, GET)
+}

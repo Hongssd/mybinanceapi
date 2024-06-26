@@ -80,3 +80,16 @@ func (api *SwapMarginTypeApi) Do() (*SwapMarginTypeRes, error) {
 	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapMarginType], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SwapMarginTypeRes](api.client.c, url, POST)
 }
+
+// binance SWAP  SwapPositionRisk rest用户持仓风险V2 (USER_DATA)
+func (client *SwapRestClient) NewSwapPositionRisk() *SwapPositionRiskApi {
+	return &SwapPositionRiskApi{
+		client: client,
+		req:    &SwapPositionRiskReq{},
+	}
+}
+func (api *SwapPositionRiskApi) Do() (*SwapPositionRiskRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SWAP, api.req, SwapApiMap[SwapPositionRisk], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SwapPositionRiskRes](api.client.c, url, GET)
+}

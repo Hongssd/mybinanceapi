@@ -191,3 +191,27 @@ func (api *FutureLeverageBracketApi) Timestamp(Timestamp int64) *FutureLeverageB
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type FuturePositionRiskReq struct {
+	Symbol     *string `json:"symbol"` //No	交易对
+	RecvWindow *int64  `json:"recvWindow"`
+	Timestamp  *int64  `json:"timestamp"`
+}
+
+type FuturePositionRiskApi struct {
+	client *FutureRestClient
+	req    *FuturePositionRiskReq
+}
+
+func (api *FuturePositionRiskApi) Symbol(Symbol string) *FuturePositionRiskApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+func (api *FuturePositionRiskApi) RecvWindow(RecvWindow int64) *FuturePositionRiskApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *FuturePositionRiskApi) Timestamp(Timestamp int64) *FuturePositionRiskApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

@@ -137,3 +137,32 @@ func (api *SwapMarginTypeApi) Timestamp(Timestamp int64) *SwapMarginTypeApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SwapPositionRiskReq struct {
+	MarginAsset *string `json:"marginAsset"`
+	Pair        *string `json:"pair"`
+	RecvWindow  *int64  `json:"recvWindow"`
+	Timestamp   *int64  `json:"timestamp"`
+}
+
+type SwapPositionRiskApi struct {
+	client *SwapRestClient
+	req    *SwapPositionRiskReq
+}
+
+func (api *SwapPositionRiskApi) MarginAsset(MarginAsset string) *SwapPositionRiskApi {
+	api.req.MarginAsset = GetPointer(MarginAsset)
+	return api
+}
+func (api *SwapPositionRiskApi) Pair(Pair string) *SwapPositionRiskApi {
+	api.req.Pair = GetPointer(Pair)
+	return api
+}
+func (api *SwapPositionRiskApi) RecvWindow(RecvWindow int64) *SwapPositionRiskApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SwapPositionRiskApi) Timestamp(Timestamp int64) *SwapPositionRiskApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

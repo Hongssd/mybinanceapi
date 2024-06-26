@@ -12,6 +12,7 @@ const (
 	FutureLeverage                               //POST接口 (HMAC SHA256)调整开仓杠杆 (TRADE)
 	FutureMarginType                             //POST接口 (HMAC SHA256)变换逐全仓模式 (TRADE)
 	FutureLeverageBracket                        //GET接口 杠杆分层标准 (USER_DATA)
+	FuturePositionRisk                           //GET接口 用户持仓风险V2 (USER_DATA)
 
 	//交易接口
 	FutureOpenOrders        //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)
@@ -62,6 +63,7 @@ var FutureApiMap = map[FutureApi]string{
 	FutureLeverage:              "/fapi/v1/leverage",          //POST接口 (HMAC SHA256)调整开仓杠杆 (TRADE)
 	FutureMarginType:            "/fapi/v1/marginType",        //POST接口 (HMAC SHA256)变换逐全仓模式 (TRADE)
 	FutureLeverageBracket:       "/fapi/v1/leverageBracket",   //GET接口 杠杆分层标准 (USER_DATA)
+	FuturePositionRisk:          "/fapi/v2/positionRisk",      //GET接口 用户持仓风险V2 (USER_DATA)
 
 	//交易接口
 	FutureOpenOrders:        "/fapi/v1/openOrders",     //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)
