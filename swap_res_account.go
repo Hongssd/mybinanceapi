@@ -89,5 +89,5 @@ type SwapPositionRiskResRow struct {
 	IsAutoAddMargin  string `json:"isAutoAddMargin"`  // 是否自动追加保证金
 	PositionSide     string `json:"positionSide"`     // 持仓方向
 	NotionalValue    string `json:"notionalValue"`    // 名义价值
-	UpdateTime       int    `json:"updateTime"`       // 最新更新时间
+	UpdateTime       int64  `json:"updateTime"`       // 最新更新时间
 }
