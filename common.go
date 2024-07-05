@@ -2,16 +2,13 @@ package mybinanceapi
 
 import (
 	"bytes"
-	"compress/gzip"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"io"
 	"sort"
 	"sync"
 	"time"
 
-	"net/http"
 	"net/url"
 	"reflect"
 	"strconv"
@@ -67,48 +64,48 @@ func HmacSha256(secret, data string) string {
 //	return RequestWithHeader(url, method, map[string]string{}, isGzip)
 //}
 
-func RequestWithHeader(url string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		return nil, err
-	}
-	for k, v := range headerMap {
-		req.Header.Set(k, v)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	client := &http.Client{
-		Timeout: httpTimeout,
-	}
-	if isGzip { // 请求 header 添加 gzip
-		req.Header.Add("Content-Encoding", "gzip")
-		req.Header.Add("Accept-Encoding", "gzip")
-	}
-
-	log.Debug(method, ": ", req.URL.String())
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Error(err)
-		}
-	}(resp.Body)
-
-	body := resp.Body
-	if resp.Header.Get("Content-Encoding") == "gzip" {
-		body, err = gzip.NewReader(resp.Body)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-	}
-	data, err := io.ReadAll(body)
-	log.Debug(string(data))
-	return data, err
-}
+//func RequestWithHeader(url string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
+//	req, err := http.NewRequest(method, url, nil)
+//	if err != nil {
+//		return nil, err
+//	}
+//	for k, v := range headerMap {
+//		req.Header.Set(k, v)
+//	}
+//	req.Header.Set("Content-Type", "application/json")
+//	client := &http.Client{
+//		Timeout: httpTimeout,
+//	}
+//	if isGzip { // 请求 header 添加 gzip
+//		req.Header.Add("Content-Encoding", "gzip")
+//		req.Header.Add("Accept-Encoding", "gzip")
+//	}
+//
+//	log.Debug(method, ": ", req.URL.String())
+//
+//	resp, err := client.Do(req)
+//	if err != nil {
+//		return nil, err
+//	}
+//	defer func(Body io.ReadCloser) {
+//		err := Body.Close()
+//		if err != nil {
+//			log.Error(err)
+//		}
+//	}(resp.Body)
+//
+//	body := resp.Body
+//	if resp.Header.Get("Content-Encoding") == "gzip" {
+//		body, err = gzip.NewReader(resp.Body)
+//		if err != nil {
+//			log.Error(err)
+//			return nil, err
+//		}
+//	}
+//	data, err := io.ReadAll(body)
+//	log.Debug(string(data))
+//	return data, err
+//}
 
 type MyBinance struct {
 }
