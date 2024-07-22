@@ -21,14 +21,19 @@ func (api *SpotAccountApiTradingStatusApi) Timestamp(Timestamp int64) *SpotAccou
 }
 
 type SpotAccountReq struct {
-	RecvWindow *int64 `json:"recvWindow"`
-	Timestamp  *int64 `json:"timestamp"`
+	OmitZeroBalances *bool  `json:"omitZeroBalances"` //NO	默认 false, 设为 true 时，返回结果不包含为 0 的资产
+	RecvWindow       *int64 `json:"recvWindow"`
+	Timestamp        *int64 `json:"timestamp"`
 }
 type SpotAccountApi struct {
 	client *SpotRestClient
 	req    *SpotAccountReq
 }
 
+func (api *SpotAccountApi) OmitZeroBalances(OmitZeroBalances bool) *SpotAccountApi {
+	api.req.OmitZeroBalances = GetPointer(OmitZeroBalances)
+	return api
+}
 func (api *SpotAccountApi) RecvWindow(RecvWindow int64) *SpotAccountApi {
 	api.req.RecvWindow = GetPointer(RecvWindow)
 	return api

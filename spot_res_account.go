@@ -27,20 +27,22 @@ type SpotBalance struct {
 	Locked string `json:"locked"`
 }
 type SpotAccountRes struct {
-	MakerCommission           int                        `json:"makerCommission"`
-	TakerCommission           int                        `json:"takerCommission"`
-	BuyerCommission           int                        `json:"buyerCommission"`
-	SellerCommission          int                        `json:"sellerCommission"`
-	CommissionRates           SpotAccountCommissionRates `json:"commissionRates"`
-	CanTrade                  bool                       `json:"canTrade"`
-	CanWithdraw               bool                       `json:"canWithdraw"`
-	CanDeposit                bool                       `json:"canDeposit"`
-	Brokered                  bool                       `json:"brokered"`
-	RequireSelfTradePreventio bool                       `json:"requireSelfTradePreventio"`
-	UpdateTime                int64                      `json:"updateTime"`
-	AccountType               string                     `json:"accountType"`
-	Balance                   []SpotBalance              `json:"balances"`
-	Permissions               []string                   `json:"permissions"`
+	MakerCommission            int                        `json:"makerCommission"`
+	TakerCommission            int                        `json:"takerCommission"`
+	BuyerCommission            int                        `json:"buyerCommission"`
+	SellerCommission           int                        `json:"sellerCommission"`
+	CommissionRates            SpotAccountCommissionRates `json:"commissionRates"`
+	CanTrade                   bool                       `json:"canTrade"`
+	CanWithdraw                bool                       `json:"canWithdraw"`
+	CanDeposit                 bool                       `json:"canDeposit"`
+	Brokered                   bool                       `json:"brokered"`
+	RequireSelfTradePrevention bool                       `json:"requireSelfTradePrevention"`
+	PreventSor                 bool                       `json:"preventSor"`
+	UpdateTime                 int64                      `json:"updateTime"`
+	AccountType                string                     `json:"accountType"`
+	Balance                    []SpotBalance              `json:"balances"`
+	Permissions                []string                   `json:"permissions"`
+	Uid                        int64                      `json:"uid"`
 }
 
 type SpotAssetTransferPostRes struct {
