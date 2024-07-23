@@ -45,6 +45,15 @@ type SpotAccountRes struct {
 	Uid                        int64                      `json:"uid"`
 }
 
+type SpotAssetGetFundingAssetRes []SpotAssetGetFundingAssetResRow
+type SpotAssetGetFundingAssetResRow struct {
+	Asset        string `json:"asset"`
+	Free         string `json:"free"`         // 可用余额
+	Locked       string `json:"locked"`       // 锁定资金
+	Freeze       string `json:"freeze"`       //冻结资金
+	Withdrawing  string `json:"withdrawing"`  // 提币
+	BtcValuation string `json:"btcValuation"` // btc估值
+}
 type SpotAssetTransferPostRes struct {
 	TranId int64 `json:"tranId"`
 }

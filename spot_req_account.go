@@ -20,6 +20,34 @@ func (api *SpotAccountApiTradingStatusApi) Timestamp(Timestamp int64) *SpotAccou
 	return api
 }
 
+type SpotAssetGetFundingAssetReq struct {
+	Asset            *string `json:"asset"`            //NO
+	NeedBtcValuation *string `json:"needBtcValuation"` //NO	true or false
+	RecvWindow       *int64  `json:"recvWindow"`       //NO
+	Timestamp        *int64  `json:"timestamp"`        //YES
+}
+type SpotAssetGetFundingAssetApi struct {
+	client *SpotRestClient
+	req    *SpotAssetGetFundingAssetReq
+}
+
+func (api *SpotAssetGetFundingAssetApi) Asset(Asset string) *SpotAssetGetFundingAssetApi {
+	api.req.Asset = GetPointer(Asset)
+	return api
+}
+func (api *SpotAssetGetFundingAssetApi) NeedBtcValuation(NeedBtcValuation string) *SpotAssetGetFundingAssetApi {
+	api.req.NeedBtcValuation = GetPointer(NeedBtcValuation)
+	return api
+}
+func (api *SpotAssetGetFundingAssetApi) RecvWindow(RecvWindow int64) *SpotAssetGetFundingAssetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotAssetGetFundingAssetApi) Timestamp(Timestamp int64) *SpotAssetGetFundingAssetApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
 type SpotAccountReq struct {
 	OmitZeroBalances *bool  `json:"omitZeroBalances"` //NO	默认 false, 设为 true 时，返回结果不包含为 0 的资产
 	RecvWindow       *int64 `json:"recvWindow"`

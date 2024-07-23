@@ -29,6 +29,19 @@ func (api *SpotAccountApi) Do() (*SpotAccountRes, error) {
 	return binanceCallApiWithSecret[SpotAccountRes](api.client.c, url, GET)
 }
 
+// binance SPOT spotAssetGetFundingAsset rest资金账户 (USER_DATA)
+func (client *SpotRestClient) NewSpotAssetGetFundingAsset() *SpotAssetGetFundingAssetApi {
+	return &SpotAssetGetFundingAssetApi{
+		client: client,
+		req:    &SpotAssetGetFundingAssetReq{},
+	}
+}
+func (api *SpotAssetGetFundingAssetApi) Do() (*SpotAssetGetFundingAssetRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetGetFundingAsset], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAssetGetFundingAssetRes](api.client.c, url, POST)
+}
+
 // binance SPOT spotAssetTransferPost rest用户万向划转 (USER_DATA)
 func (client *SpotRestClient) NewSpotAssetTransferPost() *SpotAssetTransferPostApi {
 	return &SpotAssetTransferPostApi{

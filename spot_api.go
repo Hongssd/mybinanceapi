@@ -39,6 +39,7 @@ const (
 	//现货账户接口
 	SpotAccountApiTradingStatus //GET接口 账户API交易状态(USER_DATA)
 	SpotAccount                 //GET接口 账户信息 (USER_DATA)
+	SpotAssetGetFundingAsset    //POST接口 资金账户 (USER_DATA)
 	SpotAssetTransferPost       //POST接口 用户万向划转 (USER_DATA)
 	SpotAssetTransferGet        //GET接口 查询用户万向划转历史 (USER_DATA)
 	SpotAssetTradeFee           //GET接口 查询用户交易手续费率 (USER_DATA)
@@ -120,6 +121,7 @@ var SpotApiMap = map[SpotApi]string{
 	//现货账户接口
 	SpotAccountApiTradingStatus: "/sapi/v1/account/apiTradingStatus", //GET接口 账户API交易状态(USER_DATA)
 	SpotAccount:                 "/api/v3/account",                   //GET接口 账户信息 (USER_DATA)
+	SpotAssetGetFundingAsset:    "/sapi/v1/asset/get-funding-asset",  //POST接口 资金账户 (USER_DATA)
 	SpotAssetTransferPost:       "/sapi/v1/asset/transfer",           //POST接口 用户万向划转 (USER_DATA)
 	SpotAssetTransferGet:        "/sapi/v1/asset/transfer",           //GET接口 查询用户万向划转历史 (USER_DATA)
 	SpotAssetTradeFee:           "/sapi/v1/asset/tradeFee",           //GET接口 查询用户交易手续费率 (USER_DATA)
