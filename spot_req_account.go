@@ -72,20 +72,20 @@ func (api *SpotAccountApi) Timestamp(Timestamp int64) *SpotAccountApi {
 }
 
 type SpotAssetTransferPostReq struct {
-	Type       *AssertTransferType `json:"type"`       //YES
-	Asset      *string             `json:"asset"`      //YES
-	Amount     *decimal.Decimal    `json:"amount"`     //YES
-	FromSymbol *string             `json:"fromSymbol"` //NO
-	ToSymbol   *string             `json:"toSymbol"`   //NO
-	RecvWindow *int64              `json:"recvWindow"` //NO
-	Timestamp  *int64              `json:"timestamp"`  //YES
+	Type       *AssetTransferType `json:"type"`       //YES
+	Asset      *string            `json:"asset"`      //YES
+	Amount     *decimal.Decimal   `json:"amount"`     //YES
+	FromSymbol *string            `json:"fromSymbol"` //NO
+	ToSymbol   *string            `json:"toSymbol"`   //NO
+	RecvWindow *int64             `json:"recvWindow"` //NO
+	Timestamp  *int64             `json:"timestamp"`  //YES
 }
 type SpotAssetTransferPostApi struct {
 	client *SpotRestClient
 	req    *SpotAssetTransferPostReq
 }
 
-func (api *SpotAssetTransferPostApi) Type(Type AssertTransferType) *SpotAssetTransferPostApi {
+func (api *SpotAssetTransferPostApi) Type(Type AssetTransferType) *SpotAssetTransferPostApi {
 	api.req.Type = GetPointer(Type)
 	return api
 }
@@ -115,22 +115,22 @@ func (api *SpotAssetTransferPostApi) Timestamp(Timestamp int64) *SpotAssetTransf
 }
 
 type SpotAssetTransferGetReq struct {
-	Type       *AssertTransferType `json:"type"`       //YES
-	StartTime  *int64              `json:"startTime"`  //NO
-	EndTime    *int64              `json:"endTime"`    //NO
-	Current    *int64              `json:"current"`    //NO	默认 1
-	Size       *int64              `json:"size"`       //NO	默认 10, 最大 100
-	FromSymbol *string             `json:"fromSymbol"` //NO
-	ToSymbol   *string             `json:"toSymbol"`   //NO
-	RecvWindow *int64              `json:"recvWindow"` //NO
-	Timestamp  *int64              `json:"timestamp"`  //YES
+	Type       *AssetTransferType `json:"type"`       //YES
+	StartTime  *int64             `json:"startTime"`  //NO
+	EndTime    *int64             `json:"endTime"`    //NO
+	Current    *int64             `json:"current"`    //NO	默认 1
+	Size       *int64             `json:"size"`       //NO	默认 10, 最大 100
+	FromSymbol *string            `json:"fromSymbol"` //NO
+	ToSymbol   *string            `json:"toSymbol"`   //NO
+	RecvWindow *int64             `json:"recvWindow"` //NO
+	Timestamp  *int64             `json:"timestamp"`  //YES
 }
 type SpotAssetTransferGetApi struct {
 	client *SpotRestClient
 	req    *SpotAssetTransferGetReq
 }
 
-func (api *SpotAssetTransferGetApi) Type(Type AssertTransferType) *SpotAssetTransferGetApi {
+func (api *SpotAssetTransferGetApi) Type(Type AssetTransferType) *SpotAssetTransferGetApi {
 	api.req.Type = GetPointer(Type)
 	return api
 }
