@@ -211,3 +211,15 @@ func (api *SpotMarginRepayApi) Do() (*MarginRepayRes, error) {
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginRepay], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginRepayRes](api.client.c, url, POST)
 }
+
+func (client *SpotRestClient) NewSpotMarginMaxLeverage() *SpotMarginMaxLeverageApi {
+	return &SpotMarginMaxLeverageApi{
+		client: client,
+		req:    &SpotMarginMaxLeverageReq{},
+	}
+}
+func (api *SpotMarginMaxLeverageApi) Do() (*MarginMaxLeverageRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginMaxLeverage], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginMaxLeverageRes](api.client.c, url, POST)
+}
