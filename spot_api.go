@@ -120,7 +120,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginLoan:             "/sapi/v1/margin/loan",              //POST  杠杆账户借贷 (MARGIN) 支持逐仓和全仓
 	SpotMarginRepay:            "/sapi/v1/margin/repay",             //POST  杠杆账户归还借贷 (MARGIN) 支持逐仓和全仓
 
-	SpotMarginMaxLeverage: "/sapi/v1/margin/max-leverage", //POST 调整逐仓最大杠杆倍数（USER_DATA)
+	SpotMarginMaxLeverage: "/sapi/v1/margin/max-leverage", //POST 调整全仓最大杠杆倍数（USER_DATA)
 
 	//现货账户接口
 	SpotAccountApiTradingStatus: "/sapi/v1/account/apiTradingStatus", //GET接口 账户API交易状态(USER_DATA)

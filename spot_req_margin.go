@@ -591,7 +591,7 @@ func (api *SpotMarginRepayApi) Timestamp(Timestamp int64) *SpotMarginRepayApi {
 }
 
 type SpotMarginMaxLeverageReq struct {
-	MaxLeverage *int   `json:"maxLeverage"` //YES	只能调整3, 5 或者10,举例: maxLeverage=10 就是选择切换成全仓 Pro 模式，maxLeverage = 5 或者3是选择全仓Classic模式
+	MaxLeverage *int64 `json:"maxLeverage"` //YES	只能调整3, 5 或者10,举例: maxLeverage=10 就是选择切换成全仓 Pro 模式，maxLeverage = 5 或者3是选择全仓Classic模式
 	Timestamp   *int64 `json:"timestamp"`   //YES
 }
 type SpotMarginMaxLeverageApi struct {
@@ -599,7 +599,7 @@ type SpotMarginMaxLeverageApi struct {
 	req    *SpotMarginMaxLeverageReq
 }
 
-func (api *SpotMarginMaxLeverageApi) MaxLeverage(MaxLeverage int) *SpotMarginMaxLeverageApi {
+func (api *SpotMarginMaxLeverageApi) MaxLeverage(MaxLeverage int64) *SpotMarginMaxLeverageApi {
 	api.req.MaxLeverage = GetPointer(MaxLeverage)
 	return api
 }
