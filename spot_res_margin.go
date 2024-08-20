@@ -162,3 +162,7 @@ type MarginIsolatedTransferRes TranRes
 type MarginLoanRes TranRes
 
 type MarginRepayRes TranRes
+
+type MarginMaxLeverageRes struct {
+	Success bool `json:"success"` // 是否成功
+}

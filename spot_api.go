@@ -36,6 +36,8 @@ const (
 	SpotMarginLoan             //POST接口 杠杆账户借贷 (MARGIN) 支持逐仓和全仓
 	SpotMarginRepay            //POST接口 杠杆账户归还借贷 (MARGIN) 支持逐仓和全仓
 
+	SpotMarginMaxLeverage //POST接口 调整全仓最大杠杆倍数（USER_DATA) 仅全仓
+
 	//现货账户接口
 	SpotAccountApiTradingStatus //GET接口 账户API交易状态(USER_DATA)
 	SpotAccount                 //GET接口 账户信息 (USER_DATA)
@@ -117,6 +119,8 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginIsolatedTransfer: "/sapi/v1/margin/isolated/transfer", //POST  逐仓杠杆账户划转 (MARGIN)
 	SpotMarginLoan:             "/sapi/v1/margin/loan",              //POST  杠杆账户借贷 (MARGIN) 支持逐仓和全仓
 	SpotMarginRepay:            "/sapi/v1/margin/repay",             //POST  杠杆账户归还借贷 (MARGIN) 支持逐仓和全仓
+
+	SpotMarginMaxLeverage: "/sapi/v1/margin/max-leverage", //POST 调整逐仓最大杠杆倍数（USER_DATA)
 
 	//现货账户接口
 	SpotAccountApiTradingStatus: "/sapi/v1/account/apiTradingStatus", //GET接口 账户API交易状态(USER_DATA)
