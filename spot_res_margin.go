@@ -28,6 +28,7 @@ type MarginAccountRes struct {
 	TotalNetAssetOfBtc  string        `json:"totalNetAssetOfBtc"`
 	TradeEnabled        bool          `json:"tradeEnabled"`
 	TransferEnabled     bool          `json:"transferEnabled"`
+	AccountType         string        `json:"accountType"`
 	UserAssets          []MarginAsset `json:"userAssets"`
 }
 
