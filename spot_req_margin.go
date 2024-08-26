@@ -607,3 +607,17 @@ func (api *SpotMarginMaxLeverageApi) Timestamp(Timestamp int64) *SpotMarginMaxLe
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotMarginTradeCoeffReq struct {
+	Timestamp *int64 `json:"timestamp"` //YES
+}
+
+func (api *SpotMarginTradeCoeffApi) Timestamp(Timestamp int64) *SpotMarginTradeCoeffApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotMarginTradeCoeffApi struct {
+	client *SpotRestClient
+	req    *SpotMarginTradeCoeffReq
+}

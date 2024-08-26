@@ -167,3 +167,9 @@ type MarginRepayRes TranRes
 type MarginMaxLeverageRes struct {
 	Success bool `json:"success"` // 是否成功
 }
+
+type MarginTradeCoeffRes struct {
+	NormalBar           string `json:"normalBar"`           // 初始风险率
+	MarginCallBar       string `json:"marginCallBar"`       // 补仓风险率
+	ForceLiquidationBar string `json:"forceLiquidationBar"` // 强平风险率
+}
