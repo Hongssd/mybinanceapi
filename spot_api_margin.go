@@ -223,3 +223,16 @@ func (api *SpotMarginMaxLeverageApi) Do() (*MarginMaxLeverageRes, error) {
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginMaxLeverage], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginMaxLeverageRes](api.client.c, url, POST)
 }
+
+func (client *SpotRestClient) NewSpotMarginTradeCoeff() *SpotMarginTradeCoeffApi {
+	return &SpotMarginTradeCoeffApi{
+		client: client,
+		req:    &SpotMarginTradeCoeffReq{},
+	}
+}
+
+func (api *SpotMarginTradeCoeffApi) Do() (*MarginTradeCoeffRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginTradeCoeff], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginTradeCoeffRes](api.client.c, url, GET)
+}
