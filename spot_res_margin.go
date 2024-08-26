@@ -169,7 +169,7 @@ type MarginMaxLeverageRes struct {
 }
 
 type MarginTradeCoeffRes struct {
-	NormalBar           string `json:"normalBar"`
-	MarginCallBar       string `json:"marginCallBar"`
-	ForceLiquidationBar string `json:"forceLiquidationBar"`
+	NormalBar           string `json:"normalBar"`           // 初始风险率
+	MarginCallBar       string `json:"marginCallBar"`       // 补仓风险率
+	ForceLiquidationBar string `json:"forceLiquidationBar"` // 强平风险率
 }
