@@ -621,3 +621,38 @@ type SpotMarginTradeCoeffApi struct {
 	client *SpotRestClient
 	req    *SpotMarginTradeCoeffReq
 }
+
+type SpotMarginIsolatedMarginDataReq struct {
+	VipLevel   *int64  `json:"vipLevel"`   // NO 默认为用户当前VIP等级
+	Symbol     *string `json:"symbol"`     // NO 交易对
+	RecvWindow *int64  `json:"recvWindow"` // NO 赋值不能大于 60000
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+type SpotMarginIsolatedMarginDataApi struct {
+	client *SpotRestClient
+	req    *SpotMarginIsolatedMarginDataReq
+}
+
+// VipLevel: NO 默认为用户当前VIP等级
+func (api *SpotMarginIsolatedMarginDataApi) VipLevel(VipLevel int64) *SpotMarginIsolatedMarginDataApi {
+	api.req.VipLevel = GetPointer(VipLevel)
+	return api
+}
+
+// Symbol: NO 交易对
+func (api *SpotMarginIsolatedMarginDataApi) Symbol(Symbol string) *SpotMarginIsolatedMarginDataApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+
+// RecvWindow: NO 赋值不能大于 60000
+func (api *SpotMarginIsolatedMarginDataApi) RecvWindow(RecvWindow int64) *SpotMarginIsolatedMarginDataApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// Timestamp: YES
+func (api *SpotMarginIsolatedMarginDataApi) Timestamp(Timestamp int64) *SpotMarginIsolatedMarginDataApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
