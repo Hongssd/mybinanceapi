@@ -212,6 +212,7 @@ func (api *SpotMarginRepayApi) Do() (*MarginRepayRes, error) {
 	return binanceCallApiWithSecret[MarginRepayRes](api.client.c, url, POST)
 }
 
+// binance SPOT杠杆接口 MarginMaxLeverage rest 调整全仓最大杠杆倍数（USER_DATA)
 func (client *SpotRestClient) NewSpotMarginMaxLeverage() *SpotMarginMaxLeverageApi {
 	return &SpotMarginMaxLeverageApi{
 		client: client,
@@ -224,6 +225,7 @@ func (api *SpotMarginMaxLeverageApi) Do() (*MarginMaxLeverageRes, error) {
 	return binanceCallApiWithSecret[MarginMaxLeverageRes](api.client.c, url, POST)
 }
 
+// binance SPOT杠杆接口 MarginTradeCoeff rest 获取用户个人杠杆账户信息汇总（USER_DATA）全仓
 func (client *SpotRestClient) NewSpotMarginTradeCoeff() *SpotMarginTradeCoeffApi {
 	return &SpotMarginTradeCoeffApi{
 		client: client,
@@ -235,4 +237,17 @@ func (api *SpotMarginTradeCoeffApi) Do() (*MarginTradeCoeffRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginTradeCoeff], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginTradeCoeffRes](api.client.c, url, GET)
+}
+
+// binance SPOT杠杆接口 MarginIsolatedMarginData rest 获取逐仓杠杆利率及限额 (USER_DATA)
+func (client *SpotRestClient) NewSpotMarginIsolatedMarginData() *SpotMarginIsolatedMarginDataApi {
+	return &SpotMarginIsolatedMarginDataApi{
+		client: client,
+		req:    &SpotMarginIsolatedMarginDataReq{},
+	}
+}
+func (api *SpotMarginIsolatedMarginDataApi) Do() (*MarginIsolatedMarginDataRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedMarginData], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginIsolatedMarginDataRes](api.client.c, url, GET)
 }
