@@ -173,3 +173,15 @@ type MarginTradeCoeffRes struct {
 	MarginCallBar       string `json:"marginCallBar"`       // 补仓风险率
 	ForceLiquidationBar string `json:"forceLiquidationBar"` // 强平风险率
 }
+
+type MarginIsolatedMarginDataResRow struct {
+	VipLevel int    `json:"vipLevel"`
+	Symbol   string `json:"symbol"`
+	Leverage string `json:"leverage"`
+	Data     []struct {
+		Coin          string `json:"coin"`
+		DailyInterest string `json:"dailyInterest"`
+		BorrowLimit   string `json:"borrowLimit"`
+	} `json:"data"`
+}
+type MarginIsolatedMarginDataRes []MarginIsolatedMarginDataResRow
