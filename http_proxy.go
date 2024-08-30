@@ -179,7 +179,7 @@ func RequestWithHeader(urlStr string, method string, headerMap map[string]string
 	}
 	data, err := io.ReadAll(body)
 	log.Debug(string(data))
-	log.Warn(resp.Header)
+	log.Debug(resp.Header)
 	if isUseProxy() {
 		//回填权重
 		if resp.Header.Get("X-MBX-USED-WEIGHT-1M") != "" {
