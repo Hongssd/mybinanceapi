@@ -179,14 +179,17 @@ func RequestWithHeader(urlStr string, method string, headerMap map[string]string
 	}
 	data, err := io.ReadAll(body)
 	log.Debug(string(data))
+	log.Warn(resp.Header)
 	if isUseProxy() {
 		//回填权重
-		usedWeight, err := strconv.Atoi(resp.Header.Get("X-MBX-USED-WEIGHT-1M"))
-		if err != nil {
-			log.Error(err)
-		}
-		if usedWeight > currentProxyWeight.UsedWeight {
-			currentProxyWeight.UsedWeight = usedWeight
+		if resp.Header.Get("X-MBX-USED-WEIGHT-1M") != "" {
+			usedWeight, err := strconv.Atoi(resp.Header.Get("X-MBX-USED-WEIGHT-1M"))
+			if err != nil {
+				log.Error(err)
+			}
+			if usedWeight > currentProxyWeight.UsedWeight {
+				currentProxyWeight.UsedWeight = usedWeight
+			}
 		}
 
 		//回填是否429限制
