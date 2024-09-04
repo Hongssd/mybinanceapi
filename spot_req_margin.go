@@ -622,6 +622,42 @@ type SpotMarginTradeCoeffApi struct {
 	req    *SpotMarginTradeCoeffReq
 }
 
+type SpotMarginCrossMarginDataReq struct {
+	VipLevel   *int64  `json:"vipLevel"`   // NO 默认为用户当前VIP等级
+	Coin       *string `json:"coin"`       // NO 币种, 比如, BTC
+	RecvWindow *int64  `json:"recvWindow"` // NO 赋值不能大于 60000
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+type SpotMarginCrossMarginDataApi struct {
+	client *SpotRestClient
+	req    *SpotMarginCrossMarginDataReq
+}
+
+// VipLevel: NO 默认为用户当前VIP等级
+func (api *SpotMarginCrossMarginDataApi) VipLevel(VipLevel int64) *SpotMarginCrossMarginDataApi {
+	api.req.VipLevel = GetPointer(VipLevel)
+	return api
+}
+
+// Coin: NO 币种, 比如, BTC
+func (api *SpotMarginCrossMarginDataApi) Coin(Coin string) *SpotMarginCrossMarginDataApi {
+	api.req.Coin = GetPointer(Coin)
+	return api
+}
+
+// RecvWindow: NO 赋值不能大于 60000
+func (api *SpotMarginCrossMarginDataApi) RecvWindow(RecvWindow int64) *SpotMarginCrossMarginDataApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// Timestamp: YES
+func (api *SpotMarginCrossMarginDataApi) Timestamp(Timestamp int64) *SpotMarginCrossMarginDataApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
 type SpotMarginIsolatedMarginDataReq struct {
 	VipLevel   *int64  `json:"vipLevel"`   // NO 默认为用户当前VIP等级
 	Symbol     *string `json:"symbol"`     // NO 交易对
@@ -653,6 +689,41 @@ func (api *SpotMarginIsolatedMarginDataApi) RecvWindow(RecvWindow int64) *SpotMa
 
 // Timestamp: YES
 func (api *SpotMarginIsolatedMarginDataApi) Timestamp(Timestamp int64) *SpotMarginIsolatedMarginDataApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotMarginIsolatedMarginTierReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	Tier       *int64  `json:"tier"`       // NO	不传则返回所有逐仓杠杆档位
+	RecvWindow *int64  `json:"recvWindow"` // NO 赋值不能大于 60000
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+type SpotMarginIsolatedMarginTierApi struct {
+	client *SpotRestClient
+	req    *SpotMarginIsolatedMarginTierReq
+}
+
+// Symbol: YES 交易对
+func (api *SpotMarginIsolatedMarginTierApi) Symbol(Symbol string) *SpotMarginIsolatedMarginTierApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+
+// Tier: NO	不传则返回所有逐仓杠杆档位
+func (api *SpotMarginIsolatedMarginTierApi) Tier(Tier int64) *SpotMarginIsolatedMarginTierApi {
+	api.req.Tier = GetPointer(Tier)
+	return api
+}
+
+// RecvWindow: NO 赋值不能大于 60000
+func (api *SpotMarginIsolatedMarginTierApi) RecvWindow(RecvWindow int64) *SpotMarginIsolatedMarginTierApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// Timestamp: YES
+func (api *SpotMarginIsolatedMarginTierApi) Timestamp(Timestamp int64) *SpotMarginIsolatedMarginTierApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }

@@ -21,15 +21,16 @@ type MarginAsset struct {
 	NetAsset string `json:"netAsset"`
 }
 type MarginAccountRes struct {
-	BorrowEnabled       bool          `json:"borrowEnabled"`
-	MarginLevel         string        `json:"marginLevel"`
-	TotalAssetOfBtc     string        `json:"totalAssetOfBtc"`
-	TotalLiabilityOfBtc string        `json:"totalLiabilityOfBtc"`
-	TotalNetAssetOfBtc  string        `json:"totalNetAssetOfBtc"`
-	TradeEnabled        bool          `json:"tradeEnabled"`
-	TransferEnabled     bool          `json:"transferEnabled"`
-	AccountType         string        `json:"accountType"`
-	UserAssets          []MarginAsset `json:"userAssets"`
+	BorrowEnabled              bool          `json:"borrowEnabled"`
+	MarginLevel                string        `json:"marginLevel"`
+	TotalAssetOfBtc            string        `json:"totalAssetOfBtc"`
+	TotalLiabilityOfBtc        string        `json:"totalLiabilityOfBtc"`
+	TotalNetAssetOfBtc         string        `json:"totalNetAssetOfBtc"`
+	TotalCollateralValueInUSDT string        `json:"totalCollateralValueInUSDT"`
+	TradeEnabled               bool          `json:"tradeEnabled"`
+	TransferEnabled            bool          `json:"transferEnabled"`
+	AccountType                string        `json:"accountType"`
+	UserAssets                 []MarginAsset `json:"userAssets"`
 }
 
 type MarginIsolatedAsset struct {
@@ -174,6 +175,19 @@ type MarginTradeCoeffRes struct {
 	ForceLiquidationBar string `json:"forceLiquidationBar"` // 强平风险率
 }
 
+type MarginCrossMarginDataResRow struct {
+	VipLevel        int      `json:"vipLevel"`
+	Coin            string   `json:"coin"`
+	TransferIn      bool     `json:"transferIn"`
+	Borrowable      bool     `json:"borrowable"`
+	DailyInterest   string   `json:"dailyInterest"`
+	YearlyInterest  string   `json:"yearlyInterest"`
+	BorrowLimit     string   `json:"borrowLimit"`
+	MarginablePairs []string `json:"marginablePairs"`
+}
+
+type MarginCrossMarginDataRes []MarginCrossMarginDataResRow
+
 type MarginIsolatedMarginDataResRow struct {
 	VipLevel int    `json:"vipLevel"`
 	Symbol   string `json:"symbol"`
@@ -185,3 +199,14 @@ type MarginIsolatedMarginDataResRow struct {
 	} `json:"data"`
 }
 type MarginIsolatedMarginDataRes []MarginIsolatedMarginDataResRow
+
+type MarginIsolatedMarginTierResRow struct {
+	Symbol                  string `json:"symbol"`
+	Tier                    int64  `json:"tier"`
+	EffectiveMultiple       string `json:"effectiveMultiple"`
+	InitialRiskRatio        string `json:"initialRiskRatio"`
+	LiquidationRiskRatio    string `json:"liquidationRiskRatio"`
+	BaseAssetMaxBorrowable  string `json:"baseAssetMaxBorrowable"`
+	QuoteAssetMaxBorrowable string `json:"quoteAssetMaxBorrowable"`
+}
+type MarginIsolatedMarginTierRes []MarginIsolatedMarginTierResRow
