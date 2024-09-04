@@ -239,6 +239,19 @@ func (api *SpotMarginTradeCoeffApi) Do() (*MarginTradeCoeffRes, error) {
 	return binanceCallApiWithSecret[MarginTradeCoeffRes](api.client.c, url, GET)
 }
 
+// binance SPOT杠杆接口 MarginCrossMarginData rest 获取全仓杠杆利率及限额 (USER_DATA)
+func (client *SpotRestClient) NewSpotMarginCrossMarginData() *SpotMarginCrossMarginDataApi {
+	return &SpotMarginCrossMarginDataApi{
+		client: client,
+		req:    &SpotMarginCrossMarginDataReq{},
+	}
+}
+func (api *SpotMarginCrossMarginDataApi) Do() (*MarginCrossMarginDataRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginCrossMarginData], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginCrossMarginDataRes](api.client.c, url, GET)
+}
+
 // binance SPOT杠杆接口 MarginIsolatedMarginData rest 获取逐仓杠杆利率及限额 (USER_DATA)
 func (client *SpotRestClient) NewSpotMarginIsolatedMarginData() *SpotMarginIsolatedMarginDataApi {
 	return &SpotMarginIsolatedMarginDataApi{
@@ -250,4 +263,17 @@ func (api *SpotMarginIsolatedMarginDataApi) Do() (*MarginIsolatedMarginDataRes, 
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedMarginData], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginIsolatedMarginDataRes](api.client.c, url, GET)
+}
+
+// binance SPOT杠杆接口 MarginIsolatedMarginTier rest 获取逐仓杠杆档位信息 (USER_DATA)
+func (client *SpotRestClient) NewSpotMarginIsolatedMarginTier() *SpotMarginIsolatedMarginTierApi {
+	return &SpotMarginIsolatedMarginTierApi{
+		client: client,
+		req:    &SpotMarginIsolatedMarginTierReq{},
+	}
+}
+func (api *SpotMarginIsolatedMarginTierApi) Do() (*MarginIsolatedMarginTierRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedMarginTier], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginIsolatedMarginTierRes](api.client.c, url, GET)
 }
