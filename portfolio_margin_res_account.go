@@ -46,3 +46,9 @@ type PortfolioMarginSetUmLeverageRes struct {
 	MaxNotionalValue string `json:"maxNotionalValue"` // 最大名义价值
 	Symbol           string `json:"symbol"`           // 交易对
 }
+
+type PortfolioMarginSetCmLeverageRes struct {
+	Leverage         int    `json:"leverage"`         // 杠杆倍数
+	MaxNotionalValue string `json:"maxNotionalValue"` // 最大名义价值
+	Symbol           string `json:"symbol"`           // 交易对
+}

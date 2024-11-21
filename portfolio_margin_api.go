@@ -9,6 +9,7 @@ const (
 	PortfolioMarginGetMaxBorrowable = "/papi/v1/margin/maxBorrowable" // 查询最大可借贷额度
 	PortfolioMarginGetMaxWithdraw   = "/papi/v1/margin/maxWithdraw"   // 查询最大可转出额度
 	PortfolioMarginSetUmLeverage    = "/papi/v1/um/leverage"          // 设置UM开仓杠杆
+	PortfolioMarginSetCmLeverage    = "/papi/v1/cm/leverage"          // 设置CM开仓杠杆
 )
 
 var PortfolioMarginApi = map[string]string{
@@ -20,4 +21,5 @@ var PortfolioMarginApi = map[string]string{
 	PortfolioMarginGetMaxBorrowable: "/papi/v1/margin/maxBorrowable", // 查询最大可借贷额度
 	PortfolioMarginGetMaxWithdraw:   "/papi/v1/margin/maxWithdraw",   // 查询最大可转出额度
 	PortfolioMarginSetUmLeverage:    "/papi/v1/um/leverage",          // 设置UM开仓杠杆
+	PortfolioMarginSetCmLeverage:    "/papi/v1/cm/leverage",          // 设置CM开仓杠杆
 }
