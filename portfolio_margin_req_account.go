@@ -109,3 +109,39 @@ type PortfolioMarginMaxWithdrawApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginMaxWithdrawReq
 }
+
+type PortfolioMarginSetUmLeverageReq struct {
+	Symbol     *string `json:"symbol,omitempty"`     // YES
+	Leverage   *int    `json:"leverage,omitempty"`   // YES target initial leverage: int from 1 to 125
+	RevcWindow *int64  `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64  `json:"timestamp,omitempty"`  // YES
+}
+
+// 交易对
+func (api *PortfolioMarginSetUmLeverageApi) Symbol(symbol string) *PortfolioMarginSetUmLeverageApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// 杠杆 target initial leverage: int from 1 to 125
+func (api *PortfolioMarginSetUmLeverageApi) Leverage(leverage int) *PortfolioMarginSetUmLeverageApi {
+	api.req.Leverage = GetPointer(leverage)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginSetUmLeverageApi) RevcWindow(recvWindow int64) *PortfolioMarginSetUmLeverageApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginSetUmLeverageApi) Timestamp(timestamp int64) *PortfolioMarginSetUmLeverageApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginSetUmLeverageApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginSetUmLeverageReq
+}

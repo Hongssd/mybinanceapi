@@ -54,3 +54,16 @@ func (api *PortfolioMarginMaxWithdrawApi) Do() (*PortfolioMarginMaxWithdrawRes, 
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApi[PortfolioMarginGetMaxWithdraw], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginMaxWithdrawRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginSetUmLeverage rest设置UM开仓杠杆
+func (client *PortfolioMarginRestClient) NewSetUmLeverage() *PortfolioMarginSetUmLeverageApi {
+	return &PortfolioMarginSetUmLeverageApi{
+		client: client,
+		req:    &PortfolioMarginSetUmLeverageReq{},
+	}
+}
+func (api *PortfolioMarginSetUmLeverageApi) Do() (*PortfolioMarginSetUmLeverageRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApi[PortfolioMarginSetUmLeverage], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginSetUmLeverageRes](api.client.c, url, POST)
+}

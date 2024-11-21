@@ -40,3 +40,9 @@ type PortfolioMarginMaxBorrowableRes struct {
 type PortfolioMarginMaxWithdrawRes struct {
 	Amount string `json:"amount"` // 系统可转出充足情况下用户账户当前最大可转出额度
 }
+
+type PortfolioMarginSetUmLeverageRes struct {
+	Leverage         int    `json:"leverage"`         // 杠杆倍数
+	MaxNotionalValue string `json:"maxNotionalValue"` // 最大名义价值
+	Symbol           string `json:"symbol"`           // 交易对
+}
