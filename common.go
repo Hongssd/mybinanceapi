@@ -111,13 +111,15 @@ type MyBinance struct {
 }
 
 const (
-	BINANCE_API_SPOT_HTTP        = "api.binance.com"
-	BINANCE_API_FUTURE_HTTP      = "fapi.binance.com"
-	BINANCE_API_SWAP_HTTP        = "dapi.binance.com"
-	TEST_BINANCE_API_SPOT_HTTP   = "testnet.binance.vision"
-	TEST_BINANCE_API_FUTURE_HTTP = "testnet.binancefuture.com"
-	TEST_BINANCE_API_SWAP_HTTP   = "testnet.binancefuture.com"
-	IS_GZIP                      = true
+	BINANCE_API_SPOT_HTTP             = "api.binance.com"
+	BINANCE_API_FUTURE_HTTP           = "fapi.binance.com"
+	BINANCE_API_SWAP_HTTP             = "dapi.binance.com"
+	BINANCE_API_PORTFOLIO_MARGIN_HTTP = "papi.binance.com"
+	TEST_BINANCE_API_SPOT_HTTP        = "testnet.binance.vision"
+	TEST_BINANCE_API_FUTURE_HTTP      = "testnet.binancefuture.com"
+	TEST_BINANCE_API_SWAP_HTTP        = "testnet.binancefuture.com"
+
+	IS_GZIP = true
 )
 
 type NetType int
@@ -139,6 +141,7 @@ const (
 	SPOT ApiType = iota
 	FUTURE
 	SWAP
+	PORTFOLIO_MARGIN
 )
 
 func (apiType *ApiType) String() string {
@@ -149,6 +152,8 @@ func (apiType *ApiType) String() string {
 		return "FUTURE"
 	case SWAP:
 		return "SWAP"
+	case PORTFOLIO_MARGIN:
+		return "PORTFOLIO_MARGIN"
 	}
 	return ""
 }
@@ -164,6 +169,7 @@ type RestClient struct {
 type SpotRestClient RestClient
 type FutureRestClient RestClient
 type SwapRestClient RestClient
+type PortfolioMarginRestClient RestClient
 
 func (*MyBinance) NewSpotRestClient(apiKey string, apiSecret string) *SpotRestClient {
 	client := &SpotRestClient{
@@ -192,6 +198,15 @@ func (*MyBinance) NewSwapRestClient(apiKey string, apiSecret string) *SwapRestCl
 	}
 	return client
 }
+func (*MyBinance) NewPortfolioMarginClient(apiKey string, apiSecret string) *PortfolioMarginRestClient {
+	client := &PortfolioMarginRestClient{
+		&Client{
+			ApiKey:    apiKey,
+			ApiSecret: apiSecret,
+		},
+	}
+	return client
+}
 
 var serverTimeDelta int64 = 0
 
@@ -201,6 +216,7 @@ func SetServerTimeDelta(delta int64) {
 
 // 通用鉴权接口调用
 func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, error) {
+	log.Info(url)
 	body, err := RequestWithHeader(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)
 	if err != nil {
 		return nil, err
@@ -357,6 +373,13 @@ func BinanceGetRestHostByApiType(apiType ApiType) string {
 			return BINANCE_API_SWAP_HTTP
 		case TEST_NET:
 			return TEST_BINANCE_API_SWAP_HTTP
+		}
+	case PORTFOLIO_MARGIN:
+		switch NowNetType {
+		case MAIN_NET:
+			return BINANCE_API_PORTFOLIO_MARGIN_HTTP
+		case TEST_NET:
+			return BINANCE_API_PORTFOLIO_MARGIN_HTTP
 		}
 	}
 	return ""

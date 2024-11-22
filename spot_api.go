@@ -89,6 +89,9 @@ const (
 	SpotMarginIsolatedUserDataStreamPost   //POST接口   (逐仓杠杆账户)生成 Listen Key (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamPut    //PUT接口    (逐仓杠杆账户)延长 Listen Key 有效期 (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamDelete //DELETE接口 (逐仓杠杆账户)关闭 Listen Key (USER_STREAM)
+
+	//经济商子母账号接口
+	SpotBrokerSubAccountGet //POST接口 创建经纪商子账户
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -178,4 +181,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginIsolatedUserDataStreamPost:   "/sapi/v1/userDataStream/isolated", //POST接口 (逐仓杠杆账户)生成 Listen Key (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamPut:    "/sapi/v1/userDataStream/isolated", //PUT接口 (逐仓杠杆账户)延长 Listen Key 有效期 (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamDelete: "/sapi/v1/userDataStream/isolated", //DELETE接口 (逐仓杠杆账户)关闭 Listen Key (USER_STREAM)
+
+	//经济商子母账号接口
+	SpotBrokerSubAccountGet: "/sapi/v1/broker/subAccount", //GET接口 查询经纪商子账户
 }
