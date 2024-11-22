@@ -52,3 +52,6 @@ type PortfolioMarginSetCmLeverageRes struct {
 	MaxNotionalValue string `json:"maxNotionalValue"` // 最大名义价值
 	Symbol           string `json:"symbol"`           // 交易对
 }
+
+type PortfolioMarginSetUmPositionSideDualRes struct{}
+type PortfolioMarginGetCmPositionSideDualRes struct{}

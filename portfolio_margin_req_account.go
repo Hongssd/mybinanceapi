@@ -181,3 +181,61 @@ type PortfolioMarginSetCmLeverageApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginSetCmLeverageReq
 }
+
+type PortfolioMarginSetUmPositionSideDualReq struct {
+	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
+	RevcWindow       *int64 `json:"recvWindow,omitempty"`       // NO
+	Timestamp        *int64 `json:"timestamp,omitempty"`        // YES
+}
+
+// 双向持仓模式
+func (api *PortfolioMarginSetUmPositionSideDualApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginSetUmPositionSideDualApi {
+	api.req.DualSidePosition = GetPointer(dualSidePosition)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginSetUmPositionSideDualApi) RevcWindow(recvWindow int64) *PortfolioMarginSetUmPositionSideDualApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginSetUmPositionSideDualApi) Timestamp(timestamp int64) *PortfolioMarginSetUmPositionSideDualApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginSetUmPositionSideDualApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginSetUmPositionSideDualReq
+}
+
+type PortfolioMarginGetCmPositionSideDualReq struct {
+	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES
+	RevcWindow       *int64 `json:"recvWindow,omitempty"`       // NO
+	Timestamp        *int64 `json:"timestamp,omitempty"`        // YES
+}
+
+// 双向持仓模式
+func (api *PortfolioMarginGetCmPositionSideDualApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginGetCmPositionSideDualApi {
+	api.req.DualSidePosition = GetPointer(dualSidePosition)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginGetCmPositionSideDualApi) RevcWindow(recvWindow int64) *PortfolioMarginGetCmPositionSideDualApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginGetCmPositionSideDualApi) Timestamp(timestamp int64) *PortfolioMarginGetCmPositionSideDualApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginGetCmPositionSideDualApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginGetCmPositionSideDualReq
+}
