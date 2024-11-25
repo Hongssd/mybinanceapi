@@ -115,3 +115,86 @@ type SubAccountFuturesEnableRes struct {
 	Email            string `json:"email"`
 	IsFuturesEnabled bool   `json:"isFuturesEnabled"`
 }
+
+type SpotSubAccountMarginEnableRes struct {
+	Email           string `json:"email"`
+	IsMarginEnabled bool   `json:"isMarginEnabled"`
+}
+
+type SpotSubAccountSubAccountApiIpRestrictionPostRes struct {
+	Status     string   `json:"status"`     // IP Restriction status. 1 = IP Unrestricted. 2 = Restrict access to trusted IPs only.
+	ApiKey     string   `json:"apiKey"`     // API Key
+	IpList     []string `json:"ipList"`     // IP白名单
+	UpdateTime int64    `json:"updateTime"` // 更新时间
+}
+type SpotSubAccountSubAccountApiIpRestrictionGetRes struct {
+	IpRestrict string   `json:"ipRestrict"` // 是否开启IP限制 "true" or "false"
+	ApiKey     string   `json:"apiKey"`     // API Key
+	IpList     []string `json:"ipList"`     // IP白名单
+	UpdateTime int64    `json:"updateTime"` // 更新时间
+}
+type SpotSubAccountSubAccountApiIpRestrictionDeleteRes struct {
+	IpRestrict string   `json:"ipRestrict"` // 是否开启IP限制 "true" or "false"
+	ApiKey     string   `json:"apiKey"`     // API Key
+	IpList     []string `json:"ipList"`     // IP白名单
+	UpdateTime int64    `json:"updateTime"` // 更新时间
+}
+
+type SpotSubAccountCapitalDepositSubHisrecResRow struct {
+	Id            string `json:"id"`
+	Amount        string `json:"amount"`
+	Coin          string `json:"coin"`
+	Network       string `json:"network"`
+	Status        int    `json:"status"`
+	Address       string `json:"address"`
+	AddressTag    string `json:"addressTag"`
+	TxId          string `json:"txId"`
+	InsertTime    int64  `json:"insertTime"`
+	TransferType  int    `json:"transferType"`
+	ConfirmTimes  string `json:"confirmTimes"`
+	UnlockConfirm int    `json:"unlockConfirm"`
+	WalletType    int    `json:"walletType"`
+}
+type SpotSubAccountCapitalDepositSubHisrecRes []SpotSubAccountCapitalDepositSubHisrecResRow
+
+type SpotSubAccountFuturesPositionRiskResRow struct {
+	EntryPrice       string `json:"entryPrice"`
+	Leverage         string `json:"leverage"`
+	MaxNotional      string `json:"maxNotional"`
+	LiquidationPrice string `json:"liquidationPrice"`
+	MarkPrice        string `json:"markPrice"`
+	PositionAmount   string `json:"positionAmount"`
+	Symbol           string `json:"symbol"`
+	UnrealizedProfit string `json:"unrealizedProfit"`
+}
+
+// v2 interface
+//
+//	type DeliveryPositionRiskVo struct {
+//		EntryPrice       string `json:"entryPrice"`
+//		MarkPrice        string `json:"markPrice"`
+//		Leverage         string `json:"leverage"`
+//		Isolated         string `json:"isolated"`
+//		IsolatedWallet   string `json:"isolatedWallet"`
+//		IsolatedMargin   string `json:"isolatedMargin"`
+//		IsAutoAddMargin  string `json:"isAutoAddMargin"`
+//		PositionSide     string `json:"positionSide"`
+//		PositionAmount   string `json:"positionAmount"`
+//		Symbol           string `json:"symbol"`
+//		UnrealizedProfit string `json:"unrealizedProfit"`
+//	}
+type SpotSubAccountFuturesPositionRiskRes []SpotSubAccountFuturesPositionRiskResRow
+
+//type SpotSubAccountFuturesPositionRiskRes struct {
+//FuturePositionRiskVos []FuturePositionRiskVo `json:"futurePositionRiskVos"`
+//DeliveryPositionRiskVos []DeliveryPositionRiskVo `json:"deliveryPositionRiskVos"`
+//}
+
+type SpotSubAccountSpotSummaryRes struct {
+	TotalCount              int64  `json:"totalCount"`
+	MasterAccountTotalAsset string `json:"masterAccountTotalAsset"`
+	SpotSubUserAssetBtcVos  []struct {
+		Email      string `json:"email"`
+		TotalAsset string `json:"totalAsset"`
+	} `json:"spotSubUserAssetBtcVoList"`
+}

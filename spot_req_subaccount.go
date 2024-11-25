@@ -375,3 +375,318 @@ func (api *SpotSubAccountFuturesEnableApi) Timestamp(Timestamp int64) *SpotSubAc
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotSubAccountMarginEnableReq struct {
+	Email      *string `json:"email"`      // YES 子账户邮箱 备注
+	RecvWindow *int64  `json:"recvWindow"` // NO 接收窗口
+	Timestamp  *int64  `json:"timestamp"`  // YES 时间戳
+}
+
+// YES 子账户邮箱 备注
+func (api *SpotSubAccountMarginEnableApi) Email(Email string) *SpotSubAccountMarginEnableApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// NO 接收窗口
+func (api *SpotSubAccountMarginEnableApi) RecvWindow(RecvWindow int64) *SpotSubAccountMarginEnableApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES 时间戳
+func (api *SpotSubAccountMarginEnableApi) Timestamp(Timestamp int64) *SpotSubAccountMarginEnableApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountMarginEnableApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountMarginEnableReq
+}
+
+// email	STRING	YES	Sub-account email
+// subAccountApiKey	STRING	YES
+// status	STRING	YES	IP限制状态。1或不填入(null) = IP未受限。2 = 仅限受信任IP访问。
+// ipAddress	STRING	NO	可批量填入IP，以逗号区隔
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotSubAccountSubAccountApiIpRestrictionPostReq struct {
+	Email            *string `json:"email"`            // YES Sub-account email
+	SubAccountApiKey *string `json:"subAccountApiKey"` // YES
+	Status           *string `json:"status"`           // YES	IP限制状态。1或不填入(null) = IP未受限。2 = 仅限受信任IP访问。
+	IpAddress        *string `json:"ipAddress"`        // NO	可批量填入IP，以逗号区隔
+	RecvWindow       *int64  `json:"recvWindow"`       // NO
+	Timestamp        *int64  `json:"timestamp"`        // YES
+}
+
+// YES	Sub-account email
+func (api *SpotSubAccountSubAccountApiIpRestrictionPostApi) Email(Email string) *SpotSubAccountSubAccountApiIpRestrictionPostApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSubAccountApiIpRestrictionPostApi) SubAccountApiKey(SubAccountApiKey string) *SpotSubAccountSubAccountApiIpRestrictionPostApi {
+	api.req.SubAccountApiKey = GetPointer(SubAccountApiKey)
+	return api
+}
+
+// YES	IP限制状态。1或不填入(null) = IP未受限。2 = 仅限受信任IP访问。
+func (api *SpotSubAccountSubAccountApiIpRestrictionPostApi) Status(Status string) *SpotSubAccountSubAccountApiIpRestrictionPostApi {
+	api.req.Status = GetPointer(Status)
+	return api
+}
+
+// NO	可批量填入IP，以逗号区隔
+func (api *SpotSubAccountSubAccountApiIpRestrictionPostApi) IpAddress(IpAddress string) *SpotSubAccountSubAccountApiIpRestrictionPostApi {
+	api.req.IpAddress = GetPointer(IpAddress)
+	return api
+}
+
+// NO recvWindow
+func (api *SpotSubAccountSubAccountApiIpRestrictionPostApi) RecvWindow(RecvWindow int64) *SpotSubAccountSubAccountApiIpRestrictionPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSubAccountApiIpRestrictionPostApi) Timestamp(Timestamp int64) *SpotSubAccountSubAccountApiIpRestrictionPostApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountSubAccountApiIpRestrictionPostApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountSubAccountApiIpRestrictionPostReq
+}
+
+type SpotSubAccountSubAccountApiIpRestrictionGetReq struct {
+	Email            *string `json:"email"`            // YES Sub-account email
+	SubAccountApiKey *string `json:"subAccountApiKey"` // YES
+	RecvWindow       *int64  `json:"recvWindow"`       // NO
+	Timestamp        *int64  `json:"timestamp"`        // YES
+}
+
+// YES Sub-account email
+func (api *SpotSubAccountSubAccountApiIpRestrictionGetApi) Email(Email string) *SpotSubAccountSubAccountApiIpRestrictionGetApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSubAccountApiIpRestrictionGetApi) SubAccountApiKey(SubAccountApiKey string) *SpotSubAccountSubAccountApiIpRestrictionGetApi {
+	api.req.SubAccountApiKey = GetPointer(SubAccountApiKey)
+	return api
+}
+
+// NO recvWindow
+func (api *SpotSubAccountSubAccountApiIpRestrictionGetApi) RecvWindow(RecvWindow int64) *SpotSubAccountSubAccountApiIpRestrictionGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSubAccountApiIpRestrictionGetApi) Timestamp(Timestamp int64) *SpotSubAccountSubAccountApiIpRestrictionGetApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountSubAccountApiIpRestrictionGetApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountSubAccountApiIpRestrictionGetReq
+}
+
+type SpotSubAccountSubAccountApiIpRestrictionDeleteReq struct {
+	Email            *string `json:"email"`            // YES Sub-account email
+	SubAccountApiKey *string `json:"subAccountApiKey"` // YES
+	IpAddress        *string `json:"ipAddress"`        // YES 可批量填入IP，以逗号分隔
+	RecvWindow       *int64  `json:"recvWindow"`       // NO 接收窗口
+	Timestamp        *int64  `json:"timestamp"`        // YES 时间戳
+}
+
+// YES Sub-account email
+func (api *SpotSubAccountSubAccountApiIpRestrictionDeleteApi) Email(Email string) *SpotSubAccountSubAccountApiIpRestrictionDeleteApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSubAccountApiIpRestrictionDeleteApi) SubAccountApiKey(SubAccountApiKey string) *SpotSubAccountSubAccountApiIpRestrictionDeleteApi {
+	api.req.SubAccountApiKey = GetPointer(SubAccountApiKey)
+	return api
+}
+
+// YES 可批量填入IP，以逗号分隔
+func (api *SpotSubAccountSubAccountApiIpRestrictionDeleteApi) IpAddress(IpAddress string) *SpotSubAccountSubAccountApiIpRestrictionDeleteApi {
+	api.req.IpAddress = GetPointer(IpAddress)
+	return api
+}
+
+// NO 接收窗口
+func (api *SpotSubAccountSubAccountApiIpRestrictionDeleteApi) RecvWindow(RecvWindow int64) *SpotSubAccountSubAccountApiIpRestrictionDeleteApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES 时间戳
+func (api *SpotSubAccountSubAccountApiIpRestrictionDeleteApi) Timestamp(Timestamp int64) *SpotSubAccountSubAccountApiIpRestrictionDeleteApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountSubAccountApiIpRestrictionDeleteApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountSubAccountApiIpRestrictionDeleteReq
+}
+
+type SpotSubAccountCapitalDepositSubHisrecReq struct {
+	Email      *string `json:"email"`      // YES	子账户邮箱 备注
+	Coin       *string `json:"coin"`       // NO
+	Status     *int    `json:"status"`     // NO	0(0:pending,6: credited but cannot withdraw,7:Wrong Deposit,8:Waiting User confirm,1:success)
+	StartTime  *int64  `json:"startTime"`  // NO
+	EndTime    *int64  `json:"endTime"`    // NO
+	Limit      *int    `json:"limit"`      // NO
+	Offset     *int    `json:"offset"`     // NO	default:0
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+	TxId       *string `json:"txId"`       // NO
+}
+
+// YES	子账户邮箱 备注
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) Email(Email string) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) Coin(Coin string) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.Coin = GetPointer(Coin)
+	return api
+}
+
+// NO	0(0:pending,6: credited but cannot withdraw,7:Wrong Deposit,8:Waiting User confirm,1:success)
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) Status(Status int) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.Status = GetPointer(Status)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) StartTime(StartTime int64) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) EndTime(EndTime int64) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) Limit(Limit int) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+
+// NO	default:0
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) Offset(Offset int) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.Offset = GetPointer(Offset)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) RecvWindow(RecvWindow int64) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountCapitalDepositSubHisrecApi) Timestamp(Timestamp int64) *SpotSubAccountCapitalDepositSubHisrecApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountCapitalDepositSubHisrecApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountCapitalDepositSubHisrecReq
+}
+
+type SpotSubAccountFuturesPositionRiskReq struct {
+	Email       *string `json:"email"`       // YES	子账户邮箱 备注
+	FuturesType *int    `json:"futuresType"` // YES	1:USDT Margined Futures, 2:COIN Margined Futures
+	RecvWindow  *int64  `json:"recvWindow"`  // NO
+	Timestamp   *int64  `json:"timestamp"`   // YES
+}
+
+// YES	子账户邮箱 备注
+func (api *SpotSubAccountFuturesPositionRiskApi) Email(Email string) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// YES	1:USDT Margined Futures, 2:COIN Margined Futures
+func (api *SpotSubAccountFuturesPositionRiskApi) FuturesType(FuturesType int) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.FuturesType = GetPointer(FuturesType)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountFuturesPositionRiskApi) RecvWindow(RecvWindow int64) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountFuturesPositionRiskApi) Timestamp(Timestamp int64) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountFuturesPositionRiskApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountFuturesPositionRiskReq
+}
+
+type SpotSubAccountSpotSummaryReq struct {
+	Email      *string `json:"email"`      // NO	子账户邮箱
+	Page       *int    `json:"page"`       // NO	分页，默认 1
+	Size       *int    `json:"size"`       // NO	单页条目数, 默认 10, 最大 20
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// NO	子账户邮箱
+func (api *SpotSubAccountSpotSummaryApi) Email(Email string) *SpotSubAccountSpotSummaryApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// NO	分页，默认 1
+func (api *SpotSubAccountSpotSummaryApi) Page(Page int) *SpotSubAccountSpotSummaryApi {
+	api.req.Page = GetPointer(Page)
+	return api
+}
+
+// NO	单页条目数, 默认 10, 最大 20
+func (api *SpotSubAccountSpotSummaryApi) Size(Size int) *SpotSubAccountSpotSummaryApi {
+	api.req.Size = GetPointer(Size)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountSpotSummaryApi) RecvWindow(RecvWindow int64) *SpotSubAccountSpotSummaryApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSpotSummaryApi) Timestamp(Timestamp int64) *SpotSubAccountSpotSummaryApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountSpotSummaryApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountSpotSummaryReq
+}

@@ -3,18 +3,25 @@ package mybinanceapi
 type SpotApi int
 
 const (
-
 	//子母账户接口
-	SpotSubAccountList                     SpotApi = iota //GET接口 查询子账户列表(适用主账户)
-	SpotSubAccountUniversalTransferHistory                //GET接口 查询子母账户万能划转历史查询
-	SpotSubAccountAssets                                  //GET接口 查询子账户资产 (适用主账户)(USER_DATA)
-	SpotSubAccountFuturesAccount                          //GET接口 查询子账户Futures账户详情V2 (适用主账户)
-	SpotSubAccountApiIpRestriction                        //GET接口 查询子账户API Key IP白名单 (适用母账户)
-	SpotSubAccountTransferSubUserHistory                  //GET接口 查询子账户划转历史 (仅适用子账户)
-	SpotManagedSubAccountQueryTransLog                    //GET接口 查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
-	SpotSubAccountVirtualSubAccount                       //POST接口 创建虚拟子账户(适用主账户)
-	SpotSubAccountUniversalTransfer                       //POST接口 子母账户万能划转 (适用主账户)
-	SpotSubAccountFuturesEnable                           //POST接口 为子账户开通Futures (适用主账户)
+	SpotSubAccountList                             SpotApi = iota //GET接口 查询子账户列表(适用主账户)
+	SpotSubAccountUniversalTransferHistory                        //GET接口 查询子母账户万能划转历史查询
+	SpotSubAccountAssets                                          //GET接口 查询子账户资产 (适用主账户)(USER_DATA)
+	SpotSubAccountFuturesAccount                                  //GET接口 查询子账户Futures账户详情V2 (适用主账户)
+	SpotSubAccountApiIpRestriction                                //GET接口 查询子账户API Key IP白名单 (适用母账户)
+	SpotSubAccountTransferSubUserHistory                          //GET接口 查询子账户划转历史 (仅适用子账户)
+	SpotManagedSubAccountQueryTransLog                            //GET接口 查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
+	SpotSubAccountVirtualSubAccount                               //POST接口 创建虚拟子账户(适用主账户)
+	SpotSubAccountUniversalTransfer                               //POST接口 子母账户万能划转 (适用主账户)
+	SpotSubAccountFuturesEnable                                   //POST接口 为子账户开通Futures (适用主账户)
+	SpotSubAccountMarginEnable                                    //POST接口 为子账户开通杠杆 (适用主账户)
+	SpotSubAccountSubAccountApiIpRestrictionPost                  //POST接口 为子账户API Key增加IP白名单(适用母账户)
+	SpotSubAccountSubAccountApiIpRestrictionGet                   //GET接口 查询子账户API Key IP白名单(适用母账户)
+	SpotSubAccountSubAccountApiIpRestrictionDelete                //DELETE接口 删除子账户API Key IP白名单(适用母账户)
+	SpotSubAccountCapitalDepositSubAddress                        //GET接口 获取子账户充值地址 (适用主账户)
+	SpotSubAccountCapitalDepositSubHisrec                         //GET接口 获取子账户充值历史 (适用主账户)
+	SpotSubAccountFuturesPositionRisk                             //GET接口 查询子账户合约持仓信息 (适用主账户)
+	SpotSubAccountSpotSummary                                     //GET接口 查询子账户现货汇总账户 (适用主账户)
 
 	//杠杆账户接口
 	SpotMarginAllPairs         //GET接口 获取所有全仓杠杆交易对(MARKET_DATA)
@@ -90,22 +97,42 @@ const (
 	SpotMarginIsolatedUserDataStreamPut    //PUT接口    (逐仓杠杆账户)延长 Listen Key 有效期 (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamDelete //DELETE接口 (逐仓杠杆账户)关闭 Listen Key (USER_STREAM)
 
-	//经济商子母账号接口
-	SpotBrokerSubAccountGet //POST接口 创建经纪商子账户
+	//经纪商子母账号接口
+	SpotBrokerSubAccountPost                        //POST接口 创建经纪商子账户
+	SpotBrokerSubAccountGet                         //GET接口 查询经纪商子账户
+	SpotBrokerSubAccountApiPost                     //POST 创建经纪商子账号ApiKey
+	SpotBrokerSubAccountApiGet                      //GET 查询经纪商子账号ApiKey
+	SpotBrokerSubAccountApiDelete                   //DELETE 删除经纪商子账号ApiKey
+	SpotBrokerSubAccountFutures                     //POST接口 授权经纪商子账户Futures权限
+	SpotBrokerSubAccountPermissionUniversalTransfer //POST接口 授权经纪商子账户万能划转权限
+	SpotBrokerSubAccountApiIpRestrictionPost        //POST接口 更新经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionGet         //GET接口 查询经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionDelete      //DELETE接口 删除经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountDepositHist                 //GET接口 查询经纪商子账户充值历史
+	SpotBrokerUniversalTransferPost                 //POST接口 经纪商子账户万能划转
+	SpotBrokerUniversalTransferGet                  //GET接口 查询经纪商子账户万能划转历史
 )
 
 var SpotApiMap = map[SpotApi]string{
 	//子母账户接口
-	SpotSubAccountList:                     "/sapi/v1/sub-account/list",                        //GET接口 查询子账户列表(适用主账户)
-	SpotSubAccountUniversalTransferHistory: "/sapi/v1/sub-account/universalTransfer",           //GET接口 子母账户万能划转历史查询 (适用主账户)
-	SpotSubAccountAssets:                   "/sapi/v4/sub-account/assets",                      //GET接口 查询子账户资产(适用主账户)(USER_DATA)
-	SpotSubAccountFuturesAccount:           "/sapi/v2/sub-account/futures/account",             //GET接口 查询子账户Futures账户详情V2 (适用主账户)
-	SpotSubAccountApiIpRestriction:         "/sapi/v1/sub-account/subAccountApi/ipRestriction", //GET接口 查询子账户API Key IP白名单 (适用母账户)
-	SpotSubAccountTransferSubUserHistory:   "/sapi/v1/sub-account/transfer/subUserHistory",     //GET 查询子账户划转历史 (仅适用子账户)
-	SpotManagedSubAccountQueryTransLog:     "/sapi/v1/managed-subaccount/query-trans-log",      //GET接口 查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
-	SpotSubAccountVirtualSubAccount:        "/sapi/v1/sub-account/virtualSubAccount",           //POST接口 创建虚拟子账户(适用主账户)
-	SpotSubAccountUniversalTransfer:        "/sapi/v1/sub-account/universalTransfer",           //POST接口 子母账户万能划转 (适用主账户)
-	SpotSubAccountFuturesEnable:            "/sapi/v1/sub-account/futures/enable",              //POST接口 为子账户开通Futures (适用主账户)
+	SpotSubAccountList:                             "/sapi/v1/sub-account/list",                        //GET接口 查询子账户列表(适用主账户)
+	SpotSubAccountUniversalTransferHistory:         "/sapi/v1/sub-account/universalTransfer",           //GET接口 子母账户万能划转历史查询 (适用主账户)
+	SpotSubAccountAssets:                           "/sapi/v4/sub-account/assets",                      //GET接口 查询子账户资产(适用主账户)(USER_DATA)
+	SpotSubAccountFuturesAccount:                   "/sapi/v2/sub-account/futures/account",             //GET接口 查询子账户Futures账户详情V2 (适用主账户)
+	SpotSubAccountApiIpRestriction:                 "/sapi/v1/sub-account/subAccountApi/ipRestriction", //GET接口 查询子账户API Key IP白名单 (适用母账户)
+	SpotSubAccountTransferSubUserHistory:           "/sapi/v1/sub-account/transfer/subUserHistory",     //GET 查询子账户划转历史 (仅适用子账户)
+	SpotManagedSubAccountQueryTransLog:             "/sapi/v1/managed-subaccount/query-trans-log",      //GET接口 查询托管子账户的划转记录(适用交易团队子账户)(USER_DATA)
+	SpotSubAccountVirtualSubAccount:                "/sapi/v1/sub-account/virtualSubAccount",           //POST接口 创建虚拟子账户(适用主账户)
+	SpotSubAccountUniversalTransfer:                "/sapi/v1/sub-account/universalTransfer",           //POST接口 子母账户万能划转 (适用主账户)
+	SpotSubAccountFuturesEnable:                    "/sapi/v1/sub-account/futures/enable",              //POST接口 为子账户开通Futures (适用主账户)
+	SpotSubAccountMarginEnable:                     "/sapi/v1/sub-account/margin/enable",               //POST接口 为子账户开通杠杆 (适用主账户)
+	SpotSubAccountSubAccountApiIpRestrictionPost:   "/sapi/v1/sub-account/subAccountApi/ipRestriction", //POST接口 为子账户API Key增加IP白名单(适用母账户)
+	SpotSubAccountSubAccountApiIpRestrictionGet:    "/sapi/v1/sub-account/subAccountApi/ipRestriction", //GET接口 查询子账户API Key IP白名单(适用母账户)
+	SpotSubAccountSubAccountApiIpRestrictionDelete: "/sapi/v1/sub-account/subAccountApi/ipRestriction", //DELETE接口 删除子账户API Key IP白名单(适用母账户)
+	SpotSubAccountCapitalDepositSubAddress:         "/sapi/v1/capital/deposit/subAddress",              //GET接口 获取子账户充值地址 (适用主账户)
+	SpotSubAccountCapitalDepositSubHisrec:          "/sapi/v1/capital/deposit/subHisrec",               //GET接口 获取子账户充值历史 (适用主账户)
+	SpotSubAccountFuturesPositionRisk:              "/sapi/v1/sub-account/futures/positionRisk",        //GET接口 查询子账户合约持仓信息 (适用主账户)
+	SpotSubAccountSpotSummary:                      "/sapi/v1/sub-account/spotSummary",                 //GET接口 查询子账户现货汇总账户 (适用主账户)
 
 	//杠杆账户接口
 	SpotMarginAllPairs:         "/sapi/v1/margin/allPairs",          //GET 获取所有全仓杠杆交易对(MARKET_DATA)
@@ -182,6 +209,18 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginIsolatedUserDataStreamPut:    "/sapi/v1/userDataStream/isolated", //PUT接口 (逐仓杠杆账户)延长 Listen Key 有效期 (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamDelete: "/sapi/v1/userDataStream/isolated", //DELETE接口 (逐仓杠杆账户)关闭 Listen Key (USER_STREAM)
 
-	//经济商子母账号接口
-	SpotBrokerSubAccountGet: "/sapi/v1/broker/subAccount", //GET接口 查询经纪商子账户
+	// 经纪商子母账号接口
+	SpotBrokerSubAccountPost:                        "/sapi/v1/broker/subAccount",                              //POST接口 创建经纪商子账户
+	SpotBrokerSubAccountGet:                         "/sapi/v1/broker/subAccount",                              //GET接口 查询经纪商子账户
+	SpotBrokerSubAccountApiPost:                     "/sapi/v1/broker/subAccountApi",                           //POST创建经纪商子账号ApiKey
+	SpotBrokerSubAccountApiGet:                      "/sapi/v1/broker/subAccountApi",                           //GET查询经纪商子账号ApiKey
+	SpotBrokerSubAccountApiDelete:                   "/sapi/v1/broker/subAccountApi",                           //DELETE删除经纪商子账号ApiKey
+	SpotBrokerSubAccountFutures:                     "/sapi/v1/broker/subAccount/futures",                      //POST接口 授权经纪商子账户Futures权限
+	SpotBrokerSubAccountPermissionUniversalTransfer: "/sapi/v1/broker/subAccount/permission/universalTransfer", //POST接口 授权经纪商子账户万能划转权限
+	SpotBrokerSubAccountApiIpRestrictionPost:        "/sapi/v1/broker/subAccountApi/ipRestriction",             //POST接口 更新经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionGet:         "/sapi/v1/broker/subAccountApi/ipRestriction",             //GET接口 查询经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionDelete:      "/sapi/v1/broker/subAccountApi/ipRestriction",             //DELETE接口 删除经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountDepositHist:                 "/sapi/v1/broker/subAccount/depositHist",                  //GET接口 查询经纪商子账户充值历史
+	SpotBrokerUniversalTransferPost:                 "/sapi/v1/broker/universalTransfer",                       //POST接口 经纪商子账户万能划转
+	SpotBrokerUniversalTransferGet:                  "/sapi/v1/broker/universalTransfer",                       //GET接口 查询经纪商子账户万能划转历史
 }
