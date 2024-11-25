@@ -197,3 +197,28 @@ func (api *SpotSubAccountCapitalDepositSubHisrecApi) Do() (*SpotSubAccountCapita
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountCapitalDepositSubHisrec], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotSubAccountCapitalDepositSubHisrecRes](api.client.c, url, GET)
 }
+
+func (client *SpotRestClient) NewSpotSubAccountFuturesPositionRisk() *SpotSubAccountFuturesPositionRiskApi {
+	return &SpotSubAccountFuturesPositionRiskApi{
+		client: client,
+		req:    &SpotSubAccountFuturesPositionRiskReq{},
+	}
+}
+func (api *SpotSubAccountFuturesPositionRiskApi) Do() (*SpotSubAccountFuturesPositionRiskRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesPositionRisk], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotSubAccountFuturesPositionRiskRes](api.client.c, url, GET)
+}
+
+// binance SPOT子母账户接口 SpotSubAccountSpotSummary 查询子账户汇总账户信息 (适用主账户)
+func (api *SpotRestClient) NewSpotSubAccountSpotSummary() *SpotSubAccountSpotSummaryApi {
+	return &SpotSubAccountSpotSummaryApi{
+		client: api,
+		req:    &SpotSubAccountSpotSummaryReq{},
+	}
+}
+func (api *SpotSubAccountSpotSummaryApi) Do() (*SpotSubAccountSpotSummaryRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountSpotSummary], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotSubAccountSpotSummaryRes](api.client.c, url, GET)
+}

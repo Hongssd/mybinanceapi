@@ -611,3 +611,82 @@ type SpotSubAccountCapitalDepositSubHisrecApi struct {
 	client *SpotRestClient
 	req    *SpotSubAccountCapitalDepositSubHisrecReq
 }
+
+type SpotSubAccountFuturesPositionRiskReq struct {
+	Email       *string `json:"email"`       // YES	子账户邮箱 备注
+	FuturesType *int    `json:"futuresType"` // YES	1:USDT Margined Futures, 2:COIN Margined Futures
+	RecvWindow  *int64  `json:"recvWindow"`  // NO
+	Timestamp   *int64  `json:"timestamp"`   // YES
+}
+
+// YES	子账户邮箱 备注
+func (api *SpotSubAccountFuturesPositionRiskApi) Email(Email string) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// YES	1:USDT Margined Futures, 2:COIN Margined Futures
+func (api *SpotSubAccountFuturesPositionRiskApi) FuturesType(FuturesType int) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.FuturesType = GetPointer(FuturesType)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountFuturesPositionRiskApi) RecvWindow(RecvWindow int64) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountFuturesPositionRiskApi) Timestamp(Timestamp int64) *SpotSubAccountFuturesPositionRiskApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountFuturesPositionRiskApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountFuturesPositionRiskReq
+}
+
+type SpotSubAccountSpotSummaryReq struct {
+	Email      *string `json:"email"`      // NO	子账户邮箱
+	Page       *int    `json:"page"`       // NO	分页，默认 1
+	Size       *int    `json:"size"`       // NO	单页条目数, 默认 10, 最大 20
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// NO	子账户邮箱
+func (api *SpotSubAccountSpotSummaryApi) Email(Email string) *SpotSubAccountSpotSummaryApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// NO	分页，默认 1
+func (api *SpotSubAccountSpotSummaryApi) Page(Page int) *SpotSubAccountSpotSummaryApi {
+	api.req.Page = GetPointer(Page)
+	return api
+}
+
+// NO	单页条目数, 默认 10, 最大 20
+func (api *SpotSubAccountSpotSummaryApi) Size(Size int) *SpotSubAccountSpotSummaryApi {
+	api.req.Size = GetPointer(Size)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountSpotSummaryApi) RecvWindow(RecvWindow int64) *SpotSubAccountSpotSummaryApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountSpotSummaryApi) Timestamp(Timestamp int64) *SpotSubAccountSpotSummaryApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountSpotSummaryApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountSpotSummaryReq
+}

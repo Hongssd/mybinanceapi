@@ -20,6 +20,8 @@ const (
 	SpotSubAccountSubAccountApiIpRestrictionDelete                //DELETE接口 删除子账户API Key IP白名单(适用母账户)
 	SpotSubAccountCapitalDepositSubAddress                        //GET接口 获取子账户充值地址 (适用主账户)
 	SpotSubAccountCapitalDepositSubHisrec                         //GET接口 获取子账户充值历史 (适用主账户)
+	SpotSubAccountFuturesPositionRisk                             //GET接口 查询子账户合约持仓信息 (适用主账户)
+	SpotSubAccountSpotSummary                                     //GET接口 查询子账户现货汇总账户 (适用主账户)
 
 	//杠杆账户接口
 	SpotMarginAllPairs         //GET接口 获取所有全仓杠杆交易对(MARKET_DATA)
@@ -129,6 +131,8 @@ var SpotApiMap = map[SpotApi]string{
 	SpotSubAccountSubAccountApiIpRestrictionDelete: "/sapi/v1/sub-account/subAccountApi/ipRestriction", //DELETE接口 删除子账户API Key IP白名单(适用母账户)
 	SpotSubAccountCapitalDepositSubAddress:         "/sapi/v1/capital/deposit/subAddress",              //GET接口 获取子账户充值地址 (适用主账户)
 	SpotSubAccountCapitalDepositSubHisrec:          "/sapi/v1/capital/deposit/subHisrec",               //GET接口 获取子账户充值历史 (适用主账户)
+	SpotSubAccountFuturesPositionRisk:              "/sapi/v1/sub-account/futures/positionRisk",        //GET接口 查询子账户合约持仓信息 (适用主账户)
+	SpotSubAccountSpotSummary:                      "/sapi/v1/sub-account/spotSummary",                 //GET接口 查询子账户现货汇总账户 (适用主账户)
 
 	//杠杆账户接口
 	SpotMarginAllPairs:         "/sapi/v1/margin/allPairs",          //GET 获取所有全仓杠杆交易对(MARKET_DATA)

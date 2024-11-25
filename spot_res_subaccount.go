@@ -156,3 +156,45 @@ type SpotSubAccountCapitalDepositSubHisrecResRow struct {
 	WalletType    int    `json:"walletType"`
 }
 type SpotSubAccountCapitalDepositSubHisrecRes []SpotSubAccountCapitalDepositSubHisrecResRow
+
+type SpotSubAccountFuturesPositionRiskResRow struct {
+	EntryPrice       string `json:"entryPrice"`
+	Leverage         string `json:"leverage"`
+	MaxNotional      string `json:"maxNotional"`
+	LiquidationPrice string `json:"liquidationPrice"`
+	MarkPrice        string `json:"markPrice"`
+	PositionAmount   string `json:"positionAmount"`
+	Symbol           string `json:"symbol"`
+	UnrealizedProfit string `json:"unrealizedProfit"`
+}
+
+// v2 interface
+//
+//	type DeliveryPositionRiskVo struct {
+//		EntryPrice       string `json:"entryPrice"`
+//		MarkPrice        string `json:"markPrice"`
+//		Leverage         string `json:"leverage"`
+//		Isolated         string `json:"isolated"`
+//		IsolatedWallet   string `json:"isolatedWallet"`
+//		IsolatedMargin   string `json:"isolatedMargin"`
+//		IsAutoAddMargin  string `json:"isAutoAddMargin"`
+//		PositionSide     string `json:"positionSide"`
+//		PositionAmount   string `json:"positionAmount"`
+//		Symbol           string `json:"symbol"`
+//		UnrealizedProfit string `json:"unrealizedProfit"`
+//	}
+type SpotSubAccountFuturesPositionRiskRes []SpotSubAccountFuturesPositionRiskResRow
+
+//type SpotSubAccountFuturesPositionRiskRes struct {
+//FuturePositionRiskVos []FuturePositionRiskVo `json:"futurePositionRiskVos"`
+//DeliveryPositionRiskVos []DeliveryPositionRiskVo `json:"deliveryPositionRiskVos"`
+//}
+
+type SpotSubAccountSpotSummaryRes struct {
+	TotalCount              int64  `json:"totalCount"`
+	MasterAccountTotalAsset string `json:"masterAccountTotalAsset"`
+	SpotSubUserAssetBtcVos  []struct {
+		Email      string `json:"email"`
+		TotalAsset string `json:"totalAsset"`
+	} `json:"spotSubUserAssetBtcVoList"`
+}
