@@ -101,3 +101,5 @@ type SpotBrokerUniversalTransferGetResRow struct {
 	FromAccountType string `json:"fromAccountType"` // 转出账户类型
 	ToAccountType   string `json:"toAccountType"`   // 转入账户类型
 }
+
+type SpotBrokerUniversalTransferGetRes []SpotBrokerUniversalTransferGetResRow
