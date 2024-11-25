@@ -115,3 +115,8 @@ type SubAccountFuturesEnableRes struct {
 	Email            string `json:"email"`
 	IsFuturesEnabled bool   `json:"isFuturesEnabled"`
 }
+
+type SpotSubAccountMarginEnableRes struct {
+	Email           string `json:"email"`
+	IsMarginEnabled bool   `json:"isMarginEnabled"`
+}

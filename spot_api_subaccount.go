@@ -132,3 +132,16 @@ func (api *SpotSubAccountFuturesEnableApi) Do() (*SubAccountFuturesEnableRes, er
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountFuturesEnable], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SubAccountFuturesEnableRes](api.client.c, url, POST)
 }
+
+// binance SPOT子母账户接口  SpotSubAccountMarginEnable rest为子账户开通杠杆 (适用主账户)
+func (client *SpotRestClient) NewSpotSubAccountMarginEnable() *SpotSubAccountMarginEnableApi {
+	return &SpotSubAccountMarginEnableApi{
+		client: client,
+		req:    &SpotSubAccountMarginEnableReq{},
+	}
+}
+func (api *SpotSubAccountMarginEnableApi) Do() (*SpotSubAccountMarginEnableRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountMarginEnable], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotSubAccountMarginEnableRes](api.client.c, url, POST)
+}

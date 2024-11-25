@@ -3,7 +3,6 @@ package mybinanceapi
 type SpotApi int
 
 const (
-
 	//子母账户接口
 	SpotSubAccountList                     SpotApi = iota //GET接口 查询子账户列表(适用主账户)
 	SpotSubAccountUniversalTransferHistory                //GET接口 查询子母账户万能划转历史查询
@@ -15,6 +14,7 @@ const (
 	SpotSubAccountVirtualSubAccount                       //POST接口 创建虚拟子账户(适用主账户)
 	SpotSubAccountUniversalTransfer                       //POST接口 子母账户万能划转 (适用主账户)
 	SpotSubAccountFuturesEnable                           //POST接口 为子账户开通Futures (适用主账户)
+	SpotSubAccountMarginEnable                            //POST接口 为子账户开通杠杆 (适用主账户)
 
 	//杠杆账户接口
 	SpotMarginAllPairs         //GET接口 获取所有全仓杠杆交易对(MARKET_DATA)
@@ -90,8 +90,17 @@ const (
 	SpotMarginIsolatedUserDataStreamPut    //PUT接口    (逐仓杠杆账户)延长 Listen Key 有效期 (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamDelete //DELETE接口 (逐仓杠杆账户)关闭 Listen Key (USER_STREAM)
 
-	//经济商子母账号接口
-	SpotBrokerSubAccountGet //POST接口 创建经纪商子账户
+	//经纪商子母账号接口
+	SpotBrokerSubAccountPost                        //POST接口 创建经纪商子账户
+	SpotBrokerSubAccountGet                         //GET接口 查询经纪商子账户
+	SpotBrokerSubAccountApiPost                     //POST 创建经纪商子账号ApiKey
+	SpotBrokerSubAccountApiGet                      //GET 查询经纪商子账号ApiKey
+	SpotBrokerSubAccountApiDelete                   //DELETE 删除经纪商子账号ApiKey
+	SpotBrokerSubAccountFutures                     //POST接口 授权经纪商子账户Futures权限
+	SpotBrokerSubAccountPermissionUniversalTransfer //POST接口 授权经纪商子账户万能划转权限
+	SpotBrokerSubAccountApiIpRestrictionPost        //POST接口 更新经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionGet         //GET接口 查询经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionDelete      //DELETE接口 删除经纪商子账户API Key IP白名单
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -106,6 +115,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotSubAccountVirtualSubAccount:        "/sapi/v1/sub-account/virtualSubAccount",           //POST接口 创建虚拟子账户(适用主账户)
 	SpotSubAccountUniversalTransfer:        "/sapi/v1/sub-account/universalTransfer",           //POST接口 子母账户万能划转 (适用主账户)
 	SpotSubAccountFuturesEnable:            "/sapi/v1/sub-account/futures/enable",              //POST接口 为子账户开通Futures (适用主账户)
+	SpotSubAccountMarginEnable:             "/sapi/v1/sub-account/margin/enable",               //POST接口 为子账户开通杠杆 (适用主账户)
 
 	//杠杆账户接口
 	SpotMarginAllPairs:         "/sapi/v1/margin/allPairs",          //GET 获取所有全仓杠杆交易对(MARKET_DATA)
@@ -182,6 +192,15 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginIsolatedUserDataStreamPut:    "/sapi/v1/userDataStream/isolated", //PUT接口 (逐仓杠杆账户)延长 Listen Key 有效期 (USER_STREAM)
 	SpotMarginIsolatedUserDataStreamDelete: "/sapi/v1/userDataStream/isolated", //DELETE接口 (逐仓杠杆账户)关闭 Listen Key (USER_STREAM)
 
-	//经济商子母账号接口
-	SpotBrokerSubAccountGet: "/sapi/v1/broker/subAccount", //GET接口 查询经纪商子账户
+	// 经纪商子母账号接口
+	SpotBrokerSubAccountPost:                        "/sapi/v1/broker/subAccount",                              //POST接口 创建经纪商子账户
+	SpotBrokerSubAccountGet:                         "/sapi/v1/broker/subAccount",                              //GET接口 查询经纪商子账户
+	SpotBrokerSubAccountApiPost:                     "/sapi/v1/broker/subAccountApi",                           //POST创建经纪商子账号ApiKey
+	SpotBrokerSubAccountApiGet:                      "/sapi/v1/broker/subAccountApi",                           //GET查询经纪商子账号ApiKey
+	SpotBrokerSubAccountApiDelete:                   "/sapi/v1/broker/subAccountApi",                           //DELETE删除经纪商子账号ApiKey
+	SpotBrokerSubAccountFutures:                     "/sapi/v1/broker/subAccount/futures",                      //POST接口 授权经纪商子账户Futures权限
+	SpotBrokerSubAccountPermissionUniversalTransfer: "/sapi/v1/broker/subAccount/permission/universalTransfer", //POST接口 授权经纪商子账户万能划转权限
+	SpotBrokerSubAccountApiIpRestrictionPost:        "/sapi/v1/broker/subAccountApi/ipRestriction",             //POST接口 更新经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionGet:         "/sapi/v1/broker/subAccountApi/ipRestriction",             //GET接口 查询经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionDelete:      "/sapi/v1/broker/subAccountApi/ipRestriction",             //DELETE接口 删除经纪商子账户API Key IP白名单
 }

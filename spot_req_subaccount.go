@@ -375,3 +375,32 @@ func (api *SpotSubAccountFuturesEnableApi) Timestamp(Timestamp int64) *SpotSubAc
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotSubAccountMarginEnableReq struct {
+	Email      *string `json:"email"`      // YES 子账户邮箱 备注
+	RecvWindow *int64  `json:"recvWindow"` // NO 接收窗口
+	Timestamp  *int64  `json:"timestamp"`  // YES 时间戳
+}
+
+// YES 子账户邮箱 备注
+func (api *SpotSubAccountMarginEnableApi) Email(Email string) *SpotSubAccountMarginEnableApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// NO 接收窗口
+func (api *SpotSubAccountMarginEnableApi) RecvWindow(RecvWindow int64) *SpotSubAccountMarginEnableApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES 时间戳
+func (api *SpotSubAccountMarginEnableApi) Timestamp(Timestamp int64) *SpotSubAccountMarginEnableApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountMarginEnableApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountMarginEnableReq
+}
