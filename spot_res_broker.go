@@ -67,3 +67,37 @@ type SpotBrokerSubAccountApiIpRestrictionDeleteRes struct {
 	IpList     []string `json:"ipList"`
 	UpdateTime int64    `json:"updateTime"`
 }
+
+type SpotBrokerSubAccountDepositHistResRow struct {
+	DepositId        int64  `json:"depositId"`
+	SubAccountId     string `json:"subAccountId"`
+	Address          string `json:"address"`
+	AddressTag       string `json:"addressTag"`
+	Amount           string `json:"amount"`
+	Coin             string `json:"coin"`
+	InsertTime       int64  `json:"insertTime"`
+	TransferType     int    `json:"transferType"`
+	Network          string `json:"network"`
+	Status           int    `json:"status"`
+	TxId             string `json:"txId"`
+	SourceAddress    string `json:"sourceAddress"`
+	ConfirmTimes     string `json:"confirmTimes"`
+	SelfReturnStatus int    `json:"selfReturnStatus"`
+}
+type SpotBrokerSubAccountDepositHistRes []SpotBrokerSubAccountDepositHistResRow
+
+type SpotBrokerUniversalTransferPostRes struct {
+	TxnId        int64  `json:"txnId"`        // 交易ID
+	ClientTranId string `json:"clientTranId"` // 客户端交易ID
+}
+type SpotBrokerUniversalTransferGetResRow struct {
+	ToId            string `json:"toId"`            // 目标账户ID
+	Asset           string `json:"asset"`           // 资产
+	Qty             string `json:"qty"`             // 数量
+	Time            int64  `json:"time"`            // 时间
+	Status          string `json:"status"`          // 状态
+	TxnId           string `json:"txnId"`           // 交易ID
+	ClientTranId    string `json:"clientTranId"`    // 客户端交易ID
+	FromAccountType string `json:"fromAccountType"` // 转出账户类型
+	ToAccountType   string `json:"toAccountType"`   // 转入账户类型
+}

@@ -420,3 +420,224 @@ type SpotBrokerSubAccountApiIpRestrictionDeleteApi struct {
 	client *SpotRestClient
 	req    *SpotBrokerSubAccountApiIpRestrictionDeleteReq
 }
+
+type SpotBrokerSubAccountDepositHistReq struct {
+	SubAccountId *string `json:"subAccountId,omitempty"` // NO
+	Coin         *string `json:"coin,omitempty"`         // NO
+	Status       *int    `json:"status,omitempty"`       // NO 0(0:pending,6: credited but cannot withdraw, 1:success)
+	StartTime    *int64  `json:"startTime,omitempty"`    // NO Default: 7 days from current timestamp
+	EndTime      *int64  `json:"endTime,omitempty"`      // NO Default: present timestamp
+	Limit        *int    `json:"limit,omitempty"`        // NO Default：500
+	Offset       *int    `json:"offset,omitempty"`       // NO Default：0
+	RecvWindow   *int64  `json:"recvWindow,omitempty"`   // NO
+	Timestamp    *int64  `json:"timestamp,omitempty"`    // YES
+}
+
+// NO 子账户ID
+func (api *SpotBrokerSubAccountDepositHistApi) SubAccountId(subAccountId string) *SpotBrokerSubAccountDepositHistApi {
+	api.req.SubAccountId = GetPointer(subAccountId)
+	return api
+}
+
+// NO
+func (api *SpotBrokerSubAccountDepositHistApi) Coin(coin string) *SpotBrokerSubAccountDepositHistApi {
+	api.req.Coin = GetPointer(coin)
+	return api
+}
+
+// NO 0(0:pending,6: credited but cannot withdraw, 1:success)
+func (api *SpotBrokerSubAccountDepositHistApi) Status(status int) *SpotBrokerSubAccountDepositHistApi {
+	api.req.Status = GetPointer(status)
+	return api
+}
+
+// NO Default: 7 days from current timestamp
+func (api *SpotBrokerSubAccountDepositHistApi) StartTime(startTime int64) *SpotBrokerSubAccountDepositHistApi {
+	api.req.StartTime = GetPointer(startTime)
+	return api
+}
+
+// NO Default: present timestamp
+func (api *SpotBrokerSubAccountDepositHistApi) EndTime(endTime int64) *SpotBrokerSubAccountDepositHistApi {
+	api.req.EndTime = GetPointer(endTime)
+	return api
+}
+
+// NO Default：500
+func (api *SpotBrokerSubAccountDepositHistApi) Limit(limit int) *SpotBrokerSubAccountDepositHistApi {
+	api.req.Limit = GetPointer(limit)
+	return api
+}
+
+// NO Default：0
+func (api *SpotBrokerSubAccountDepositHistApi) Offset(offset int) *SpotBrokerSubAccountDepositHistApi {
+	api.req.Offset = GetPointer(offset)
+	return api
+}
+
+// NO
+func (api *SpotBrokerSubAccountDepositHistApi) RecvWindow(recvWindow int64) *SpotBrokerSubAccountDepositHistApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *SpotBrokerSubAccountDepositHistApi) Timestamp(timestamp int64) *SpotBrokerSubAccountDepositHistApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type SpotBrokerSubAccountDepositHistApi struct {
+	client *SpotRestClient
+	req    *SpotBrokerSubAccountDepositHistReq
+}
+
+type SpotBrokerUniversalTransferPostReq struct {
+	FromId          *string `json:"fromId,omitempty"`          // NO
+	ToId            *string `json:"toId,omitempty"`            // NO
+	FromAccountType *string `json:"fromAccountType,omitempty"` // YES SPOT,USDT_FUTURE,COIN_FUTURE
+	ToAccountType   *string `json:"toAccountType,omitempty"`   // YES SPOT,USDT_FUTURE,COIN_FUTURE
+	ClientTranId    *string `json:"clientTranId,omitempty"`    // NO Client transfer id, must be unique. The max length is 32 characters
+	Asset           *string `json:"asset,omitempty"`           // YES
+	Amount          *string `json:"amount,omitempty"`          // YES
+	RecvWindow      *int64  `json:"recvWindow,omitempty"`      // NO
+	Timestamp       *int64  `json:"timestamp,omitempty"`       // YES
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferPostApi) FromId(fromId string) *SpotBrokerUniversalTransferPostApi {
+	api.req.FromId = GetPointer(fromId)
+	return api
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferPostApi) ToId(toId string) *SpotBrokerUniversalTransferPostApi {
+	api.req.ToId = GetPointer(toId)
+	return api
+}
+
+// YES SPOT,USDT_FUTURE,COIN_FUTURE
+func (api *SpotBrokerUniversalTransferPostApi) FromAccountType(fromAccountType string) *SpotBrokerUniversalTransferPostApi {
+	api.req.FromAccountType = GetPointer(fromAccountType)
+	return api
+}
+
+// YES SPOT,USDT_FUTURE,COIN_FUTURE
+func (api *SpotBrokerUniversalTransferPostApi) ToAccountType(toAccountType string) *SpotBrokerUniversalTransferPostApi {
+	api.req.ToAccountType = GetPointer(toAccountType)
+	return api
+}
+
+// NO Client transfer id, must be unique. The max length is 32 characters
+func (api *SpotBrokerUniversalTransferPostApi) ClientTranId(clientTranId string) *SpotBrokerUniversalTransferPostApi {
+	api.req.ClientTranId = GetPointer(clientTranId)
+	return api
+}
+
+// YES
+func (api *SpotBrokerUniversalTransferPostApi) Asset(asset string) *SpotBrokerUniversalTransferPostApi {
+	api.req.Asset = GetPointer(asset)
+	return api
+}
+
+// YES
+func (api *SpotBrokerUniversalTransferPostApi) Amount(amount string) *SpotBrokerUniversalTransferPostApi {
+	api.req.Amount = GetPointer(amount)
+	return api
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferPostApi) RecvWindow(recvWindow int64) *SpotBrokerUniversalTransferPostApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *SpotBrokerUniversalTransferPostApi) Timestamp(timestamp int64) *SpotBrokerUniversalTransferPostApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type SpotBrokerUniversalTransferPostApi struct {
+	client *SpotRestClient
+	req    *SpotBrokerUniversalTransferPostReq
+}
+
+type SpotBrokerUniversalTransferGetReq struct {
+	FromId        *string `json:"fromId,omitempty"`        // NO
+	ToId          *string `json:"toId,omitempty"`          // NO
+	ClientTranId  *string `json:"clientTranId,omitempty"`  // NO client transfer id
+	StartTime     *int64  `json:"startTime,omitempty"`     // NO
+	EndTime       *int64  `json:"endTime,omitempty"`       // NO
+	Page          *int    `json:"page,omitempty"`          // NO default 1
+	Limit         *int    `json:"limit,omitempty"`         // NO default 500, max 500
+	ShowAllStatus *bool   `json:"showAllStatus,omitempty"` // NO TRUE or FALSE
+	RecvWindow    *int64  `json:"recvWindow,omitempty"`    // NO
+	Timestamp     *int64  `json:"timestamp,omitempty"`     // YES
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferGetApi) FromId(fromId string) *SpotBrokerUniversalTransferGetApi {
+	api.req.FromId = GetPointer(fromId)
+	return api
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferGetApi) ToId(toId string) *SpotBrokerUniversalTransferGetApi {
+	api.req.ToId = GetPointer(toId)
+	return api
+}
+
+// NO client transfer id
+func (api *SpotBrokerUniversalTransferGetApi) ClientTranId(clientTranId string) *SpotBrokerUniversalTransferGetApi {
+	api.req.ClientTranId = GetPointer(clientTranId)
+	return api
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferGetApi) StartTime(startTime int64) *SpotBrokerUniversalTransferGetApi {
+	api.req.StartTime = GetPointer(startTime)
+	return api
+
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferGetApi) EndTime(endTime int64) *SpotBrokerUniversalTransferGetApi {
+	api.req.EndTime = GetPointer(endTime)
+	return api
+}
+
+// NO default 1
+func (api *SpotBrokerUniversalTransferGetApi) Page(page int) *SpotBrokerUniversalTransferGetApi {
+	api.req.Page = GetPointer(page)
+	return api
+}
+
+// NO default 500, max 500
+func (api *SpotBrokerUniversalTransferGetApi) Limit(limit int) *SpotBrokerUniversalTransferGetApi {
+	api.req.Limit = GetPointer(limit)
+	return api
+}
+
+// NO TRUE or FALSE
+func (api *SpotBrokerUniversalTransferGetApi) ShowAllStatus(showAllStatus bool) *SpotBrokerUniversalTransferGetApi {
+	api.req.ShowAllStatus = GetPointer(showAllStatus)
+	return api
+}
+
+// NO
+func (api *SpotBrokerUniversalTransferGetApi) RecvWindow(recvWindow int64) *SpotBrokerUniversalTransferGetApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *SpotBrokerUniversalTransferGetApi) Timestamp(timestamp int64) *SpotBrokerUniversalTransferGetApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type SpotBrokerUniversalTransferGetApi struct {
+	client *SpotRestClient
+	req    *SpotBrokerUniversalTransferGetReq
+}

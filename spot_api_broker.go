@@ -132,3 +132,47 @@ func (api *SpotBrokerSubAccountApiIpRestrictionDeleteApi) Do() (*SpotBrokerSubAc
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerSubAccountApiIpRestrictionDelete], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotBrokerSubAccountApiIpRestrictionDeleteRes](api.client.c, url, DELETE)
 }
+
+// GET 查询经纪商子账户充值历史
+func (client *SpotRestClient) NewSpotBrokerSubAccountDepositHist() *SpotBrokerSubAccountDepositHistApi {
+	return &SpotBrokerSubAccountDepositHistApi{
+		client: client,
+		req:    &SpotBrokerSubAccountDepositHistReq{},
+	}
+}
+func (api *SpotBrokerSubAccountDepositHistApi) Do() (*SpotBrokerSubAccountDepositHistRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerSubAccountDepositHist], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotBrokerSubAccountDepositHistRes](api.client.c, url, GET)
+}
+
+// POST 经纪商子账户万能划转
+// CAUTION!!!
+// You need to enable "internal transfer" option for the api key which requests this endpoint.
+// Transfer from master account if fromId not sent.
+// Transfer to master account if toId not sent.
+// Transfer between futures acount is not supported.
+func (client *SpotRestClient) NewSpotBrokerUniversalTransferPost() *SpotBrokerUniversalTransferPostApi {
+	return &SpotBrokerUniversalTransferPostApi{
+		client: client,
+		req:    &SpotBrokerUniversalTransferPostReq{},
+	}
+}
+func (api *SpotBrokerUniversalTransferPostApi) Do() (*SpotBrokerUniversalTransferPostRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerUniversalTransferPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotBrokerUniversalTransferPostRes](api.client.c, url, POST)
+}
+
+// GET 查询经纪商子账户万能划转历史
+func (client *SpotRestClient) NewSpotBrokerUniversalTransferGet() *SpotBrokerUniversalTransferGetApi {
+	return &SpotBrokerUniversalTransferGetApi{
+		client: client,
+		req:    &SpotBrokerUniversalTransferGetReq{},
+	}
+}
+func (api *SpotBrokerUniversalTransferGetApi) Do() (*SpotBrokerUniversalTransferGetRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerUniversalTransferGet], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotBrokerUniversalTransferGetRes](api.client.c, url, GET)
+}

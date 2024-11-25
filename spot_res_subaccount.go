@@ -120,3 +120,39 @@ type SpotSubAccountMarginEnableRes struct {
 	Email           string `json:"email"`
 	IsMarginEnabled bool   `json:"isMarginEnabled"`
 }
+
+type SpotSubAccountSubAccountApiIpRestrictionPostRes struct {
+	Status     string   `json:"status"`     // IP Restriction status. 1 = IP Unrestricted. 2 = Restrict access to trusted IPs only.
+	ApiKey     string   `json:"apiKey"`     // API Key
+	IpList     []string `json:"ipList"`     // IP白名单
+	UpdateTime int64    `json:"updateTime"` // 更新时间
+}
+type SpotSubAccountSubAccountApiIpRestrictionGetRes struct {
+	IpRestrict string   `json:"ipRestrict"` // 是否开启IP限制 "true" or "false"
+	ApiKey     string   `json:"apiKey"`     // API Key
+	IpList     []string `json:"ipList"`     // IP白名单
+	UpdateTime int64    `json:"updateTime"` // 更新时间
+}
+type SpotSubAccountSubAccountApiIpRestrictionDeleteRes struct {
+	IpRestrict string   `json:"ipRestrict"` // 是否开启IP限制 "true" or "false"
+	ApiKey     string   `json:"apiKey"`     // API Key
+	IpList     []string `json:"ipList"`     // IP白名单
+	UpdateTime int64    `json:"updateTime"` // 更新时间
+}
+
+type SpotSubAccountCapitalDepositSubHisrecResRow struct {
+	Id            string `json:"id"`
+	Amount        string `json:"amount"`
+	Coin          string `json:"coin"`
+	Network       string `json:"network"`
+	Status        int    `json:"status"`
+	Address       string `json:"address"`
+	AddressTag    string `json:"addressTag"`
+	TxId          string `json:"txId"`
+	InsertTime    int64  `json:"insertTime"`
+	TransferType  int    `json:"transferType"`
+	ConfirmTimes  string `json:"confirmTimes"`
+	UnlockConfirm int    `json:"unlockConfirm"`
+	WalletType    int    `json:"walletType"`
+}
+type SpotSubAccountCapitalDepositSubHisrecRes []SpotSubAccountCapitalDepositSubHisrecResRow
