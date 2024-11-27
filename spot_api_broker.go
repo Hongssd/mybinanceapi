@@ -95,7 +95,7 @@ func (api *SpotBrokerSubAccountPermissionUniversalTransferApi) Do() (*SpotBroker
 }
 
 // POST 更新经纪商子账户API Key IP白名单
-func (client *SpotRestClient) NewSpotBrokerSubAccountApiIpRestriction() *SpotBrokerSubAccountApiIpRestrictionApi {
+func (client *SpotRestClient) NewSpotBrokerSubAccountApiIpRestrictionPost() *SpotBrokerSubAccountApiIpRestrictionApi {
 	return &SpotBrokerSubAccountApiIpRestrictionApi{
 		client: client,
 		req:    &SpotBrokerSubAccountApiIpRestrictionReq{},
