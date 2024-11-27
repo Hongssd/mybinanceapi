@@ -540,6 +540,56 @@ type SpotSubAccountSubAccountApiIpRestrictionDeleteApi struct {
 	req    *SpotSubAccountSubAccountApiIpRestrictionDeleteReq
 }
 
+type SpotSubAccountCapitalDepositSubAddressReq struct {
+	Email      *string          `json:"email"`      // YES	子账户邮箱 备注
+	Coin       *string          `json:"coin"`       // YES
+	Network    *string          `json:"network"`    // NO	网络
+	Amount     *decimal.Decimal `json:"amount"`     // NO	充值数量 使用LIGHTNING网络时，amount必须传入
+	RecvWindow *int64           `json:"recvWindow"` // NO
+	Timestamp  *int64           `json:"timestamp"`  // YES
+}
+
+// YES	子账户邮箱 备注
+func (api *SpotSubAccountCapitalDepositSubAddressApi) Email(Email string) *SpotSubAccountCapitalDepositSubAddressApi {
+	api.req.Email = GetPointer(Email)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountCapitalDepositSubAddressApi) Coin(Coin string) *SpotSubAccountCapitalDepositSubAddressApi {
+	api.req.Coin = GetPointer(Coin)
+	return api
+}
+
+// NO	网络
+func (api *SpotSubAccountCapitalDepositSubAddressApi) Network(Network string) *SpotSubAccountCapitalDepositSubAddressApi {
+	api.req.Network = GetPointer(Network)
+	return api
+}
+
+// NO	充值数量 使用LIGHTNING网络时，amount必须传入
+func (api *SpotSubAccountCapitalDepositSubAddressApi) Amount(Amount decimal.Decimal) *SpotSubAccountCapitalDepositSubAddressApi {
+	api.req.Amount = GetPointer(Amount)
+	return api
+}
+
+// NO
+func (api *SpotSubAccountCapitalDepositSubAddressApi) RecvWindow(RecvWindow int64) *SpotSubAccountCapitalDepositSubAddressApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// YES
+func (api *SpotSubAccountCapitalDepositSubAddressApi) Timestamp(Timestamp int64) *SpotSubAccountCapitalDepositSubAddressApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotSubAccountCapitalDepositSubAddressApi struct {
+	client *SpotRestClient
+	req    *SpotSubAccountCapitalDepositSubAddressReq
+}
+
 type SpotSubAccountCapitalDepositSubHisrecReq struct {
 	Email      *string `json:"email"`      // YES	子账户邮箱 备注
 	Coin       *string `json:"coin"`       // NO

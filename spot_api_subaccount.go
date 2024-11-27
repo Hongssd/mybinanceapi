@@ -185,6 +185,19 @@ func (api *SpotSubAccountSubAccountApiIpRestrictionDeleteApi) Do() (*SpotSubAcco
 	return binanceCallApiWithSecret[SpotSubAccountSubAccountApiIpRestrictionDeleteRes](api.client.c, url, DELETE)
 }
 
+// binance SPOT子母账户接口 SpotSubAccountCapitalDepositSubAddress 查询子账户充值地址 (适用主账户)
+func (client *SpotRestClient) NewSpotSubAccountCapitalDepositSubAddress() *SpotSubAccountCapitalDepositSubAddressApi {
+	return &SpotSubAccountCapitalDepositSubAddressApi{
+		client: client,
+		req:    &SpotSubAccountCapitalDepositSubAddressReq{},
+	}
+}
+func (api *SpotSubAccountCapitalDepositSubAddressApi) Do() (*SpotSubAccountCapitalDepositSubAddressRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotSubAccountCapitalDepositSubAddress], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotSubAccountCapitalDepositSubAddressRes](api.client.c, url, GET)
+}
+
 // binance SPOT子母账户接口 SpotSubAccountCapitalDepositSubHisrec 查询子账户充值历史 (适用主账户)
 func (client *SpotRestClient) NewSpotSubAccountCapitalDepositSubHisrec() *SpotSubAccountCapitalDepositSubHisrecApi {
 	return &SpotSubAccountCapitalDepositSubHisrecApi{
