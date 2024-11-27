@@ -126,7 +126,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotSubAccountUniversalTransfer:                "/sapi/v1/sub-account/universalTransfer",           //POST接口 子母账户万能划转 (适用主账户)
 	SpotSubAccountFuturesEnable:                    "/sapi/v1/sub-account/futures/enable",              //POST接口 为子账户开通Futures (适用主账户)
 	SpotSubAccountMarginEnable:                     "/sapi/v1/sub-account/margin/enable",               //POST接口 为子账户开通杠杆 (适用主账户)
-	SpotSubAccountSubAccountApiIpRestrictionPost:   "/sapi/v1/sub-account/subAccountApi/ipRestriction", //POST接口 为子账户API Key增加IP白名单(适用母账户)
+	SpotSubAccountSubAccountApiIpRestrictionPost:   "/sapi/v2/sub-account/subAccountApi/ipRestriction", //POST接口 为子账户API Key增加IP白名单(适用母账户)
 	SpotSubAccountSubAccountApiIpRestrictionGet:    "/sapi/v1/sub-account/subAccountApi/ipRestriction", //GET接口 查询子账户API Key IP白名单(适用母账户)
 	SpotSubAccountSubAccountApiIpRestrictionDelete: "/sapi/v1/sub-account/subAccountApi/ipRestriction", //DELETE接口 删除子账户API Key IP白名单(适用母账户)
 	SpotSubAccountCapitalDepositSubAddress:         "/sapi/v1/capital/deposit/subAddress",              //GET接口 获取子账户充值地址 (适用主账户)
