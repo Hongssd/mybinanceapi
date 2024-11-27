@@ -140,6 +140,13 @@ type SpotSubAccountSubAccountApiIpRestrictionDeleteRes struct {
 	UpdateTime int64    `json:"updateTime"` // 更新时间
 }
 
+type SpotSubAccountCapitalDepositSubAddressRes struct {
+	Address string `json:"address"`
+	Coin    string `json:"coin"`
+	Tag     string `json:"tag"`
+	Url     string `json:"url"`
+}
+
 type SpotSubAccountCapitalDepositSubHisrecResRow struct {
 	Id            string `json:"id"`
 	Amount        string `json:"amount"`
