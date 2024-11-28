@@ -1,5 +1,7 @@
 package mybinanceapi
 
+import "github.com/shopspring/decimal"
+
 type SpotBrokerSubAccountPostReq struct {
 	Tag        *string `json:"tag,omitempty"`        // NO 经纪商代码
 	RecvWindow *int64  `json:"recvWindow,omitempty"` // NO 接收窗口
@@ -493,15 +495,15 @@ type SpotBrokerSubAccountDepositHistApi struct {
 }
 
 type SpotBrokerUniversalTransferPostReq struct {
-	FromId          *string `json:"fromId,omitempty"`          // NO
-	ToId            *string `json:"toId,omitempty"`            // NO
-	FromAccountType *string `json:"fromAccountType,omitempty"` // YES SPOT,USDT_FUTURE,COIN_FUTURE
-	ToAccountType   *string `json:"toAccountType,omitempty"`   // YES SPOT,USDT_FUTURE,COIN_FUTURE
-	ClientTranId    *string `json:"clientTranId,omitempty"`    // NO Client transfer id, must be unique. The max length is 32 characters
-	Asset           *string `json:"asset,omitempty"`           // YES
-	Amount          *string `json:"amount,omitempty"`          // YES
-	RecvWindow      *int64  `json:"recvWindow,omitempty"`      // NO
-	Timestamp       *int64  `json:"timestamp,omitempty"`       // YES
+	FromId          *string          `json:"fromId,omitempty"`          // NO
+	ToId            *string          `json:"toId,omitempty"`            // NO
+	FromAccountType *string          `json:"fromAccountType,omitempty"` // YES SPOT,USDT_FUTURE,COIN_FUTURE
+	ToAccountType   *string          `json:"toAccountType,omitempty"`   // YES SPOT,USDT_FUTURE,COIN_FUTURE
+	ClientTranId    *string          `json:"clientTranId,omitempty"`    // NO Client transfer id, must be unique. The max length is 32 characters
+	Asset           *string          `json:"asset,omitempty"`           // YES
+	Amount          *decimal.Decimal `json:"amount,omitempty"`          // YES
+	RecvWindow      *int64           `json:"recvWindow,omitempty"`      // NO
+	Timestamp       *int64           `json:"timestamp,omitempty"`       // YES
 }
 
 // NO
@@ -541,7 +543,7 @@ func (api *SpotBrokerUniversalTransferPostApi) Asset(asset string) *SpotBrokerUn
 }
 
 // YES
-func (api *SpotBrokerUniversalTransferPostApi) Amount(amount string) *SpotBrokerUniversalTransferPostApi {
+func (api *SpotBrokerUniversalTransferPostApi) Amount(amount decimal.Decimal) *SpotBrokerUniversalTransferPostApi {
 	api.req.Amount = GetPointer(amount)
 	return api
 }
