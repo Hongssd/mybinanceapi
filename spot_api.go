@@ -217,9 +217,9 @@ var SpotApiMap = map[SpotApi]string{
 	SpotBrokerSubAccountApiDelete:                   "/sapi/v1/broker/subAccountApi",                           //DELETE删除经纪商子账号ApiKey
 	SpotBrokerSubAccountFutures:                     "/sapi/v1/broker/subAccount/futures",                      //POST接口 授权经纪商子账户Futures权限
 	SpotBrokerSubAccountPermissionUniversalTransfer: "/sapi/v1/broker/subAccount/permission/universalTransfer", //POST接口 授权经纪商子账户万能划转权限
-	SpotBrokerSubAccountApiIpRestrictionPost:        "/sapi/v1/broker/subAccountApi/ipRestriction",             //POST接口 更新经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionPost:        "/sapi/v2/broker/subAccountApi/ipRestriction",             //POST接口 更新经纪商子账户API Key IP白名单
 	SpotBrokerSubAccountApiIpRestrictionGet:         "/sapi/v1/broker/subAccountApi/ipRestriction",             //GET接口 查询经纪商子账户API Key IP白名单
-	SpotBrokerSubAccountApiIpRestrictionDelete:      "/sapi/v1/broker/subAccountApi/ipRestriction",             //DELETE接口 删除经纪商子账户API Key IP白名单
+	SpotBrokerSubAccountApiIpRestrictionDelete:      "/sapi/v1/broker/subAccountApi/ipRestriction/ipList",      //DELETE接口 删除经纪商子账户API Key IP白名单
 	SpotBrokerSubAccountDepositHist:                 "/sapi/v1/broker/subAccount/depositHist",                  //GET接口 查询经纪商子账户充值历史
 	SpotBrokerUniversalTransferPost:                 "/sapi/v1/broker/universalTransfer",                       //POST接口 经纪商子账户万能划转
 	SpotBrokerUniversalTransferGet:                  "/sapi/v1/broker/universalTransfer",                       //GET接口 查询经纪商子账户万能划转历史
