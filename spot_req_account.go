@@ -189,3 +189,134 @@ func (api *SpotAssetTradeFeeApi) Timestamp(Timestamp int64) *SpotAssetTradeFeeAp
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotCapitalDepositAddressReq struct {
+	Coin       *string          `json:"coin"`       //YES 	币种
+	Network    *string          `json:"network"`    //NO 	充值网络 (只对代币充值有效)
+	Amount     *decimal.Decimal `json:"amount"`     //NO 	充值数量
+	RecvWindow *int64           `json:"recvWindow"` //NO 	接收窗口
+	Timestamp  *int64           `json:"timestamp"`  //YES 	时间戳
+}
+
+// 币种
+func (api *SpotCapitalDepositAddressApi) Coin(Coin string) *SpotCapitalDepositAddressApi {
+	api.req.Coin = GetPointer(Coin)
+	return api
+}
+
+// 充值网络 (只对代币充值有效)
+func (api *SpotCapitalDepositAddressApi) Network(Network string) *SpotCapitalDepositAddressApi {
+	api.req.Network = GetPointer(Network)
+	return api
+}
+
+// 充值数量
+func (api *SpotCapitalDepositAddressApi) Amount(Amount decimal.Decimal) *SpotCapitalDepositAddressApi {
+	api.req.Amount = GetPointer(Amount)
+	return api
+}
+
+// 接收窗口
+func (api *SpotCapitalDepositAddressApi) RecvWindow(RecvWindow int64) *SpotCapitalDepositAddressApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// 时间戳
+func (api *SpotCapitalDepositAddressApi) Timestamp(Timestamp int64) *SpotCapitalDepositAddressApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotCapitalDepositAddressApi struct {
+	client *SpotRestClient
+	req    *SpotCapitalDepositAddressReq
+}
+
+// includeSource	Boolean	NO	默认 false，如果为true时会返回sourceAddress字段
+// coin	STRING	NO
+// status	INT	NO	0(0:pending,6: credited but cannot withdraw,7=Wrong Deposit,8=Waiting User confirm,1:success)
+// startTime	LONG	NO	默认当前时间90天前的时间戳
+// endTime	LONG	NO	默认当前时间戳
+// offset	INT	NO	默认:0
+// limit	INT	NO	默认：1000，最大1000
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+// txId	STRING	NO
+type SpotCapitalDepositHisrecReq struct {
+	IncludeSource *bool   `json:"includeSource"` //NO	默认 false，如果为true时会返回sourceAddress字段
+	Coin          *string `json:"coin"`          //NO
+	Status        *int    `json:"status"`        //NO	0(0:pending,6: credited but cannot withdraw,7=Wrong Deposit,8=Waiting User confirm,1:success)
+	StartTime     *int64  `json:"startTime"`     //NO	默认当前时间90天前的时间戳
+	EndTime       *int64  `json:"endTime"`       //NO	默认当前时间戳
+	Offset        *int    `json:"offset"`        //NO	默认:0
+	Limit         *int    `json:"limit"`         //NO	默认：1000，最大1000
+	RecvWindow    *int64  `json:"recvWindow"`    //NO
+	Timestamp     *int64  `json:"timestamp"`     //YES
+	TxId          *string `json:"txId"`          //NO
+}
+
+// includeSource	Boolean	NO	默认 false，如果为true时会返回sourceAddress字段
+func (api *SpotCapitalDepositHisrecApi) IncludeSource(IncludeSource bool) *SpotCapitalDepositHisrecApi {
+	api.req.IncludeSource = GetPointer(IncludeSource)
+	return api
+}
+
+// coin	STRING	NO
+func (api *SpotCapitalDepositHisrecApi) Coin(Coin string) *SpotCapitalDepositHisrecApi {
+	api.req.Coin = GetPointer(Coin)
+	return api
+}
+
+// status	INT	NO	0(0:pending,6: credited but cannot withdraw,7=Wrong Deposit,8=Waiting User confirm,1:success)
+func (api *SpotCapitalDepositHisrecApi) Status(Status int) *SpotCapitalDepositHisrecApi {
+	api.req.Status = GetPointer(Status)
+	return api
+}
+
+// startTime	LONG	NO	默认当前时间90天前的时间戳
+func (api *SpotCapitalDepositHisrecApi) StartTime(StartTime int64) *SpotCapitalDepositHisrecApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+
+// endTime	LONG	NO	默认当前时间戳
+func (api *SpotCapitalDepositHisrecApi) EndTime(EndTime int64) *SpotCapitalDepositHisrecApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+
+// offset	INT	NO	默认:0
+func (api *SpotCapitalDepositHisrecApi) Offset(Offset int) *SpotCapitalDepositHisrecApi {
+	api.req.Offset = GetPointer(Offset)
+	return api
+}
+
+// limit	INT	NO	默认：1000，最大1000
+func (api *SpotCapitalDepositHisrecApi) Limit(Limit int) *SpotCapitalDepositHisrecApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+
+// recvWindow	LONG	NO
+func (api *SpotCapitalDepositHisrecApi) RecvWindow(RecvWindow int64) *SpotCapitalDepositHisrecApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// timestamp	LONG	YES
+func (api *SpotCapitalDepositHisrecApi) Timestamp(Timestamp int64) *SpotCapitalDepositHisrecApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// txId	STRING	NO
+func (api *SpotCapitalDepositHisrecApi) TxId(TxId string) *SpotCapitalDepositHisrecApi {
+	api.req.TxId = GetPointer(TxId)
+	return api
+}
+
+type SpotCapitalDepositHisrecApi struct {
+	client *SpotRestClient
+	req    *SpotCapitalDepositHisrecReq
+}
