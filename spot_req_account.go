@@ -189,3 +189,46 @@ func (api *SpotAssetTradeFeeApi) Timestamp(Timestamp int64) *SpotAssetTradeFeeAp
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotCapitalDepositAddressReq struct {
+	Coin       *string          `json:"coin"`       //YES 	币种
+	Network    *string          `json:"network"`    //NO 	充值网络 (只对代币充值有效)
+	Amount     *decimal.Decimal `json:"amount"`     //NO 	充值数量
+	RecvWindow *int64           `json:"recvWindow"` //NO 	接收窗口
+	Timestamp  *int64           `json:"timestamp"`  //YES 	时间戳
+}
+
+// 币种
+func (api *SpotCapitalDepositAddressApi) Coin(Coin string) *SpotCapitalDepositAddressApi {
+	api.req.Coin = GetPointer(Coin)
+	return api
+}
+
+// 充值网络 (只对代币充值有效)
+func (api *SpotCapitalDepositAddressApi) Network(Network string) *SpotCapitalDepositAddressApi {
+	api.req.Network = GetPointer(Network)
+	return api
+}
+
+// 充值数量
+func (api *SpotCapitalDepositAddressApi) Amount(Amount decimal.Decimal) *SpotCapitalDepositAddressApi {
+	api.req.Amount = GetPointer(Amount)
+	return api
+}
+
+// 接收窗口
+func (api *SpotCapitalDepositAddressApi) RecvWindow(RecvWindow int64) *SpotCapitalDepositAddressApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// 时间戳
+func (api *SpotCapitalDepositAddressApi) Timestamp(Timestamp int64) *SpotCapitalDepositAddressApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type SpotCapitalDepositAddressApi struct {
+	client *SpotRestClient
+	req    *SpotCapitalDepositAddressReq
+}

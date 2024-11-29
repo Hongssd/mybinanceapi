@@ -56,6 +56,7 @@ const (
 	SpotAssetTransferPost       //POST接口 用户万向划转 (USER_DATA)
 	SpotAssetTransferGet        //GET接口 查询用户万向划转历史 (USER_DATA)
 	SpotAssetTradeFee           //GET接口 查询用户交易手续费率 (USER_DATA)
+	SpotCapitalDepositAddress   //GET接口 获取充值地址 (USER_DATA)
 
 	//现货订单接口
 	SpotOpenOrders         //GET接口 查询当前挂单 (USER_DATA)
@@ -167,6 +168,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotAssetTransferPost:       "/sapi/v1/asset/transfer",           //POST接口 用户万向划转 (USER_DATA)
 	SpotAssetTransferGet:        "/sapi/v1/asset/transfer",           //GET接口 查询用户万向划转历史 (USER_DATA)
 	SpotAssetTradeFee:           "/sapi/v1/asset/tradeFee",           //GET接口 查询用户交易手续费率 (USER_DATA)
+	SpotCapitalDepositAddress:   "/sapi/v1/capital/deposit/address",  //GET接口 获取充值地址 (USER_DATA)
 
 	//现货订单接口
 	SpotOpenOrders: "/api/v3/openOrders", //GET接口 查询当前挂单 (USER_DATA)

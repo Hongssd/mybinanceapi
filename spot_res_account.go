@@ -77,3 +77,10 @@ type SpotAssetTradeFeeResRow struct {
 	TakerCommission string `json:"takerCommission"`
 }
 type SpotAssetTradeFeeRes []SpotAssetTradeFeeResRow
+
+type SpotCapitalDepositAddressRes struct {
+	Address string `json:"address"`
+	Coin    string `json:"coin"`
+	Tag     string `json:"tag"`
+	Url     string `json:"url"`
+}
