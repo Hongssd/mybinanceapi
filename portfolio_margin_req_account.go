@@ -182,60 +182,148 @@ type PortfolioMarginSetCmLeverageApi struct {
 	req    *PortfolioMarginSetCmLeverageReq
 }
 
-type PortfolioMarginSetUmPositionSideDualReq struct {
+type PortfolioMarginUmPositionSideDualPostReq struct {
 	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
 	RevcWindow       *int64 `json:"recvWindow,omitempty"`       // NO
 	Timestamp        *int64 `json:"timestamp,omitempty"`        // YES
 }
 
 // 双向持仓模式
-func (api *PortfolioMarginSetUmPositionSideDualApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginSetUmPositionSideDualApi {
+func (api *PortfolioMarginUmPositionSideDualPostApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginUmPositionSideDualPostApi {
 	api.req.DualSidePosition = GetPointer(dualSidePosition)
 	return api
 }
 
 // 接收窗口
-func (api *PortfolioMarginSetUmPositionSideDualApi) RevcWindow(recvWindow int64) *PortfolioMarginSetUmPositionSideDualApi {
+func (api *PortfolioMarginUmPositionSideDualPostApi) RevcWindow(recvWindow int64) *PortfolioMarginUmPositionSideDualPostApi {
 	api.req.RevcWindow = GetPointer(recvWindow)
 	return api
 }
 
 // 时间戳
-func (api *PortfolioMarginSetUmPositionSideDualApi) Timestamp(timestamp int64) *PortfolioMarginSetUmPositionSideDualApi {
+func (api *PortfolioMarginUmPositionSideDualPostApi) Timestamp(timestamp int64) *PortfolioMarginUmPositionSideDualPostApi {
 	api.req.Timestamp = GetPointer(timestamp)
 	return api
 }
 
-type PortfolioMarginSetUmPositionSideDualApi struct {
+type PortfolioMarginUmPositionSideDualPostApi struct {
 	client *PortfolioMarginRestClient
-	req    *PortfolioMarginSetUmPositionSideDualReq
+	req    *PortfolioMarginUmPositionSideDualPostReq
 }
 
-type PortfolioMarginGetCmPositionSideDualReq struct {
-	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES
+type PortfolioMarginUmPositionSideDualGetReq struct {
+	RevcWindow *int64 `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64 `json:"timestamp,omitempty"`  // YES
+}
+
+// 接收窗口
+func (api *PortfolioMarginUmPositionSideDualGetApi) RevcWindow(recvWindow int64) *PortfolioMarginUmPositionSideDualGetApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginUmPositionSideDualGetApi) Timestamp(timestamp int64) *PortfolioMarginUmPositionSideDualGetApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginUmPositionSideDualGetApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginUmPositionSideDualGetReq
+}
+
+type PortfolioMarginCmPositionSideDualPostReq struct {
+	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
 	RevcWindow       *int64 `json:"recvWindow,omitempty"`       // NO
 	Timestamp        *int64 `json:"timestamp,omitempty"`        // YES
 }
 
 // 双向持仓模式
-func (api *PortfolioMarginGetCmPositionSideDualApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginGetCmPositionSideDualApi {
+func (api *PortfolioMarginCmPositionSideDualPostApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginCmPositionSideDualPostApi {
 	api.req.DualSidePosition = GetPointer(dualSidePosition)
 	return api
 }
 
 // 接收窗口
-func (api *PortfolioMarginGetCmPositionSideDualApi) RevcWindow(recvWindow int64) *PortfolioMarginGetCmPositionSideDualApi {
+func (api *PortfolioMarginCmPositionSideDualPostApi) RevcWindow(recvWindow int64) *PortfolioMarginCmPositionSideDualPostApi {
 	api.req.RevcWindow = GetPointer(recvWindow)
 	return api
 }
 
 // 时间戳
-func (api *PortfolioMarginGetCmPositionSideDualApi) Timestamp(timestamp int64) *PortfolioMarginGetCmPositionSideDualApi {
+func (api *PortfolioMarginCmPositionSideDualPostApi) Timestamp(timestamp int64) *PortfolioMarginCmPositionSideDualPostApi {
 	api.req.Timestamp = GetPointer(timestamp)
 	return api
 }
 
-type PortfolioMarginGetCmPositionSideDualApi struct {
+type PortfolioMarginCmPositionSideDualPostApi struct {
 	client *PortfolioMarginRestClient
-	req    *PortfolioMarginGetCmPositionSideDualReq
+	req    *PortfolioMarginCmPositionSideDualPostReq
+}
+
+type PortfolioMarginCmPositionSideDualGetReq struct {
+	RevcWindow *int64 `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64 `json:"timestamp,omitempty"`  // YES
+}
+
+// 接收窗口
+func (api *PortfolioMarginCmPositionSideDualGetApi) RevcWindow(recvWindow int64) *PortfolioMarginCmPositionSideDualGetApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginCmPositionSideDualGetApi) Timestamp(timestamp int64) *PortfolioMarginCmPositionSideDualGetApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmPositionSideDualGetApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmPositionSideDualGetReq
+}
+
+type PortfolioMarginUmAccountReq struct {
+	RevcWindow *int64 `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64 `json:"timestamp,omitempty"`  // YES
+}
+
+// 接收窗口
+func (api *PortfolioMarginUmAccountApi) RevcWindow(recvWindow int64) *PortfolioMarginUmAccountApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginUmAccountApi) Timestamp(timestamp int64) *PortfolioMarginUmAccountApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginUmAccountApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginUmAccountReq
+}
+
+type PortfolioMarginCmAccountReq struct {
+	RevcWindow *int64 `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64 `json:"timestamp,omitempty"`  // YES
+}
+
+// 接收窗口
+func (api *PortfolioMarginCmAccountApi) RevcWindow(recvWindow int64) *PortfolioMarginCmAccountApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginCmAccountApi) Timestamp(timestamp int64) *PortfolioMarginCmAccountApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmAccountApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmAccountReq
 }

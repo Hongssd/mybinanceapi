@@ -77,3 +77,26 @@ type SpotAssetTradeFeeResRow struct {
 	TakerCommission string `json:"takerCommission"`
 }
 type SpotAssetTradeFeeRes []SpotAssetTradeFeeResRow
+
+type SpotCapitalDepositAddressRes struct {
+	Address string `json:"address"`
+	Coin    string `json:"coin"`
+	Tag     string `json:"tag"`
+	Url     string `json:"url"`
+}
+type SpotCapitalDepositHisrecResRow struct {
+	Id            string `json:"id"`
+	Amount        string `json:"amount"`
+	Coin          string `json:"coin"`
+	Network       string `json:"network"`
+	Status        int    `json:"status"`
+	Address       string `json:"address"`
+	AddressTag    string `json:"addressTag"`
+	TxId          string `json:"txId"`
+	InsertTime    int64  `json:"insertTime"`
+	TransferType  int    `json:"transferType"`
+	ConfirmTimes  string `json:"confirmTimes"`
+	UnlockConfirm int    `json:"unlockConfirm"`
+	WalletType    int    `json:"walletType"`
+}
+type SpotCapitalDepositHisrecRes []SpotCapitalDepositHisrecResRow

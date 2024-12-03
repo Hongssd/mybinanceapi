@@ -80,3 +80,29 @@ func (api *SpotAssetTradeFeeApi) Do() (*SpotAssetTradeFeeRes, error) {
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetTradeFee], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotAssetTradeFeeRes](api.client.c, url, GET)
 }
+
+// binance SPOT SpotCapitalDepositAddress rest获取充值地址 (USER_DATA)
+func (client *SpotRestClient) NewSpotCapitalDepositAddress() *SpotCapitalDepositAddressApi {
+	return &SpotCapitalDepositAddressApi{
+		client: client,
+		req:    &SpotCapitalDepositAddressReq{},
+	}
+}
+func (api *SpotCapitalDepositAddressApi) Do() (*SpotCapitalDepositAddressRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotCapitalDepositAddress], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotCapitalDepositAddressRes](api.client.c, url, GET)
+}
+
+// binance SPOT SpotCapitalDepositHisrec rest获取充值历史 (USER_DATA)
+func (client *SpotRestClient) NewSpotCapitalDepositHisrec() *SpotCapitalDepositHisrecApi {
+	return &SpotCapitalDepositHisrecApi{
+		client: client,
+		req:    &SpotCapitalDepositHisrecReq{},
+	}
+}
+func (api *SpotCapitalDepositHisrecApi) Do() (*SpotCapitalDepositHisrecRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotCapitalDepositHisrec], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotCapitalDepositHisrecRes](api.client.c, url, GET)
+}

@@ -53,5 +53,62 @@ type PortfolioMarginSetCmLeverageRes struct {
 	Symbol           string `json:"symbol"`           // 交易对
 }
 
-type PortfolioMarginSetUmPositionSideDualRes struct{}
-type PortfolioMarginGetCmPositionSideDualRes struct{}
+type PortfolioMarginUmPositionSideDualPostRes struct{}
+type PortfolioMarginUmPositionSideDualGetRes struct {
+	DualSidePosition bool `json:"dualSidePosition"` // 是否开启双向持仓
+}
+
+type PortfolioMarginCmPositionSideDualPostRes struct{}
+type PortfolioMarginCmPositionSideDualGetRes struct {
+	DualSidePosition bool `json:"dualSidePosition"` // 是否开启双向持仓
+}
+
+type PortfolioMarginUmAccountRes struct {
+	Assets []struct {
+		Asset                  string `json:"asset"`                  // 资产
+		CrossWalletBalance     string `json:"crossWalletBalance"`     // 全仓账户余额
+		CrossUnPnl             string `json:"crossUnPnl"`             // 全仓持仓未实现盈亏
+		MaintMargin            string `json:"maintMargin"`            // 维持保证金
+		InitialMargin          string `json:"initialMargin"`          // 当前所需起始保证金
+		PositionInitialMargin  string `json:"positionInitialMargin"`  // 持仓所需起始保证金(基于最新标记价格)
+		OpenOrderInitialMargin string `json:"openOrderInitialMargin"` // 当前挂单所需起始保证金(基于最新标记价格)
+		UpdateTime             int64  `json:"updateTime"`             // 更新时间
+	} `json:"assets"` // 资产
+	Positions []struct {
+		Symbol           string `json:"symbol"`           // 交易对
+		InitialMargin    string `json:"initialMargin"`    // 当前所需起始保证金(基于最新标记价格)
+		MaintMargin      string `json:"maintMargin"`      // 维持保证金
+		UnrealizedProfit string `json:"unrealizedProfit"` // 持仓未实现盈亏
+		PositionSide     string `json:"positionSide"`     // 持仓方向
+		PositionAmt      string `json:"positionAmt"`      // 持仓数量
+		UpdateTime       int64  `json:"updateTime"`       // 更新时间
+		Notional         string `json:"notional"`         // 名义价值
+	} `json:"positions"` // 头寸，将返回所有市场symbol。
+}
+
+type PortfolioMarginCmAccountRes struct {
+	Assets []struct {
+		Asset                  string `json:"asset"`                  // 资产
+		CrossWalletBalance     string `json:"crossWalletBalance"`     // 全仓账户余额
+		CrossUnPnl             string `json:"crossUnPnl"`             // 全仓持仓未实现盈亏
+		MaintMargin            string `json:"maintMargin"`            // 维持保证金
+		InitialMargin          string `json:"initialMargin"`          // 当前所需起始保证金
+		PositionInitialMargin  string `json:"positionInitialMargin"`  // 持仓所需起始保证金(基于最新标记价格)
+		OpenOrderInitialMargin string `json:"openOrderInitialMargin"` // 当前挂单所需起始保证金(基于最新标记价格)
+		UpdateTime             int64  `json:"updateTime"`             // 更新时间
+	} `json:"assets"`
+	Positions []struct {
+		Symbol                 string `json:"symbol"`                 // 交易对
+		PositionAmt            string `json:"positionAmt"`            // 持仓数量
+		InitialMargin          string `json:"initialMargin"`          // 当前所需起始保证金(基于最新标记价格)
+		MaintMargin            string `json:"maintMargin"`            // 维持保证金
+		UnrealizedProfit       string `json:"unrealizedProfit"`       // 持仓未实现盈亏
+		PositionInitialMargin  string `json:"positionInitialMargin"`  // 持仓所需起始保证金(基于最新标记价格)
+		OpenOrderInitialMargin string `json:"openOrderInitialMargin"` // 当前挂单所需起始保证金(基于最新标记价格)
+		Leverage               string `json:"leverage"`               // 杠杆倍率
+		PositionSide           string `json:"positionSide"`           // 持仓方向
+		EntryPrice             string `json:"entryPrice"`             // 持仓成本价
+		MaxQty                 string `json:"maxQty"`                 // 当前杠杆下用户可用的最大名义价值
+		UpdateTime             int64  `json:"updateTime"`             // 更新时间
+	}
+}

@@ -9,6 +9,6 @@ func (client *PortfolioMarginRestClient) NewPing() *PortfolioMarginPingApi {
 }
 
 func (api *PortfolioMarginPingApi) Do() (*PortfolioMarginPingRes, error) {
-	url := binanceHandlerRequestApi(PORTFOLIO_MARGIN, api.req, PortfolioMarginApi[PortfolioMarginPing])
+	url := binanceHandlerRequestApi(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginPing])
 	return binanceCallApiWithSecret[PortfolioMarginPingRes](api.client.c, url, GET)
 }
