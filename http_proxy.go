@@ -14,9 +14,10 @@ import (
 type RestProxy struct {
 	ProxyUrl string //代理的协议IP端口URL
 
-	SpotWeight   ProxyWeight
-	FutureWeight ProxyWeight
-	SwapWeight   ProxyWeight
+	SpotWeight      ProxyWeight
+	FutureWeight    ProxyWeight
+	SwapWeight      ProxyWeight
+	PortfolioMargin ProxyWeight
 }
 
 type ProxyWeight struct {
@@ -60,6 +61,7 @@ func init() {
 			proxy.SpotWeight.restore()
 			proxy.FutureWeight.restore()
 			proxy.SwapWeight.restore()
+			proxy.PortfolioMargin.restore()
 		}
 	})
 	if err != nil {
@@ -83,6 +85,8 @@ func getBestProxyAndWeight(apiType ApiType) (*RestProxy, *ProxyWeight, error) {
 			proxyWeight = &proxy.FutureWeight
 		case SWAP:
 			proxyWeight = &proxy.SwapWeight
+		case PORTFOLIO_MARGIN:
+			proxyWeight = &proxy.PortfolioMargin
 		default:
 			return nil, nil, errors.New("apiType error")
 		}
@@ -136,6 +140,9 @@ func RequestWithHeader(urlStr string, method string, headerMap map[string]string
 			maxWeight = 2400
 		case BinanceGetRestHostByApiType(SWAP):
 			apiType = SWAP
+			maxWeight = 2400
+		case BinanceGetRestHostByApiType(PORTFOLIO_MARGIN):
+			apiType = PORTFOLIO_MARGIN
 			maxWeight = 2400
 		default:
 			return nil, errors.New("request host error")
