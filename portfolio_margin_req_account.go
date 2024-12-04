@@ -414,3 +414,61 @@ type PortfolioMarginCmPositionRiskApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginCmPositionRiskReq
 }
+
+type PortfolioMarginUmCommissionRateReq struct {
+	Symbol     *string `json:"symbol,omitempty"`     // YES
+	RevcWindow *int64  `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64  `json:"timestamp,omitempty"`  // YES
+}
+
+// 交易对
+func (api *PortfolioMarginUmCommissionRateApi) Symbol(symbol string) *PortfolioMarginUmCommissionRateApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginUmCommissionRateApi) RevcWindow(recvWindow int64) *PortfolioMarginUmCommissionRateApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginUmCommissionRateApi) Timestamp(timestamp int64) *PortfolioMarginUmCommissionRateApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginUmCommissionRateApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginUmCommissionRateReq
+}
+
+type PortfolioMarginCmCommissionRateReq struct {
+	Symbol     *string `json:"symbol,omitempty"`     // YES
+	RevcWindow *int64  `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64  `json:"timestamp,omitempty"`  // YES
+}
+
+// 交易对
+func (api *PortfolioMarginCmCommissionRateApi) Symbol(symbol string) *PortfolioMarginCmCommissionRateApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginCmCommissionRateApi) RevcWindow(recvWindow int64) *PortfolioMarginCmCommissionRateApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginCmCommissionRateApi) Timestamp(timestamp int64) *PortfolioMarginCmCommissionRateApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmCommissionRateApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmCommissionRateReq
+}

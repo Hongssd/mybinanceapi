@@ -206,3 +206,31 @@ func (api *PortfolioMarginCmPositionRiskApi) Do() (*PortfolioMarginCmPositionRis
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmPositionRisk], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginCmPositionRiskRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginUmCommissionRate rest 查询UM手续费率
+func (client *PortfolioMarginRestClient) NewUmCommissionRate() *PortfolioMarginUmCommissionRateApi {
+	return &PortfolioMarginUmCommissionRateApi{
+		client: client,
+		req:    &PortfolioMarginUmCommissionRateReq{},
+	}
+}
+
+func (api *PortfolioMarginUmCommissionRateApi) Do() (*PortfolioMarginUmCommissionRateRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmCommissionRate], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmCommissionRateRes](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginCmCommissionRate rest 查询CM手续费率
+func (client *PortfolioMarginRestClient) NewCmCommissionRate() *PortfolioMarginCmCommissionRateApi {
+	return &PortfolioMarginCmCommissionRateApi{
+		client: client,
+		req:    &PortfolioMarginCmCommissionRateReq{},
+	}
+}
+
+func (api *PortfolioMarginCmCommissionRateApi) Do() (*PortfolioMarginCmCommissionRateRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmCommissionRate], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginCmCommissionRateRes](api.client.c, url, GET)
+}
