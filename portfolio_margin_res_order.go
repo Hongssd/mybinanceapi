@@ -442,3 +442,22 @@ type PortfolioMarginCmAllOrdersResRow struct {
 }
 
 type PortfolioMarginCmAllOrdersRes []PortfolioMarginCmAllOrdersResRow
+
+type PortfolioMarginCmConditionalOpenOrderRes struct {
+	NewClientStrategyId string `json:"newClientStrategyId"` // 用户自定义的订单号
+	StrategyId          int    `json:"strategyId"`          // 策略ID
+	StrategyStatus      string `json:"strategyStatus"`      // 策略状态
+	StrategyType        string `json:"strategyType"`        // 条件单类型
+	OrigQty             string `json:"origQty"`             // 原始数量
+	Price               string `json:"price"`               // 价格
+	ReduceOnly          bool   `json:"reduceOnly"`          // true或false
+	Side                string `json:"side"`                // 方向
+	PositionSide        string `json:"positionSide"`        // 持仓方向
+	StopPrice           string `json:"stopPrice"`           // 触发价格
+	Symbol              string `json:"symbol"`              // 交易对
+	BookTime            int64  `json:"bookTime"`            // 条件单下单时间
+	UpdateTime          int64  `json:"updateTime"`          // 更新时间
+	TimeInForce         string `json:"timeInForce"`         // TIF
+	ActivatePrice       string `json:"activatePrice"`       // 触发价格
+	PriceRate           string `json:"priceRate"`           // 触发百分比
+}

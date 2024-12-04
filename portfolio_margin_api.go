@@ -45,6 +45,7 @@ const (
 	PortfolioMarginCmConditionalOrderPost           // CM条件下单
 	PortfolioMarginCmConditionalOrderDelete         // 取消CM条件订单
 	PortfolioMarginCmConditionalAllOpenOrdersDelete // 取消全部CM条件单
+	PortfolioMarginCmConditionalOpenOrder           // 查询CM当前条件挂单
 
 	PortfolioMarginMarginOrderPost    // 杠杆下单
 	PortfolioMarginMarginOrderOcoPost // 杠杆OCO下单
@@ -90,10 +91,11 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmOrderPut:                       "/papi/v1/cm/order",                     // CM修改订单
 	PortfolioMarginCmOrderGet:                       "/papi/v1/cm/order",                     // 查询CM订单
 	PortfolioMarginCmAllOrders:                      "/papi/v1/cm/allOrders",                 // 查询CM所有订单
-	PortfolioMarginCmOpenOrders:                     "/papi/v1/cm/openOrders",                // 查看当前全部CM挂单
+	PortfolioMarginCmOpenOrders:                     "/papi/v1/cm/openOrders",                // 查看当前全部CM挂单（带symbol或不带symbol)
 	PortfolioMarginCmConditionalOrderPost:           "/papi/v1/cm/conditional/order",         // CM条件下单
 	PortfolioMarginCmConditionalOrderDelete:         "/papi/v1/cm/conditional/order",         // 取消CM条件订单
 	PortfolioMarginCmConditionalAllOpenOrdersDelete: "/papi/v1/cm/conditional/allOpenOrders", // 取消全部CM条件单
+	PortfolioMarginCmConditionalOpenOrder:           "/papi/v1/cm/conditional/openOrder",     // 查询CM当前条件挂单
 
 	PortfolioMarginMarginOrderPost:    "/papi/v1/margin/order",     // 杠杆下单
 	PortfolioMarginMarginOrderOcoPost: "/papi/v1/margin/order/oco", // 杠杆OCO下单

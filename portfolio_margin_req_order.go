@@ -1418,3 +1418,46 @@ type PortfolioMarginCmAllOrdersApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginCmAllOrdersReq
 }
+
+type PortfolioMarginCmConditionalOpenOrderReq struct {
+	Symbol              *string `json:"symbol"`              // YES 交易对
+	StrategyId          *int64  `json:"strategyId"`          // YES 用户
+	NewClientStrategyId *string `json:"newClientStrategyId"` // NO 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+	RecvWindow          *int64  `json:"recvWindow"`          // NO
+	Timestamp           *int64  `json:"timestamp"`           // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginCmConditionalOpenOrderApi) Symbol(symbol string) *PortfolioMarginCmConditionalOpenOrderApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// YES 用户
+func (api *PortfolioMarginCmConditionalOpenOrderApi) StrategyId(strategyId int64) *PortfolioMarginCmConditionalOpenOrderApi {
+	api.req.StrategyId = GetPointer(strategyId)
+	return api
+}
+
+// NO 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+func (api *PortfolioMarginCmConditionalOpenOrderApi) NewClientStrategyId(newClientStrategyId string) *PortfolioMarginCmConditionalOpenOrderApi {
+	api.req.NewClientStrategyId = GetPointer(newClientStrategyId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmConditionalOpenOrderApi) RecvWindow(recvWindow int64) *PortfolioMarginCmConditionalOpenOrderApi {
+	api.req.RecvWindow = &recvWindow
+	return api
+}
+
+// YES
+func (api *PortfolioMarginCmConditionalOpenOrderApi) Timestamp(timestamp int64) *PortfolioMarginCmConditionalOpenOrderApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmConditionalOpenOrderApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmConditionalOpenOrderReq
+}

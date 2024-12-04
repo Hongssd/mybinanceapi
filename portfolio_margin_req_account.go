@@ -183,13 +183,13 @@ type PortfolioMarginSetCmLeverageApi struct {
 }
 
 type PortfolioMarginUmPositionSideDualPostReq struct {
-	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
-	RevcWindow       *int64 `json:"recvWindow,omitempty"`       // NO
-	Timestamp        *int64 `json:"timestamp,omitempty"`        // YES
+	DualSidePosition *string `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
+	RevcWindow       *int64  `json:"recvWindow,omitempty"`       // NO
+	Timestamp        *int64  `json:"timestamp,omitempty"`        // YES
 }
 
 // 双向持仓模式
-func (api *PortfolioMarginUmPositionSideDualPostApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginUmPositionSideDualPostApi {
+func (api *PortfolioMarginUmPositionSideDualPostApi) DualSidePosition(dualSidePosition string) *PortfolioMarginUmPositionSideDualPostApi {
 	api.req.DualSidePosition = GetPointer(dualSidePosition)
 	return api
 }
@@ -234,13 +234,13 @@ type PortfolioMarginUmPositionSideDualGetApi struct {
 }
 
 type PortfolioMarginCmPositionSideDualPostReq struct {
-	DualSidePosition *bool  `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
-	RevcWindow       *int64 `json:"recvWindow,omitempty"`       // NO
-	Timestamp        *int64 `json:"timestamp,omitempty"`        // YES
+	DualSidePosition *string `json:"dualSidePosition,omitempty"` // YES true: 双向持仓模式 false: 单向持仓模式
+	RevcWindow       *int64  `json:"recvWindow,omitempty"`       // NO
+	Timestamp        *int64  `json:"timestamp,omitempty"`        // YES
 }
 
 // 双向持仓模式
-func (api *PortfolioMarginCmPositionSideDualPostApi) DualSidePosition(dualSidePosition bool) *PortfolioMarginCmPositionSideDualPostApi {
+func (api *PortfolioMarginCmPositionSideDualPostApi) DualSidePosition(dualSidePosition string) *PortfolioMarginCmPositionSideDualPostApi {
 	api.req.DualSidePosition = GetPointer(dualSidePosition)
 	return api
 }
