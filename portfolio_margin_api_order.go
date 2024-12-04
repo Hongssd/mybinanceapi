@@ -309,3 +309,17 @@ func (api *PortfolioMarginCmAllOrdersApi) Do() (*PortfolioMarginCmAllOrdersRes, 
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmAllOrders], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginCmAllOrdersRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginCmConditionalOpenOrder rest 查询CM当前条件挂单（TRADE)
+func (client *PortfolioMarginRestClient) NewCmConditionalOpenOrder() *PortfolioMarginCmConditionalOpenOrderApi {
+	return &PortfolioMarginCmConditionalOpenOrderApi{
+		client: client,
+		req:    &PortfolioMarginCmConditionalOpenOrderReq{},
+	}
+}
+
+func (api *PortfolioMarginCmConditionalOpenOrderApi) Do() (*PortfolioMarginCmConditionalOpenOrderRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmConditionalOpenOrder], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginCmConditionalOpenOrderRes](api.client.c, url, GET)
+}
