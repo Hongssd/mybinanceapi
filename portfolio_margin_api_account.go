@@ -164,3 +164,31 @@ func (api *PortfolioMarginCmAccountApi) Do() (*PortfolioMarginCmAccountRes, erro
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmAccount], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginCmAccountRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginUmPositionRisk rest 查询UM持仓风险
+func (client *PortfolioMarginRestClient) NewUmPositionRisk() *PortfolioMarginUmPositionRiskApi {
+	return &PortfolioMarginUmPositionRiskApi{
+		client: client,
+		req:    &PortfolioMarginUmPositionRiskReq{},
+	}
+}
+
+func (api *PortfolioMarginUmPositionRiskApi) Do() (*PortfolioMarginUmPositionRiskRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmPositionRisk], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmPositionRiskRes](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginCmPositionRisk rest 查询CM持仓风险
+func (client *PortfolioMarginRestClient) NewCmPositionRisk() *PortfolioMarginCmPositionRiskApi {
+	return &PortfolioMarginCmPositionRiskApi{
+		client: client,
+		req:    &PortfolioMarginCmPositionRiskReq{},
+	}
+}
+
+func (api *PortfolioMarginCmPositionRiskApi) Do() (*PortfolioMarginCmPositionRiskRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmPositionRisk], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginCmPositionRiskRes](api.client.c, url, GET)
+}

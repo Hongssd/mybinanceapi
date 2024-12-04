@@ -327,3 +327,68 @@ type PortfolioMarginCmAccountApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginCmAccountReq
 }
+
+type PortfolioMarginUmPositionRiskReq struct {
+	Symbol     *string `json:"symbol,omitempty"`     // NO
+	RevcWindow *int64  `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64  `json:"timestamp,omitempty"`  // YES
+}
+
+// 交易对
+func (api *PortfolioMarginUmPositionRiskApi) Symbol(symbol string) *PortfolioMarginUmPositionRiskApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginUmPositionRiskApi) RevcWindow(recvWindow int64) *PortfolioMarginUmPositionRiskApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginUmPositionRiskApi) Timestamp(timestamp int64) *PortfolioMarginUmPositionRiskApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginUmPositionRiskApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginUmPositionRiskReq
+}
+
+type PortfolioMarginCmPositionRiskReq struct {
+	MarginAsset *string `json:"marginAsset,omitempty"` // NO
+	Pair        *string `json:"pair,omitempty"`        // NO
+	RevcWindow  *int64  `json:"recvWindow,omitempty"`  // NO
+	Timestamp   *int64  `json:"timestamp,omitempty"`   // YES
+}
+
+// MarginAsset NO 保证金资产 marginasset 和 pair 不要同时提供
+func (api *PortfolioMarginCmPositionRiskApi) MarginAsset(marginAsset string) *PortfolioMarginCmPositionRiskApi {
+	api.req.MarginAsset = GetPointer(marginAsset)
+	return api
+}
+
+// Pair NO 交易对 marginasset 和 pair 不要同时提供
+func (api *PortfolioMarginCmPositionRiskApi) Pair(pair string) *PortfolioMarginCmPositionRiskApi {
+	api.req.Pair = GetPointer(pair)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginCmPositionRiskApi) RevcWindow(recvWindow int64) *PortfolioMarginCmPositionRiskApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginCmPositionRiskApi) Timestamp(timestamp int64) *PortfolioMarginCmPositionRiskApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmPositionRiskApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmPositionRiskReq
+}
