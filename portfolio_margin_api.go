@@ -16,7 +16,8 @@ const (
 	PortfolioMarginUmPositionSideDualGet  // 查询UM持仓模式
 	PortfolioMarginCmPositionSideDualPost // 更改CM持仓模式
 	PortfolioMarginCmPositionSideDualGet  // 查询CM持仓模式
-	PortfolioMarginUmAccount              // 获取UM账户信息
+	PortfolioMarginUmAccountV1            // 获取UM账户信息
+	PortfolioMarginUmAccountV2            // 获取UM账户信息
 	PortfolioMarginCmAccount              // 获取CM账户信息
 	PortfolioMarginUmPositionRisk         // 查询UM持仓风险
 	PortfolioMarginCmPositionRisk         // 查询CM持仓风险
@@ -64,7 +65,8 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginUmPositionSideDualGet:  "/papi/v1/um/positionSide/dual", // 查询UM持仓模式
 	PortfolioMarginCmPositionSideDualPost: "/papi/v1/cm/positionSide/dual", // 更改CM持仓模式
 	PortfolioMarginCmPositionSideDualGet:  "/papi/v1/cm/positionSide/dual", // 查询CM持仓模式
-	PortfolioMarginUmAccount:              "/papi/v2/um/account",           // 获取UM账户信息
+	PortfolioMarginUmAccountV1:            "/papi/v1/um/account",           // 获取UM账户信息
+	PortfolioMarginUmAccountV2:            "/papi/v2/um/account",           // 获取UM账户信息
 	PortfolioMarginCmAccount:              "/papi/v1/cm/account",           // 获取CM账户信息
 	PortfolioMarginUmPositionRisk:         "/papi/v1/um/positionRisk",      // 查询UM持仓风险
 	PortfolioMarginCmPositionRisk:         "/papi/v1/cm/positionRisk",      // 查询CM持仓风险

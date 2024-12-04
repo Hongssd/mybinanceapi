@@ -137,18 +137,32 @@ func (api *PortfolioMarginCmPositionSideDualGetApi) Do() (*PortfolioMarginCmPosi
 	return binanceCallApiWithSecret[PortfolioMarginCmPositionSideDualGetRes](api.client.c, url, GET)
 }
 
-// binance PortfolioMarginUmAccount rest 获取UM账户信息
-func (client *PortfolioMarginRestClient) NewUmAccount() *PortfolioMarginUmAccountApi {
-	return &PortfolioMarginUmAccountApi{
+// binance PortfolioMarginUmAccountV1 rest 获取UM账户信息
+func (client *PortfolioMarginRestClient) NewUmAccountV1() *PortfolioMarginUmAccountV1Api {
+	return &PortfolioMarginUmAccountV1Api{
 		client: client,
-		req:    &PortfolioMarginUmAccountReq{},
+		req:    &PortfolioMarginUmAccountV1Req{},
 	}
 }
 
-func (api *PortfolioMarginUmAccountApi) Do() (*PortfolioMarginUmAccountRes, error) {
+func (api *PortfolioMarginUmAccountV1Api) Do() (*PortfolioMarginUmAccountV1Res, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
-	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmAccount], api.client.c.ApiSecret)
-	return binanceCallApiWithSecret[PortfolioMarginUmAccountRes](api.client.c, url, GET)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmAccountV1], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmAccountV1Res](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginUmAccountV2 rest 获取UM账户信息
+func (client *PortfolioMarginRestClient) NewUmAccountV2() *PortfolioMarginUmAccountV2Api {
+	return &PortfolioMarginUmAccountV2Api{
+		client: client,
+		req:    &PortfolioMarginUmAccountV2Req{},
+	}
+}
+
+func (api *PortfolioMarginUmAccountV2Api) Do() (*PortfolioMarginUmAccountV2Res, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmAccountV2], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmAccountV2Res](api.client.c, url, GET)
 }
 
 // binance PortfolioMarginCmAccount rest 获取CM账户信息

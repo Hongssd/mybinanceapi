@@ -63,7 +63,36 @@ type PortfolioMarginCmPositionSideDualGetRes struct {
 	DualSidePosition bool `json:"dualSidePosition"` // 是否开启双向持仓
 }
 
-type PortfolioMarginUmAccountRes struct {
+type PortfolioMarginUmAccountV1Res struct {
+	Assets []struct {
+		Asset                  string `json:"asset"`                  // 资产
+		CrossWalletBalance     string `json:"crossWalletBalance"`     // 全仓账户余额
+		CrossUnPnl             string `json:"crossUnPnl"`             // 全仓持仓未实现盈亏
+		MaintMargin            string `json:"maintMargin"`            // 维持保证金
+		InitialMargin          string `json:"initialMargin"`          // 当前所需起始保证金
+		PositionInitialMargin  string `json:"positionInitialMargin"`  // 持仓所需起始保证金(基于最新标记价格)
+		OpenOrderInitialMargin string `json:"openOrderInitialMargin"` // 当前挂单所需起始保证金(基于最新标记价格)
+		UpdateTime             int64  `json:"updateTime"`             // 更新时间
+	} `json:"assets"` // 资产
+	Positions []struct {
+		Symbol                 string `json:"symbol"`                 // 交易对
+		InitialMargin          string `json:"initialMargin"`          // 当前所需起始保证金(基于最新标记价格)
+		MaintMargin            string `json:"maintMargin"`            // 维持保证金
+		UnrealizedProfit       string `json:"unrealizedProfit"`       // 持仓未实现盈亏
+		PositionInitialMargin  string `json:"positionInitialMargin"`  // 持仓所需起始保证金(基于最新标记价格)
+		OpenOrderInitialMargin string `json:"openOrderInitialMargin"` // 当前挂单所需起始保证金(基于最新标记价格)
+		Leverage               string `json:"leverage"`               // 杠杆倍率
+		EntryPrice             string `json:"entryPrice"`             // 持仓成本价
+		MaxNotional            string `json:"maxNotional"`            // 当前杠杆下用户可用的最大名义价值
+		BidNotional            string `json:"bidNotional"`            // 买单净值
+		AskNotional            string `json:"askNotional"`            // 卖单净值
+		PositionSide           string `json:"positionSide"`           // 持仓方向
+		PositionAmt            string `json:"positionAmt"`            // 持仓数量
+		UpdateTime             int64  `json:"updateTime"`             // 更新时间
+	} `json:"positions"` // 头寸，将返回所有市场symbol。
+}
+
+type PortfolioMarginUmAccountV2Res struct {
 	Assets []struct {
 		Asset                  string `json:"asset"`                  // 资产
 		CrossWalletBalance     string `json:"crossWalletBalance"`     // 全仓账户余额
