@@ -21,6 +21,8 @@ const (
 	PortfolioMarginCmAccount              // 获取CM账户信息
 	PortfolioMarginUmPositionRisk         // 查询UM持仓风险
 	PortfolioMarginCmPositionRisk         // 查询CM持仓风险
+	PortfolioMarginUmCommissionRate       // 查询UM手续费率
+	PortfolioMarginCmCommissionRate       // 查询CM手续费率
 
 	// 交易接口
 	PortfolioMarginUmOrderPost               // UM下单
@@ -71,6 +73,8 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmAccount:              "/papi/v1/cm/account",           // 获取CM账户信息
 	PortfolioMarginUmPositionRisk:         "/papi/v1/um/positionRisk",      // 查询UM持仓风险
 	PortfolioMarginCmPositionRisk:         "/papi/v1/cm/positionRisk",      // 查询CM持仓风险
+	PortfolioMarginUmCommissionRate:       "/papi/v1/um/commissionRate",    // 查询UM手续费率
+	PortfolioMarginCmCommissionRate:       "/papi/v1/cm/commissionRate",    // 查询CM手续费率
 
 	//交易接口
 	PortfolioMarginUmOrderPost:               "/papi/v1/um/order",                    // UM下单

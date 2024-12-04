@@ -172,3 +172,15 @@ type PortfolioMarginCmPositionRiskResRow struct {
 	NotionalValue    string `json:"notionalValue"`    // 名义价值
 }
 type PortfolioMarginCmPositionRiskRes []PortfolioMarginCmPositionRiskResRow
+
+type PortfolioMarginUmCommissionRateRes struct {
+	Symbol              string `json:"symbol"`              // 交易对
+	MakerCommissionRate string `json:"makerCommissionRate"` // maker手续费率
+	TakerCommissionRate string `json:"takerCommissionRate"` // taker手续费率
+}
+
+type PortfolioMarginCmCommissionRateRes struct {
+	Symbol              string `json:"symbol"`              // 交易对
+	MakerCommissionRate string `json:"makerCommissionRate"` // maker手续费率
+	TakerCommissionRate string `json:"takerCommissionRate"` // taker手续费率
+}
