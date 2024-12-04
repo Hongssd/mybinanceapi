@@ -48,9 +48,21 @@ const (
 	PortfolioMarginCmConditionalOrderDelete         // 取消CM条件订单
 	PortfolioMarginCmConditionalAllOpenOrdersDelete // 取消全部CM条件单
 	PortfolioMarginCmConditionalOpenOrder           // 查询CM当前条件挂单
+	PortfolioMarginCmConditionalAllOrders           // 查询CM所有条件订单
+	PortfolioMarginCmConditionalOrderHistory        // 查询CM条件单历史
 
-	PortfolioMarginMarginOrderPost    // 杠杆下单
-	PortfolioMarginMarginOrderOcoPost // 杠杆OCO下单
+	PortfolioMarginMarginOrderPost           // 杠杆下单
+	PortfolioMarginMarginOrderDelete         // 杠杆账户撤销订单(TRADE)
+	PortfolioMarginMarginAllOpenOrdersDelete // 杠杆账户撤销单一交易对的所有挂单(TRADE)
+	PortfolioMarginMarginOrder               // 查询杠杆账户订单
+	PortfolioMarginMarginOpenOrders          // 查询杠杆账户当前全部挂单
+	PortfolioMarginMarginAllOrders           // 查询杠杆账户所有订单
+
+	PortfolioMarginMarginOrderOcoPost          // 杠杆OCO下单
+	PortfolioMarginMarginOrderOcoDelete        // 取消杠杆账户OCO订单(TRADE)
+	PortfolioMarginMarginOrderOcoGet           // 查询杠杆账户OCO订单
+	PortfolioMarginMarginOrderOcoOpenOrderList // 查询杠杆账户 OCO 挂单 (USER_DATA)
+	PortfolioMarginMarginOcoAllOrderList       // 查询杠杆账户 OCO 全部挂单 (USER_DATA)
 )
 
 var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
@@ -100,7 +112,19 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmConditionalOrderDelete:         "/papi/v1/cm/conditional/order",         // 取消CM条件订单
 	PortfolioMarginCmConditionalAllOpenOrdersDelete: "/papi/v1/cm/conditional/allOpenOrders", // 取消全部CM条件单
 	PortfolioMarginCmConditionalOpenOrder:           "/papi/v1/cm/conditional/openOrder",     // 查询CM当前条件挂单
+	PortfolioMarginCmConditionalAllOrders:           "/papi/v1/cm/conditional/allOrders",     // 查询CM所有条件订单
+	PortfolioMarginCmConditionalOrderHistory:        "/papi/v1/cm/conditional/orderHistory",  // 查询CM条件单历史
 
-	PortfolioMarginMarginOrderPost:    "/papi/v1/margin/order",     // 杠杆下单
-	PortfolioMarginMarginOrderOcoPost: "/papi/v1/margin/order/oco", // 杠杆OCO下单
+	PortfolioMarginMarginOrderPost:           "/papi/v1/margin/order",         // 杠杆下单
+	PortfolioMarginMarginOrderDelete:         "/papi/v1/margin/order",         // 杠杆账户撤销订单(TRADE)
+	PortfolioMarginMarginAllOpenOrdersDelete: "/papi/v1/margin/allOpenOrders", // 杠杆账户撤销单一交易对的所有挂单(TRADE)
+	PortfolioMarginMarginOrder:               "/papi/v1/margin/order",         // 查询杠杆账户订单
+	PortfolioMarginMarginOpenOrders:          "/papi/v1/margin/openOrders",    // 查询杠杆账户当前全部挂单
+	PortfolioMarginMarginAllOrders:           "/papi/v1/margin/allOrders",     // 查询杠杆账户所有订单
+
+	PortfolioMarginMarginOrderOcoPost:          "/papi/v1/margin/order/oco",     // 杠杆OCO下单
+	PortfolioMarginMarginOrderOcoDelete:        "/papi/v1/margin/orderList",     // 取消杠杆账户OCO订单(TRADE)
+	PortfolioMarginMarginOrderOcoGet:           "/papi/v1/margin/orderList",     // 查询杠杆账户OCO订单
+	PortfolioMarginMarginOrderOcoOpenOrderList: "/papi/v1/margin/openOrderList", // 查询杠杆账户 OCO 挂单 (USER_DATA)
+	PortfolioMarginMarginOcoAllOrderList:       "/papi/v1/margin/allOrderList",  // 查询杠杆账户 OCO 全部挂单 (USER_DATA)
 }

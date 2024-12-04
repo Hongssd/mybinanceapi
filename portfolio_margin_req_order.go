@@ -1361,7 +1361,7 @@ type PortfolioMarginCmAllOrdersReq struct {
 	OrderId    *int64  `json:"orderId"`    // NO
 	StartTime  *int64  `json:"startTime"`  // NO
 	EndTime    *int64  `json:"endTime"`    // NO
-	Limit      *int64  `json:"limit"`      // NO 默认值: 50; 最大值: 100
+	Limit      *int32  `json:"limit"`      // NO 默认值: 50; 最大值: 100
 	RecvWindow *int64  `json:"recvWindow"` // NO
 	Timestamp  *int64  `json:"timestamp"`  // YES
 }
@@ -1397,7 +1397,7 @@ func (api *PortfolioMarginCmAllOrdersApi) EndTime(endTime int64) *PortfolioMargi
 }
 
 // NO 默认值: 50; 最大值: 100
-func (api *PortfolioMarginCmAllOrdersApi) Limit(limit int64) *PortfolioMarginCmAllOrdersApi {
+func (api *PortfolioMarginCmAllOrdersApi) Limit(limit int32) *PortfolioMarginCmAllOrdersApi {
 	api.req.Limit = GetPointer(limit)
 	return api
 }
@@ -1460,4 +1460,477 @@ func (api *PortfolioMarginCmConditionalOpenOrderApi) Timestamp(timestamp int64) 
 type PortfolioMarginCmConditionalOpenOrderApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginCmConditionalOpenOrderReq
+}
+
+type PortfolioMarginCmConditionalAllOrdersReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	StrategyId *int64  `json:"strategyId"` // YES 策略ID
+	StartTime  *int64  `json:"startTime"`  // NO
+	EndTime    *int64  `json:"endTime"`    // NO
+	Limit      *int32  `json:"limit"`      // NO 默认值: 50; 最大值: 100
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginCmConditionalAllOrdersApi) Symbol(symbol string) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// YES 策略ID
+func (api *PortfolioMarginCmConditionalAllOrdersApi) StrategyId(strategyId int64) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.StrategyId = GetPointer(strategyId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmConditionalAllOrdersApi) StartTime(startTime int64) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.StartTime = GetPointer(startTime)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmConditionalAllOrdersApi) EndTime(endTime int64) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.EndTime = GetPointer(endTime)
+	return api
+}
+
+// NO 默认值: 50; 最大值: 100
+func (api *PortfolioMarginCmConditionalAllOrdersApi) Limit(limit int32) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.Limit = GetPointer(limit)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmConditionalAllOrdersApi) RecvWindow(recvWindow int64) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginCmConditionalAllOrdersApi) Timestamp(timestamp int64) *PortfolioMarginCmConditionalAllOrdersApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmConditionalAllOrdersApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmConditionalAllOrdersReq
+}
+
+type PortfolioMarginCmConditionalOrderHistoryReq struct {
+	Symbol              *string `json:"symbol"`              // YES 交易对
+	StrategyId          *int64  `json:"strategyId"`          // NO
+	NewClientStrategyId *string `json:"newClientStrategyId"` // NO
+	RecvWindow          *int64  `json:"recvWindow"`          // NO
+	Timestamp           *int64  `json:"timestamp"`           // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginCmConditionalOrderHistoryApi) Symbol(symbol string) *PortfolioMarginCmConditionalOrderHistoryApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmConditionalOrderHistoryApi) StrategyId(strategyId int64) *PortfolioMarginCmConditionalOrderHistoryApi {
+	api.req.StrategyId = GetPointer(strategyId)
+	return api
+}
+
+// NO 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+func (api *PortfolioMarginCmConditionalOrderHistoryApi) NewClientStrategyId(newClientStrategyId string) *PortfolioMarginCmConditionalOrderHistoryApi {
+	api.req.NewClientStrategyId = GetPointer(newClientStrategyId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmConditionalOrderHistoryApi) RecvWindow(recvWindow int64) *PortfolioMarginCmConditionalOrderHistoryApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginCmConditionalOrderHistoryApi) Timestamp(timestamp int64) *PortfolioMarginCmConditionalOrderHistoryApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmConditionalOrderHistoryApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmConditionalOrderHistoryReq
+}
+
+type PortfolioMarginCmOpenOrdersReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	Pair       *string `json:"pair"`       // NO
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginCmOpenOrdersApi) Symbol(symbol string) *PortfolioMarginCmOpenOrdersApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmOpenOrdersApi) Pair(pair string) *PortfolioMarginCmOpenOrdersApi {
+	api.req.Pair = GetPointer(pair)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginCmOpenOrdersApi) RecvWindow(recvWindow int64) *PortfolioMarginCmOpenOrdersApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginCmOpenOrdersApi) Timestamp(timestamp int64) *PortfolioMarginCmOpenOrdersApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginCmOpenOrdersApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginCmOpenOrdersReq
+}
+
+type PortfolioMarginMarginOrderDeleteReq struct {
+	Symbol            *string `json:"symbol"`            // YES 交易对
+	OrderId           *int64  `json:"orderId"`           // NO
+	OrigClientOrderId *string `json:"origClientOrderId"` // NO
+	NewClientOrderId  *string `json:"newClientOrderId"`  // NO
+	RecvWindow        *int64  `json:"recvWindow"`        // NO
+	Timestamp         *int64  `json:"timestamp"`         // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginMarginOrderDeleteApi) Symbol(symbol string) *PortfolioMarginMarginOrderDeleteApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderDeleteApi) OrderId(orderId int64) *PortfolioMarginMarginOrderDeleteApi {
+	api.req.OrderId = GetPointer(orderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderDeleteApi) OrigClientOrderId(origClientOrderId string) *PortfolioMarginMarginOrderDeleteApi {
+	api.req.OrigClientOrderId = GetPointer(origClientOrderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderDeleteApi) NewClientOrderId(newClientOrderId string) *PortfolioMarginMarginOrderDeleteApi {
+	api.req.NewClientOrderId = GetPointer(newClientOrderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderDeleteApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginOrderDeleteApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginOrderDeleteApi) Timestamp(timestamp int64) *PortfolioMarginMarginOrderDeleteApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginOrderDeleteApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOrderDeleteReq
+}
+
+type PortfolioMarginMarginOrderOcoDeleteReq struct {
+	Symbol            *string `json:"symbol"`            // YES 交易对
+	OrderListId       *int64  `json:"orderListId"`       // NO orderListId 或 listClientOrderId 必须被提供
+	ListClientOrderId *string `json:"listClientOrderId"` // NO orderListId 或 listClientOrderId 必须被提供
+	NewClientOrderId  *string `json:"newClientOrderId"`  // NO 用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值
+	RecvWindow        *int64  `json:"recvWindow"`        // NO 赋值不能超过 60000
+	Timestamp         *int64  `json:"timestamp"`         // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginMarginOrderOcoDeleteApi) Symbol(symbol string) *PortfolioMarginMarginOrderOcoDeleteApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO orderListId 或 listClientOrderId 必须被提供
+func (api *PortfolioMarginMarginOrderOcoDeleteApi) OrderListId(orderListId int64) *PortfolioMarginMarginOrderOcoDeleteApi {
+	api.req.OrderListId = GetPointer(orderListId)
+	return api
+}
+
+// NO orderListId 或 listClientOrderId 必须被提供
+func (api *PortfolioMarginMarginOrderOcoDeleteApi) ListClientOrderId(listClientOrderId string) *PortfolioMarginMarginOrderOcoDeleteApi {
+	api.req.ListClientOrderId = GetPointer(listClientOrderId)
+	return api
+}
+
+// NO 用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值
+func (api *PortfolioMarginMarginOrderOcoDeleteApi) NewClientOrderId(newClientOrderId string) *PortfolioMarginMarginOrderOcoDeleteApi {
+	api.req.NewClientOrderId = GetPointer(newClientOrderId)
+	return api
+}
+
+// NO 赋值不能超过 60000
+func (api *PortfolioMarginMarginOrderOcoDeleteApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginOrderOcoDeleteApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginOrderOcoDeleteApi) Timestamp(timestamp int64) *PortfolioMarginMarginOrderOcoDeleteApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginOrderOcoDeleteApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOrderOcoDeleteReq
+}
+
+type PortfolioMarginMarginOrderReq struct {
+	Symbol            *string `json:"symbol"`            // YES 交易对
+	OrderId           *int64  `json:"orderId"`           // NO
+	OrigClientOrderId *string `json:"origClientOrderId"` // NO
+	NewClientOrderId  *string `json:"newClientOrderId"`  // NO 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+	RecvWindow        *int64  `json:"recvWindow"`        // NO
+	Timestamp         *int64  `json:"timestamp"`         // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginMarginOrderApi) Symbol(symbol string) *PortfolioMarginMarginOrderApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderApi) OrderId(orderId int64) *PortfolioMarginMarginOrderApi {
+	api.req.OrderId = GetPointer(orderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderApi) OrigClientOrderId(origClientOrderId string) *PortfolioMarginMarginOrderApi {
+	api.req.OrigClientOrderId = GetPointer(origClientOrderId)
+	return api
+}
+
+// NO 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+func (api *PortfolioMarginMarginOrderApi) NewClientOrderId(newClientOrderId string) *PortfolioMarginMarginOrderApi {
+	api.req.NewClientOrderId = GetPointer(newClientOrderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginOrderApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginOrderApi) Timestamp(timestamp int64) *PortfolioMarginMarginOrderApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginOrderApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOrderReq
+}
+
+type PortfolioMarginMarginOpenOrdersReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginMarginOpenOrdersApi) Symbol(symbol string) *PortfolioMarginMarginOpenOrdersApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOpenOrdersApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginOpenOrdersApi {
+	api.req.RecvWindow = &recvWindow
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginOpenOrdersApi) Timestamp(timestamp int64) *PortfolioMarginMarginOpenOrdersApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginOpenOrdersApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOpenOrdersReq
+}
+
+type PortfolioMarginMarginAllOrdersReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	OrderId    *int64  `json:"orderId"`    // NO
+	StartTime  *int64  `json:"startTime"`  // NO
+	EndTime    *int64  `json:"endTime"`    // NO
+	Limit      *int32  `json:"limit"`      // NO 默认值: 50; 最大值: 100
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginMarginAllOrdersApi) Symbol(symbol string) *PortfolioMarginMarginAllOrdersApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginAllOrdersApi) OrderId(orderId int64) *PortfolioMarginMarginAllOrdersApi {
+	api.req.OrderId = GetPointer(orderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginAllOrdersApi) StartTime(startTime int64) *PortfolioMarginMarginAllOrdersApi {
+	api.req.StartTime = GetPointer(startTime)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginAllOrdersApi) EndTime(endTime int64) *PortfolioMarginMarginAllOrdersApi {
+	api.req.EndTime = GetPointer(endTime)
+	return api
+}
+
+// NO 默认值: 50; 最大值: 100
+func (api *PortfolioMarginMarginAllOrdersApi) Limit(limit int32) *PortfolioMarginMarginAllOrdersApi {
+	api.req.Limit = GetPointer(limit)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginAllOrdersApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginAllOrdersApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginAllOrdersApi) Timestamp(timestamp int64) *PortfolioMarginMarginAllOrdersApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginAllOrdersApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginAllOrdersReq
+}
+
+type PortfolioMarginMarginOrderOcoGetReq struct {
+	OrderListId       *int64  `json:"orderListId"`       // NO
+	OrigClientOrderId *string `json:"origClientOrderId"` // NO
+	RecvWindow        *int64  `json:"recvWindow"`        // NO
+	Timestamp         *int64  `json:"timestamp"`         // YES
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderOcoGetApi) OrderListId(orderListId int64) *PortfolioMarginMarginOrderOcoGetApi {
+	api.req.OrderListId = GetPointer(orderListId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderOcoGetApi) OrigClientOrderId(origClientOrderId string) *PortfolioMarginMarginOrderOcoGetApi {
+	api.req.OrigClientOrderId = GetPointer(origClientOrderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderOcoGetApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginOrderOcoGetApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginOrderOcoGetApi) Timestamp(timestamp int64) *PortfolioMarginMarginOrderOcoGetApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginOrderOcoGetApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOrderOcoGetReq
+}
+
+type PortfolioMarginMarginAllOpenOrdersDeleteReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginMarginAllOpenOrdersDeleteApi) Symbol(symbol string) *PortfolioMarginMarginAllOpenOrdersDeleteApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginMarginAllOpenOrdersDeleteApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginAllOpenOrdersDeleteApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginAllOpenOrdersDeleteApi) Timestamp(timestamp int64) *PortfolioMarginMarginAllOpenOrdersDeleteApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginAllOpenOrdersDeleteApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginAllOpenOrdersDeleteReq
+}
+
+type PortfolioMarginMarginOrderOcoOpenOrderListReq struct {
+	RecvWindow *int64 `json:"recvWindow"` // NO
+	Timestamp  *int64 `json:"timestamp"`  // YES
+}
+
+// NO
+func (api *PortfolioMarginMarginOrderOcoOpenOrderListApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginOrderOcoOpenOrderListApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginMarginOrderOcoOpenOrderListApi) Timestamp(timestamp int64) *PortfolioMarginMarginOrderOcoOpenOrderListApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginMarginOrderOcoOpenOrderListApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOrderOcoOpenOrderListReq
+}
+
+type PortfolioMarginMarginOcoAllOrderListReq struct {
+	FromId     *int64 `json:"fromId"`     // NO 提供该项后, startTime 和 endTime 都不可提供
+	StartTime  *int64 `json:"startTime"`  // NO
+	EndTime    *int64 `json:"endTime"`    // NO
+	Limit      *int32 `json:"limit"`      // NO 默认 500;最大500.
+	RecvWindow *int64 `json:"recvWindow"` // NO 赋值不能大于 60000
+	Timestamp  *int64 `json:"timestamp"`  // YES
+}
+
+type PortfolioMarginMarginOcoAllOrderListApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginOcoAllOrderListReq
 }
