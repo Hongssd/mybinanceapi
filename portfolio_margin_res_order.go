@@ -94,7 +94,31 @@ type PortfolioMarginUmOrderGetRes struct {
 
 type PortfolioMarginUmConditionalOrderPostRes struct {
 	NewClientStrategyId     string `json:"newClientStrategyId"`     // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
-	StrategyId              int    `json:"strategyId"`              // 策略ID
+	StrategyId              int64  `json:"strategyId"`              // 策略ID
+	StrategyStatus          string `json:"strategyStatus"`          // 策略状态
+	StrategyType            string `json:"strategyType"`            // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
+	OrigQty                 string `json:"origQty"`                 // 原始数量
+	Price                   string `json:"price"`                   // 价格
+	ReduceOnly              bool   `json:"reduceOnly"`              // true或false; 非双开模式下默认false；双开模式下不接受此参数
+	Side                    string `json:"side"`                    // 方向
+	PositionSide            string `json:"positionSide"`            // 持仓方向
+	StopPrice               string `json:"stopPrice"`               // 触发价格
+	Symbol                  string `json:"symbol"`                  // 交易对
+	TimeInForce             string `json:"timeInForce"`             // TIF
+	ActivatePrice           string `json:"activatePrice"`           // 触发价格
+	PriceRate               string `json:"priceRate"`               // 触发百分比
+	BookTime                int64  `json:"bookTime"`                // 条件单下单时间
+	UpdateTime              int64  `json:"updateTime"`              // 更新时间
+	WorkingType             string `json:"workingType"`             // 触发类型
+	PriceProtect            bool   `json:"priceProtect"`            // 条件单触发保护
+	SelfTradePreventionMode string `json:"selfTradePreventionMode"` // 订单自成交保护模式
+	GoodTillDate            int64  `json:"goodTillDate"`            // TIF为GTD时的自动取消时间
+	PriceMatch              string `json:"priceMatch"`              // OPPONENT/ OPPONENT_5/ OPPONENT_10/ OPPONENT_20/QUEUE/ QUEUE_5/ QUEUE_10/ QUEUE_20；不能与price同时传
+}
+
+type PortfolioMarginUmConditionalOrderDeleteRes struct {
+	NewClientStrategyId     string `json:"newClientStrategyId"`     // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+	StrategyId              int64  `json:"strategyId"`              // 策略ID
 	StrategyStatus          string `json:"strategyStatus"`          // 策略状态
 	StrategyType            string `json:"strategyType"`            // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
 	OrigQty                 string `json:"origQty"`                 // 原始数量
@@ -185,7 +209,7 @@ type PortfolioMarginCmOrderPostRes struct {
 
 type PortfolioMarginCmConditionalOrderPostRes struct {
 	NewClientStrategyId string `json:"newClientStrategyId"` // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
-	StrategyId          int    `json:"strategyId"`          // 策略ID
+	StrategyId          int64  `json:"strategyId"`          // 策略ID
 	StrategyStatus      string `json:"strategyStatus"`      // 策略状态
 	StrategyType        string `json:"strategyType"`        // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
 	OrigQty             string `json:"origQty"`             // 原始数量
@@ -263,7 +287,7 @@ type PortfolioMarginMarginOrderOcoPostRes struct {
 
 type PortfolioMarginUmConditionalOpenOrderRes struct {
 	NewClientStrategyId     string `json:"newClientStrategyId"`     // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
-	StrategyId              int    `json:"strategyId"`              // 策略ID
+	StrategyId              int64  `json:"strategyId"`              // 策略ID
 	StrategyStatus          string `json:"strategyStatus"`          // 策略状态
 	StrategyType            string `json:"strategyType"`            // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
 	OrigQty                 string `json:"origQty"`                 // 原始数量
@@ -285,7 +309,7 @@ type PortfolioMarginUmConditionalOpenOrderRes struct {
 
 type PortfolioMarginUmConditionalOpenOrdersResRow struct {
 	NewClientStrategyId     string `json:"newClientStrategyId"`     // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
-	StrategyId              int    `json:"strategyId"`              // 策略ID
+	StrategyId              int64  `json:"strategyId"`              // 策略ID
 	StrategyStatus          string `json:"strategyStatus"`          // 策略状态
 	StrategyType            string `json:"strategyType"`            // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
 	OrigQty                 string `json:"origQty"`                 // 原始数量
@@ -309,7 +333,7 @@ type PortfolioMarginUmConditionalOpenOrdersRes []PortfolioMarginUmConditionalOpe
 
 type PortfolioMarginUmConditionalOrderHistoryRes struct {
 	NewClientStrategyId     string `json:"newClientStrategyId"`     // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
-	StrategyId              int    `json:"strategyId"`              // 策略ID
+	StrategyId              int64  `json:"strategyId"`              // 策略ID
 	StrategyStatus          string `json:"strategyStatus"`          // 策略状态
 	StrategyType            string `json:"strategyType"`            // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
 	OrigQty                 string `json:"origQty"`                 // 原始数量
@@ -379,7 +403,7 @@ type PortfolioMarginCmOrderPutRes struct {
 
 type PortfolioMarginCmConditionalOrderDeleteRes struct {
 	NewClientStrategyId string `json:"newClientStrategyId"` // 用户自定义的订单号，不可以重复出现在挂单中。如空缺系统会自动赋值。必须满足正则规则: ^[\.A-Z\:/a-z0-9_-]{1,32}$
-	StrategyId          int    `json:"strategyId"`          // 策略ID
+	StrategyId          int64  `json:"strategyId"`          // 策略ID
 	StrategyStatus      string `json:"strategyStatus"`      // 策略状态
 	StrategyType        string `json:"strategyType"`        // 条件单类型"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET"或"TRAILING_STOP_MARKET"
 	OrigQty             string `json:"origQty"`             // 原始数量
@@ -445,7 +469,7 @@ type PortfolioMarginCmAllOrdersRes []PortfolioMarginCmAllOrdersResRow
 
 type PortfolioMarginCmConditionalOpenOrderRes struct {
 	NewClientStrategyId string `json:"newClientStrategyId"` // 用户自定义的订单号
-	StrategyId          int    `json:"strategyId"`          // 策略ID
+	StrategyId          int64  `json:"strategyId"`          // 策略ID
 	StrategyStatus      string `json:"strategyStatus"`      // 策略状态
 	StrategyType        string `json:"strategyType"`        // 条件单类型
 	OrigQty             string `json:"origQty"`             // 原始数量
@@ -489,7 +513,7 @@ type PortfolioMarginCmConditionalAllOrdersRes []PortfolioMarginCmConditionalAllO
 
 type PortfolioMarginCmConditionalOrderHistoryRes struct {
 	NewClientStrategyId string `json:"newClientStrategyId"` // 用户自定义的订单号
-	StrategyId          int    `json:"strategyId"`          // 策略ID
+	StrategyId          int64  `json:"strategyId"`          // 策略ID
 	StrategyStatus      string `json:"strategyStatus"`      // 策略状态
 	StrategyType        string `json:"strategyType"`        // 条件单类型
 	OrigQty             string `json:"origQty"`             // 原始数量
@@ -581,7 +605,7 @@ type PortfolioMarginMarginOrderOcoDeleteRes struct {
 	} `json:"orderReports"` // 订单列表
 }
 
-type PortfolioMarginMarginOrderRes struct {
+type PortfolioMarginMarginOrderGetRes struct {
 	ClientOrderId           string `json:"clientOrderId"`           // 用户自定义的订单号
 	CummulativeQuoteQty     string `json:"cummulativeQuoteQty"`     // 成交金额
 	ExecutedQty             string `json:"executedQty"`             // 成交数量
@@ -674,30 +698,6 @@ type PortfolioMarginMarginAllOpenOrdersDeleteResRow struct {
 }
 
 type PortfolioMarginMarginAllOpenOrdersDeleteRes []PortfolioMarginMarginAllOpenOrdersDeleteResRow
-
-// [
-//  {
-//    "orderListId": 31,
-//    "contingencyType": "OCO",
-//    "listStatusType": "EXEC_STARTED",
-//    "listOrderStatus": "EXECUTING",
-//    "listClientOrderId": "wuB13fmulKj3YjdqWEcsnp",
-//    "transactionTime": 1565246080644,
-//    "symbol": "LTCBTC",
-//    "orders": [
-//      {
-//        "symbol": "LTCBTC",
-//        "orderId": 4,
-//        "clientOrderId": "r3EH2N76dHfLoSZWIUw1bT"
-//      },
-//      {
-//        "symbol": "LTCBTC",
-//        "orderId": 5,
-//        "clientOrderId": "Cv1SnyPD3qhqpbjpYEHbd2"
-//      }
-//    ]
-//  }
-//]
 
 type PortfolioMarginMarginOrderOcoOpenOrderListResRow struct {
 	OrderListId       int    `json:"orderListId"`       // 订单列表ID

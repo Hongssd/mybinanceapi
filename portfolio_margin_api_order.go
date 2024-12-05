@@ -72,6 +72,20 @@ func (api *PortfolioMarginUmConditionalOrderPostApi) Do() (*PortfolioMarginUmCon
 	return binanceCallApiWithSecret[PortfolioMarginUmConditionalOrderPostRes](api.client.c, url, POST)
 }
 
+// binance PortfolioMarginUmConditionalOrderDelete rest 取消UM条件订单（TRADE)
+func (client *PortfolioMarginRestClient) NewUmConditionalOrderDelete() *PortfolioMarginUmConditionalOrderDeleteApi {
+	return &PortfolioMarginUmConditionalOrderDeleteApi{
+		client: client,
+		req:    &PortfolioMarginUmConditionalOrderDeleteReq{},
+	}
+}
+
+func (api *PortfolioMarginUmConditionalOrderDeleteApi) Do() (*PortfolioMarginUmConditionalOrderDeleteRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmConditionalOrderDelete], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmConditionalOrderDeleteRes](api.client.c, url, DELETE)
+}
+
 // binance PortfolioMarginUmConditionalOpenOrder rest 查询UM当前条件挂单（TRADE)
 func (client *PortfolioMarginRestClient) NewUmConditionalOpenOrder() *PortfolioMarginUmConditionalOpenOrderApi {
 	return &PortfolioMarginUmConditionalOpenOrderApi{
@@ -394,18 +408,18 @@ func (api *PortfolioMarginMarginOrderOcoDeleteApi) Do() (*PortfolioMarginMarginO
 	return binanceCallApiWithSecret[PortfolioMarginMarginOrderOcoDeleteRes](api.client.c, url, DELETE)
 }
 
-// binanace PortfolioMarginMarginOrder rest 查询杠杆账户订单（TRADE)
-func (client *PortfolioMarginRestClient) NewMarginOrder() *PortfolioMarginMarginOrderApi {
-	return &PortfolioMarginMarginOrderApi{
+// binanace PortfolioMarginMarginOrderGet rest 查询杠杆账户订单（TRADE)
+func (client *PortfolioMarginRestClient) NewMarginOrderGet() *PortfolioMarginMarginOrderGetApi {
+	return &PortfolioMarginMarginOrderGetApi{
 		client: client,
-		req:    &PortfolioMarginMarginOrderReq{},
+		req:    &PortfolioMarginMarginOrderGetReq{},
 	}
 }
 
-func (api *PortfolioMarginMarginOrderApi) Do() (*PortfolioMarginMarginOrderRes, error) {
+func (api *PortfolioMarginMarginOrderGetApi) Do() (*PortfolioMarginMarginOrderGetRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
-	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginOrder], api.client.c.ApiSecret)
-	return binanceCallApiWithSecret[PortfolioMarginMarginOrderRes](api.client.c, url, GET)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginOrderGet], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginMarginOrderGetRes](api.client.c, url, GET)
 }
 
 // binance PortfolioMarginMarginOpenOrders rest 查询杠杆账户当前全部挂单（TRADE)

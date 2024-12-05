@@ -33,6 +33,7 @@ const (
 	PortfolioMarginUmOpenOrderGet            // 查询UM当前挂单
 	PortfolioMarginUmOpenOrdersGet           // 查询UM当前全部挂单
 	PortfolioMarginUmConditionalOrderPost    // UM条件下单
+	PortfolioMarginUmConditionalOrderDelete  // 取消UM条件订单
 	PortfolioMarginUmConditionalOpenOrder    // 查询UM当前条件挂单
 	PortfolioMarginUmConditionalOpenOrders   // 查询UM当前条件全部挂单
 	PortfolioMarginUmConditionalOrderHistory // 查询UM条件订单历史
@@ -54,7 +55,7 @@ const (
 	PortfolioMarginMarginOrderPost           // 杠杆下单
 	PortfolioMarginMarginOrderDelete         // 杠杆账户撤销订单(TRADE)
 	PortfolioMarginMarginAllOpenOrdersDelete // 杠杆账户撤销单一交易对的所有挂单(TRADE)
-	PortfolioMarginMarginOrder               // 查询杠杆账户订单
+	PortfolioMarginMarginOrderGet            // 查询杠杆账户订单
 	PortfolioMarginMarginOpenOrders          // 查询杠杆账户当前全部挂单
 	PortfolioMarginMarginAllOrders           // 查询杠杆账户所有订单
 
@@ -97,6 +98,7 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginUmOpenOrderGet:            "/papi/v1/um/openOrder",                // 查询UM当前挂单
 	PortfolioMarginUmOpenOrdersGet:           "/papi/v1/um/openOrders",               // 查询UM当前全部挂单
 	PortfolioMarginUmConditionalOrderPost:    "/papi/v1/um/conditional/order",        // UM条件下单
+	PortfolioMarginUmConditionalOrderDelete:  "/papi/v1/um/conditional/order",        // 取消UM条件订单
 	PortfolioMarginUmConditionalOpenOrder:    "/papi/v1/um/conditional/openOrder",    // 查询UM当前条件挂单
 	PortfolioMarginUmConditionalOpenOrders:   "/papi/v1/um/conditional/openOrders",   // 查询UM当前条件全部挂单
 	PortfolioMarginUmConditionalOrderHistory: "/papi/v1/um/conditional/orderHistory", // 查询UM条件订单历史
@@ -118,7 +120,7 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginMarginOrderPost:           "/papi/v1/margin/order",         // 杠杆下单
 	PortfolioMarginMarginOrderDelete:         "/papi/v1/margin/order",         // 杠杆账户撤销订单(TRADE)
 	PortfolioMarginMarginAllOpenOrdersDelete: "/papi/v1/margin/allOpenOrders", // 杠杆账户撤销单一交易对的所有挂单(TRADE)
-	PortfolioMarginMarginOrder:               "/papi/v1/margin/order",         // 查询杠杆账户订单
+	PortfolioMarginMarginOrderGet:            "/papi/v1/margin/order",         // 查询杠杆账户订单
 	PortfolioMarginMarginOpenOrders:          "/papi/v1/margin/openOrders",    // 查询杠杆账户当前全部挂单
 	PortfolioMarginMarginAllOrders:           "/papi/v1/margin/allOrders",     // 查询杠杆账户所有订单
 
