@@ -505,3 +505,59 @@ func (api *PortfolioMarginMarginOcoAllOrderListApi) Do() (*PortfolioMarginMargin
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginOcoAllOrderList], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginMarginOcoAllOrderListRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginUmAllOrdersGet rest 查询所有UM订单（包括历史订单)(USER_DATA)
+func (client *PortfolioMarginRestClient) NewUmAllOrdersGet() *PortfolioMarginUmAllOrdersGetApi {
+	return &PortfolioMarginUmAllOrdersGetApi{
+		client: client,
+		req:    &PortfolioMarginUmAllOrdersGetReq{},
+	}
+}
+
+func (api *PortfolioMarginUmAllOrdersGetApi) Do() (*PortfolioMarginUmAllOrdersGetRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmAllOrdersGet], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmAllOrdersGetRes](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginUmUserTrades rest CM账户成交历史(USER_DATA)
+func (client *PortfolioMarginRestClient) NewUmUserTrades() *PortfolioMarginUmUserTradesApi {
+	return &PortfolioMarginUmUserTradesApi{
+		client: client,
+		req:    &PortfolioMarginUmUserTradesReq{},
+	}
+}
+
+func (api *PortfolioMarginUmUserTradesApi) Do() (*PortfolioMarginUmUserTradesRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmUserTrades], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmUserTradesRes](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginCmUserTrades rest CM账户成交历史(USER_DATA)
+func (client *PortfolioMarginRestClient) NewCmUserTrades() *PortfolioMarginCmUserTradesApi {
+	return &PortfolioMarginCmUserTradesApi{
+		client: client,
+		req:    &PortfolioMarginCmUserTradesReq{},
+	}
+}
+
+func (api *PortfolioMarginCmUserTradesApi) Do() (*PortfolioMarginCmUserTradesRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmUserTrades], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginCmUserTradesRes](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginMarginMyTrades rest 杠杆账户成交历史(USER_DATA)
+func (client *PortfolioMarginRestClient) NewMarginMyTrades() *PortfolioMarginMarginMyTradesApi {
+	return &PortfolioMarginMarginMyTradesApi{
+		client: client,
+		req:    &PortfolioMarginMarginMyTradesReq{},
+	}
+}
+
+func (api *PortfolioMarginMarginMyTradesApi) Do() (*PortfolioMarginMarginMyTradesRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginMyTrades], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginMarginMyTradesRes](api.client.c, url, GET)
+}

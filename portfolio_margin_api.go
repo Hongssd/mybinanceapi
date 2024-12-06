@@ -30,8 +30,10 @@ const (
 	PortfolioMarginUmAllOpenOrdersDelete     // 撤销特定交易对当前全部UM挂单
 	PortfolioMarginUmOrderPut                // UM修改订单
 	PortfolioMarginUmOrderGet                // 查询UM订单
+	PortfolioMarginUmAllOrdersGet            // 查询所有UM订单(包括历史订单)(USER_DATA)
 	PortfolioMarginUmOpenOrderGet            // 查询UM当前挂单
 	PortfolioMarginUmOpenOrdersGet           // 查询UM当前全部挂单
+	PortfolioMarginUmUserTrades              // UM账户成交历史 (USER_DATA)
 	PortfolioMarginUmConditionalOrderPost    // UM条件下单
 	PortfolioMarginUmConditionalOrderDelete  // 取消UM条件订单
 	PortfolioMarginUmConditionalOpenOrder    // 查询UM当前条件挂单
@@ -45,6 +47,7 @@ const (
 	PortfolioMarginCmOrderGet                       // 查询CM订单
 	PortfolioMarginCmAllOrders                      // 查询CM所有订单
 	PortfolioMarginCmOpenOrders                     // 查看当前全部CM挂单
+	PortfolioMarginCmUserTrades                     // CM账户成交历史
 	PortfolioMarginCmConditionalOrderPost           // CM条件下单
 	PortfolioMarginCmConditionalOrderDelete         // 取消CM条件订单
 	PortfolioMarginCmConditionalAllOpenOrdersDelete // 取消全部CM条件单
@@ -58,6 +61,7 @@ const (
 	PortfolioMarginMarginOrderGet            // 查询杠杆账户订单
 	PortfolioMarginMarginOpenOrders          // 查询杠杆账户当前全部挂单
 	PortfolioMarginMarginAllOrders           // 查询杠杆账户所有订单
+	PortfolioMarginMarginMyTrades            // 查询杠杆账户成交历史
 
 	PortfolioMarginMarginOrderOcoPost          // 杠杆OCO下单
 	PortfolioMarginMarginOrderOcoDelete        // 取消杠杆账户OCO订单(TRADE)
@@ -97,6 +101,8 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginUmOrderGet:                "/papi/v1/um/order",                    // 查询UM订单
 	PortfolioMarginUmOpenOrderGet:            "/papi/v1/um/openOrder",                // 查询UM当前挂单
 	PortfolioMarginUmOpenOrdersGet:           "/papi/v1/um/openOrders",               // 查询UM当前全部挂单
+	PortfolioMarginUmAllOrdersGet:            "/papi/v1/um/allOrders",                // 查询所有UM订单(包括历史订单)(USER_DATA)
+	PortfolioMarginUmUserTrades:              "/papi/v1/um/userTrades",               // UM账户成交历史 (USER_DATA)
 	PortfolioMarginUmConditionalOrderPost:    "/papi/v1/um/conditional/order",        // UM条件下单
 	PortfolioMarginUmConditionalOrderDelete:  "/papi/v1/um/conditional/order",        // 取消UM条件订单
 	PortfolioMarginUmConditionalOpenOrder:    "/papi/v1/um/conditional/openOrder",    // 查询UM当前条件挂单
@@ -110,6 +116,7 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmOrderGet:                       "/papi/v1/cm/order",                     // 查询CM订单
 	PortfolioMarginCmAllOrders:                      "/papi/v1/cm/allOrders",                 // 查询CM所有订单
 	PortfolioMarginCmOpenOrders:                     "/papi/v1/cm/openOrders",                // 查看当前全部CM挂单（带symbol或不带symbol)
+	PortfolioMarginCmUserTrades:                     "/papi/v1/cm/userTrades",                // CM账户成交历史
 	PortfolioMarginCmConditionalOrderPost:           "/papi/v1/cm/conditional/order",         // CM条件下单
 	PortfolioMarginCmConditionalOrderDelete:         "/papi/v1/cm/conditional/order",         // 取消CM条件订单
 	PortfolioMarginCmConditionalAllOpenOrdersDelete: "/papi/v1/cm/conditional/allOpenOrders", // 取消全部CM条件单
@@ -123,6 +130,7 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginMarginOrderGet:            "/papi/v1/margin/order",         // 查询杠杆账户订单
 	PortfolioMarginMarginOpenOrders:          "/papi/v1/margin/openOrders",    // 查询杠杆账户当前全部挂单
 	PortfolioMarginMarginAllOrders:           "/papi/v1/margin/allOrders",     // 查询杠杆账户所有订单
+	PortfolioMarginMarginMyTrades:            "/papi/v1/margin/myTrades",      // 查询杠杆账户成交历史
 
 	PortfolioMarginMarginOrderOcoPost:          "/papi/v1/margin/order/oco",     // 杠杆OCO下单
 	PortfolioMarginMarginOrderOcoDelete:        "/papi/v1/margin/orderList",     // 取消杠杆账户OCO订单(TRADE)
