@@ -505,3 +505,17 @@ func (api *PortfolioMarginMarginOcoAllOrderListApi) Do() (*PortfolioMarginMargin
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginOcoAllOrderList], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginMarginOcoAllOrderListRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginUmAllOrdersGet rest 查询所有UM订单（包括历史订单)(USER_DATA)
+func (client *PortfolioMarginRestClient) NewUmAllOrdersGet() *PortfolioMarginUmAllOrdersGetApi {
+	return &PortfolioMarginUmAllOrdersGetApi{
+		client: client,
+		req:    &PortfolioMarginUmAllOrdersGetReq{},
+	}
+}
+
+func (api *PortfolioMarginUmAllOrdersGetApi) Do() (*PortfolioMarginUmAllOrdersGetRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmAllOrdersGet], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmAllOrdersGetRes](api.client.c, url, GET)
+}

@@ -30,6 +30,7 @@ const (
 	PortfolioMarginUmAllOpenOrdersDelete     // 撤销特定交易对当前全部UM挂单
 	PortfolioMarginUmOrderPut                // UM修改订单
 	PortfolioMarginUmOrderGet                // 查询UM订单
+	PortfolioMarginUmAllOrdersGet            // 查询所有UM订单(包括历史订单)(USER_DATA)
 	PortfolioMarginUmOpenOrderGet            // 查询UM当前挂单
 	PortfolioMarginUmOpenOrdersGet           // 查询UM当前全部挂单
 	PortfolioMarginUmConditionalOrderPost    // UM条件下单
@@ -97,6 +98,7 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginUmOrderGet:                "/papi/v1/um/order",                    // 查询UM订单
 	PortfolioMarginUmOpenOrderGet:            "/papi/v1/um/openOrder",                // 查询UM当前挂单
 	PortfolioMarginUmOpenOrdersGet:           "/papi/v1/um/openOrders",               // 查询UM当前全部挂单
+	PortfolioMarginUmAllOrdersGet:            "/papi/v1/um/allOrders",                // 查询所有UM订单(包括历史订单)(USER_DATA)
 	PortfolioMarginUmConditionalOrderPost:    "/papi/v1/um/conditional/order",        // UM条件下单
 	PortfolioMarginUmConditionalOrderDelete:  "/papi/v1/um/conditional/order",        // 取消UM条件订单
 	PortfolioMarginUmConditionalOpenOrder:    "/papi/v1/um/conditional/openOrder",    // 查询UM当前条件挂单

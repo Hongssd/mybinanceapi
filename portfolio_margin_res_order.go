@@ -730,3 +730,28 @@ type PortfolioMarginMarginOcoAllOrderListResRow struct {
 	} `json:"orders"` // 订单列表
 }
 type PortfolioMarginMarginOcoAllOrderListRes []PortfolioMarginMarginOcoAllOrderListResRow
+
+type PortfolioMarginUmAllOrdersGetResRow struct {
+	AvgPrice                string `json:"avgPrice"`                // 平均成交价
+	ClientOrderId           string `json:"clientOrderId"`           // 用户自定义的订单号
+	CumQuote                string `json:"cumQuote"`                // 成交金额
+	ExecutedQty             string `json:"executedQty"`             // 成交数量
+	OrderId                 int64  `json:"orderId"`                 // 订单ID
+	OrigQty                 string `json:"origQty"`                 // 原始数量
+	OrigType                string `json:"origType"`                // 订单类型
+	Price                   string `json:"price"`                   // 价格
+	ReduceOnly              bool   `json:"reduceOnly"`              // true或false
+	Side                    string `json:"side"`                    // 买卖方向
+	PositionSide            string `json:"positionSide"`            // 持仓方向
+	Status                  string `json:"status"`                  // 订单状态
+	Symbol                  string `json:"symbol"`                  // 交易对
+	Time                    int64  `json:"time"`                    // 时间
+	TimeInForce             string `json:"timeInForce"`             // 有效方法
+	Type                    string `json:"type"`                    // 订单类型
+	UpdateTime              int64  `json:"updateTime"`              // 更新时间
+	SelfTradePreventionMode string `json:"selfTradePreventionMode"` // 自成交保护模式
+	GoodTillDate            int64  `json:"goodTillDate"`            // TIF为GTD时的自动取消时间
+	PriceMatch              string `json:"priceMatch"`              // OPPONENT/ OPPONENT_5/ OPPONENT_10/ OPPONENT_20/QUEUE/ QUEUE_5/ QUEUE_10/ QUEUE_20；不能与price同时传
+}
+
+type PortfolioMarginUmAllOrdersGetRes []PortfolioMarginUmAllOrdersGetResRow

@@ -2013,3 +2013,60 @@ type PortfolioMarginMarginOcoAllOrderListApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginMarginOcoAllOrderListReq
 }
+
+type PortfolioMarginUmAllOrdersGetReq struct {
+	Symbol     *string `json:"symbol"`     // YES 交易对
+	OrderId    *int64  `json:"orderId"`    // NO
+	StartTime  *int64  `json:"startTime"`  // NO
+	EndTime    *int64  `json:"endTime"`    // NO
+	Limit      *int32  `json:"limit"`      // NO 默认值: 500; 最大值: 1000
+	RecvWindow *int64  `json:"recvWindow"` // NO
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+
+// YES 交易对
+func (api *PortfolioMarginUmAllOrdersGetApi) Symbol(symbol string) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginUmAllOrdersGetApi) OrderId(orderId int64) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.OrderId = GetPointer(orderId)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginUmAllOrdersGetApi) StartTime(startTime int64) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.StartTime = GetPointer(startTime)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginUmAllOrdersGetApi) EndTime(endTime int64) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.EndTime = GetPointer(endTime)
+	return api
+}
+
+// NO 默认值: 500; 最大值: 1000
+func (api *PortfolioMarginUmAllOrdersGetApi) Limit(limit int32) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.Limit = GetPointer(limit)
+	return api
+}
+
+// NO
+func (api *PortfolioMarginUmAllOrdersGetApi) RecvWindow(recvWindow int64) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// YES
+func (api *PortfolioMarginUmAllOrdersGetApi) Timestamp(timestamp int64) *PortfolioMarginUmAllOrdersGetApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginUmAllOrdersGetApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginUmAllOrdersGetReq
+}
