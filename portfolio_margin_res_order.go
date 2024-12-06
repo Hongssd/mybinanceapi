@@ -755,3 +755,57 @@ type PortfolioMarginUmAllOrdersGetResRow struct {
 }
 
 type PortfolioMarginUmAllOrdersGetRes []PortfolioMarginUmAllOrdersGetResRow
+
+type PortfolioMarginUmUserTradesGetResRow struct {
+	Symbol          string `json:"symbol"`          // 交易对
+	Id              int64  `json:"id"`              // 交易ID
+	OrderId         int64  `json:"orderId"`         // 订单ID
+	Side            string `json:"side"`            // 买卖方向
+	Price           string `json:"price"`           // 价格
+	Qty             string `json:"qty"`             // 数量
+	RealizedPnl     string `json:"realizedPnl"`     // 已实现盈亏
+	QuoteQty        string `json:"quoteQty"`        // 成交金额
+	Commission      string `json:"commission"`      // 手续费
+	CommissionAsset string `json:"commissionAsset"` // 手续费币种
+	Time            int64  `json:"time"`            // 时间
+	Buyer           bool   `json:"buyer"`           // 是否是买方
+	Maker           bool   `json:"maker"`           // 是否是maker
+	PositionSide    string `json:"positionSide"`    // 持仓方向
+}
+type PortfolioMarginUmUserTradesRes []PortfolioMarginUmUserTradesGetResRow
+
+type PortfolioMarginCmUserTradesResRow struct {
+	Symbol          string `json:"symbol"`          // 交易对
+	Id              int64  `json:"id"`              // 交易ID
+	OrderId         int64  `json:"orderId"`         // 订单ID
+	Pair            string `json:"pair"`            // 交易对
+	Side            string `json:"side"`            // 买卖方向
+	Price           string `json:"price"`           // 价格
+	Qty             string `json:"qty"`             // 数量
+	RealizedPnl     string `json:"realizedPnl"`     // 已实现盈亏
+	MarginAsset     string `json:"marginAsset"`     // 保证金币种
+	BaseQty         string `json:"baseQty"`         // 成交基础币量
+	Commission      string `json:"commission"`      // 手续费
+	CommissionAsset string `json:"commissionAsset"` // 手续费币种
+	Time            int64  `json:"time"`            // 时间
+	PositionSide    string `json:"positionSide"`    // 持仓方向
+	Buyer           bool   `json:"buyer"`           // 是否是买方
+	Maker           bool   `json:"maker"`           // 是否是maker
+}
+type PortfolioMarginCmUserTradesRes []PortfolioMarginCmUserTradesResRow
+
+type PortfolioMarginMarginMyTradesResRow struct {
+	Commission      string `json:"commission"`      // 手续费
+	CommissionAsset string `json:"commissionAsset"` // 手续费币种
+	Id              int64  `json:"id"`              // 交易ID
+	IsBestMatch     bool   `json:"isBestMatch"`     // 是否最佳匹配
+	IsBuyer         bool   `json:"isBuyer"`         // 是否是买方
+	IsMaker         bool   `json:"isMaker"`         // 是否是maker
+	OrderId         int64  `json:"orderId"`         // 订单ID
+	Price           string `json:"price"`           // 价格
+	Qty             string `json:"qty"`             // 数量
+	Symbol          string `json:"symbol"`          // 交易对
+	Time            int64  `json:"time"`            // 时间
+}
+
+type PortfolioMarginMarginMyTradesRes []PortfolioMarginMarginMyTradesResRow
