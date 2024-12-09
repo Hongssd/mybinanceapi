@@ -325,7 +325,7 @@ func binanceHandlerWsApiReq[T any](req *T) string {
 			switch v.Field(i).Elem().Kind() {
 			case reflect.String:
 				paramBuffer.WriteString(paramName + "=" + v.Field(i).Elem().String() + "&")
-			case reflect.Int, reflect.Int64:
+			case reflect.Int, reflect.Int32, reflect.Int64:
 				paramBuffer.WriteString(paramName + "=" + strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10) + "&")
 			case reflect.Float32, reflect.Float64:
 				paramBuffer.WriteString(paramName + "=" + decimal.NewFromFloat(v.Field(i).Elem().Float()).String() + "&")
