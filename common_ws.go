@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
+	"net/http"
 	"net/url"
 	"strings"
 	"sync"
@@ -659,7 +660,17 @@ func (sub *Subscription[T]) Unsubscribe() error {
 
 // 标准订阅方法
 func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan error) (*websocket.Conn, error) {
-	c, _, err := websocket.DefaultDialer.Dial(api, nil)
+	dialer := websocket.DefaultDialer
+	if UseProxy {
+		proxy, err := getRandomProxy()
+		if err != nil {
+			return nil, err
+		}
+		url_i := url.URL{}
+		targetProxy, _ := url_i.Parse(proxy.ProxyUrl)
+		dialer.Proxy = http.ProxyURL(targetProxy)
+	}
+	c, _, err := dialer.Dial(api, nil)
 	if err != nil {
 		return nil, err
 	}

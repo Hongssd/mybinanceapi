@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/robfig/cron/v3"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -105,6 +106,16 @@ func getBestProxyAndWeight(apiType ApiType) (*RestProxy, *ProxyWeight, error) {
 	}
 
 	return minWeigthProxy, minWeight, nil
+}
+
+// 获取随机代理
+func getRandomProxy() (*RestProxy, error) {
+	length := len(proxyList)
+	if length == 0 {
+		return nil, errors.New("proxyList is empty")
+	}
+
+	return proxyList[rand.Intn(length)], nil
 }
 
 func RequestWithHeader(urlStr string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
