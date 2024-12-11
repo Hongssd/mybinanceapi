@@ -34,6 +34,7 @@ func (w *ProxyWeight) restore() {
 var proxyList = []*RestProxy{}
 
 var UseProxy = false
+var WsUseProxy = false
 
 func GetCurrentProxyList() []*RestProxy {
 	return proxyList
@@ -48,6 +49,14 @@ func SetUseProxy(useProxy bool, proxyUrls ...string) {
 		})
 	}
 	proxyList = newProxyList
+}
+
+func setWsUseProxy(useProxy bool) error {
+	if !UseProxy {
+		return errors.New("please set UseProxy first")
+	}
+	WsUseProxy = useProxy
+	return nil
 }
 
 func isUseProxy() bool {

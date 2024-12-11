@@ -661,7 +661,7 @@ func (sub *Subscription[T]) Unsubscribe() error {
 // 标准订阅方法
 func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan error) (*websocket.Conn, error) {
 	dialer := websocket.DefaultDialer
-	if UseProxy {
+	if WsUseProxy {
 		proxy, err := getRandomProxy()
 		if err != nil {
 			return nil, err
@@ -674,7 +674,7 @@ func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan
 	if err != nil {
 		return nil, err
 	}
-	c.SetReadLimit(655350)
+	c.SetReadLimit(6553500)
 	go func() {
 		if WebsocketKeepalive {
 			keepAlive(c, WebsocketTimeout)
