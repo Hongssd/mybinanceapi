@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/robfig/cron/v3"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -33,6 +34,7 @@ func (w *ProxyWeight) restore() {
 var proxyList = []*RestProxy{}
 
 var UseProxy = false
+var WsUseProxy = false
 
 func GetCurrentProxyList() []*RestProxy {
 	return proxyList
@@ -47,6 +49,14 @@ func SetUseProxy(useProxy bool, proxyUrls ...string) {
 		})
 	}
 	proxyList = newProxyList
+}
+
+func setWsUseProxy(useProxy bool) error {
+	if !UseProxy {
+		return errors.New("please set UseProxy first")
+	}
+	WsUseProxy = useProxy
+	return nil
 }
 
 func isUseProxy() bool {
@@ -105,6 +115,16 @@ func getBestProxyAndWeight(apiType ApiType) (*RestProxy, *ProxyWeight, error) {
 	}
 
 	return minWeigthProxy, minWeight, nil
+}
+
+// 获取随机代理
+func getRandomProxy() (*RestProxy, error) {
+	length := len(proxyList)
+	if length == 0 {
+		return nil, errors.New("proxyList is empty")
+	}
+
+	return proxyList[rand.Intn(length)], nil
 }
 
 func RequestWithHeader(urlStr string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
