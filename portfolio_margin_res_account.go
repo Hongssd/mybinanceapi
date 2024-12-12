@@ -184,3 +184,6 @@ type PortfolioMarginCmCommissionRateRes struct {
 	MakerCommissionRate string `json:"makerCommissionRate"` // maker手续费率
 	TakerCommissionRate string `json:"takerCommissionRate"` // taker手续费率
 }
+
+type PortfolioMarginAutoCollectionRes struct{}
+type PortfolioMarginAssetCollectionRes struct{}

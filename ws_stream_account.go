@@ -42,6 +42,19 @@ type WsSwapPayload struct {
 	AccountUpdatePayload    *Payload[WsSwapPayloadAccountUpdate]
 	OrderTradeUpdatePayload *Payload[WsSwapPayloadOrderTradeUpdate]
 }
+type WsPMContractPayload struct {
+	Ws                      *PMContractStreamClient
+	Id                      int64
+	AccountUpdatePayload    *Payload[WsPMContractPayloadAccountUpdate]
+	OrderTradeUpdatePayload *Payload[WsPMContractPayloadOrderTradeUpdate]
+}
+type WsPMMarginPayload struct {
+	Ws                             *PMMarginStreamClient
+	Id                             int64
+	OutboundAccountPositionPayload *Payload[WsPMMarginPayloadOutboundAccountPosition]
+	BalanceUpdatePayload           *Payload[WsPMMarginPayloadBalanceUpdate]
+	ExecutionReportPayload         *Payload[WsPMMarginPayloadExecutionReport]
+}
 
 func (payload *WsSpotPayload) Close() {
 	if _, ok := payload.Ws.wsSpotPayloadMap.Load(payload.Id); ok {
@@ -63,6 +76,21 @@ func (payload *WsSwapPayload) Close() {
 		payload.Ws.wsSwapPayloadMap.Delete(payload.Id)
 		payload.AccountUpdatePayload.closeChan <- struct{}{}
 		payload.OrderTradeUpdatePayload.closeChan <- struct{}{}
+	}
+}
+func (payload *WsPMContractPayload) Close() {
+	if _, ok := payload.Ws.wsPMContractPayloadMap.Load(payload.Id); ok {
+		payload.Ws.wsPMContractPayloadMap.Delete(payload.Id)
+		payload.AccountUpdatePayload.closeChan <- struct{}{}
+		payload.OrderTradeUpdatePayload.closeChan <- struct{}{}
+	}
+}
+func (payload *WsPMMarginPayload) Close() {
+	if _, ok := payload.Ws.wsPMMarginPayloadMap.Load(payload.Id); ok {
+		payload.Ws.wsPMMarginPayloadMap.Delete(payload.Id)
+		payload.OutboundAccountPositionPayload.closeChan <- struct{}{}
+		payload.BalanceUpdatePayload.closeChan <- struct{}{}
+		payload.ExecutionReportPayload.closeChan <- struct{}{}
 	}
 }
 
@@ -138,6 +166,59 @@ func (ws *SwapWsStreamClient) CreatePayload() (*WsSwapPayload, error) {
 		},
 	}
 	ws.wsSwapPayloadMap.Store(id, payload)
+	return payload, nil
+}
+
+// PM
+func (ws *PMContractStreamClient) CreatePayload() (*WsPMContractPayload, error) {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return nil, err
+	}
+	id := node.Generate().Int64()
+	payload := &WsPMContractPayload{
+		Ws: ws,
+		Id: id,
+		AccountUpdatePayload: &Payload[WsPMContractPayloadAccountUpdate]{
+			resultChan: make(chan WsPMContractPayloadAccountUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		OrderTradeUpdatePayload: &Payload[WsPMContractPayloadOrderTradeUpdate]{
+			resultChan: make(chan WsPMContractPayloadOrderTradeUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+	}
+	ws.wsPMContractPayloadMap.Store(id, payload)
+	return payload, nil
+}
+func (ws *PMMarginStreamClient) CreatePayload() (*WsPMMarginPayload, error) {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return nil, err
+	}
+	id := node.Generate().Int64()
+	payload := &WsPMMarginPayload{
+		Ws: ws,
+		Id: id,
+		OutboundAccountPositionPayload: &Payload[WsPMMarginPayloadOutboundAccountPosition]{
+			resultChan: make(chan WsPMMarginPayloadOutboundAccountPosition),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		BalanceUpdatePayload: &Payload[WsPMMarginPayloadBalanceUpdate]{
+			resultChan: make(chan WsPMMarginPayloadBalanceUpdate),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+		ExecutionReportPayload: &Payload[WsPMMarginPayloadExecutionReport]{
+			resultChan: make(chan WsPMMarginPayloadExecutionReport),
+			errChan:    make(chan error),
+			closeChan:  make(chan struct{}),
+		},
+	}
+	ws.wsPMMarginPayloadMap.Store(id, payload)
 	return payload, nil
 }
 
@@ -407,6 +488,142 @@ func (ws *SwapWsStreamClient) listenKeyPut() error {
 }
 func (ws *SwapWsStreamClient) listenKeyDelete() error {
 	_, err := ws.client.NewSwapListenKeyDelete().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (ws *PMContractStreamClient) ConvertToAccountWs(apiKey string, apiSecret string) (*PMContractStreamClient, error) {
+	ws.wsStreamPath = WS_PM_STREAM_PATH
+	ws.apiKey = apiKey
+	ws.apiSecret = apiSecret
+	ws.isListenWs = true
+	b := MyBinance{}
+	ws.client = b.NewPortfolioMarginClient(apiKey, apiSecret)
+
+	err := ws.listenKeyPost()
+	if err != nil {
+		return nil, err
+	}
+
+	//创建一个协程定时刷新listenKey，如果已存在旧的刷新协程则不再创建
+	if ws.listenKeyRefreshStopChan == nil {
+		stopChan := make(chan struct{})
+		ws.listenKeyRefreshStopChan = &stopChan
+		go func() {
+			for {
+				select {
+				case <-time.After(ListenKeyRefreshInterval):
+					err := ws.listenKeyPut()
+					for err != nil {
+						log.Error(err)
+						time.Sleep(5 * time.Second)
+						if strings.Contains(err.Error(), "-1125") {
+							//如果是-1125错误，则Post更新
+							err = ws.listenKeyPost()
+						} else {
+							err = ws.listenKeyPut()
+						}
+					}
+				case <-*ws.listenKeyRefreshStopChan:
+					return
+				}
+			}
+		}()
+	}
+
+	return ws, nil
+}
+func (ws *PMContractStreamClient) listenKeyPost() error {
+	res, err := ws.client.NewPortfolioMarginListenKeyPost().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	ws.listenKey = res.ListenKey
+	log.Debug("listenKey:", ws.listenKey)
+	return nil
+}
+func (ws *PMContractStreamClient) listenKeyPut() error {
+	_, err := ws.client.NewPortfolioMarginListenKeyPut().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+func (ws *PMContractStreamClient) listenKeyDelete() error {
+	_, err := ws.client.NewPortfolioMarginListenKeyDel().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func (ws *PMMarginStreamClient) ConvertToAccountWs(apiKey string, apiSecret string) (*PMMarginStreamClient, error) {
+	ws.wsStreamPath = WS_PM_STREAM_PATH
+	ws.apiKey = apiKey
+	ws.apiSecret = apiSecret
+	ws.isListenWs = true
+	b := MyBinance{}
+	ws.client = b.NewPortfolioMarginClient(apiKey, apiSecret)
+
+	err := ws.listenKeyPost()
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建一个协程定时刷新listenKey，如果已存在旧的刷新协程则不再创建
+	if ws.listenKeyRefreshStopChan == nil {
+		stopChan := make(chan struct{})
+		ws.listenKeyRefreshStopChan = &stopChan
+		go func() {
+			for {
+				select {
+				case <-time.After(ListenKeyRefreshInterval):
+					err := ws.listenKeyPut()
+					for err != nil {
+						log.Error(err)
+						time.Sleep(5 * time.Second)
+						if strings.Contains(err.Error(), "-1125") {
+							// 如果是-1125错误，则Post更新
+							err = ws.listenKeyPost()
+						} else {
+							err = ws.listenKeyPut()
+						}
+					}
+				case <-*ws.listenKeyRefreshStopChan:
+					return
+				}
+			}
+		}()
+	}
+
+	return ws, nil
+}
+func (ws *PMMarginStreamClient) listenKeyPut() error {
+	_, err := ws.client.NewPortfolioMarginListenKeyPut().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+func (ws *PMMarginStreamClient) listenKeyPost() error {
+	res, err := ws.client.NewPortfolioMarginListenKeyPost().Do()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	ws.listenKey = res.ListenKey
+	log.Debug("listenKey:", ws.listenKey)
+	return nil
+}
+func (ws *PMMarginStreamClient) listenKeyDelete() error {
+	_, err := ws.client.NewPortfolioMarginListenKeyDel().Do()
 	if err != nil {
 		log.Error(err)
 		return err

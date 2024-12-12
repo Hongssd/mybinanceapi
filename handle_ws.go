@@ -284,6 +284,15 @@ type WsSpotPayloadBalanceUpdate struct {
 	ClearTime int64  `json:"T"` //清算时间
 }
 
+type WsPMMarginPayloadBalanceUpdate struct {
+	Event     string `json:"e"` //事件类型
+	Timestamp int64  `json:"E"` //事件时间
+	Asset     string `json:"a"` //资产名称
+	Delta     string `json:"d"` //余额变化
+	UpdateId  int64  `json:"U"` //事件更新ID
+	ClearTime int64  `json:"T"` //清算时间
+}
+
 // 现货订单推送
 type WsSpotPayloadExecutionReport struct {
 	//标准字段
@@ -542,6 +551,131 @@ type WsSwapOrder struct {
 	ActivePrice    string `json:"AP"` //追踪止损激活价格
 	CallbackRate   string `json:"cr"` //追踪止损回调比例
 	PriceProtect   bool   `json:"pP"` //是否开启条件单触发保护
+}
+
+// 统一账户合约账户更新
+type WsPMContractPayloadAccountUpdate struct {
+	Event        string             `json:"e"`  //事件类型
+	EventLine    string             `json:"fs"` //事件业务线
+	Timestamp    int64              `json:"E"`  //事件时间
+	TradeTime    int64              `json:"T"`  //撮合时间
+	AccountAlias string             `json:"i"`  //账户唯一识别码 accountAlias
+	Action       WsPMContractAction `json:"a"`  // 账户更新事件
+}
+
+type WsPMContractAction struct {
+	Reason   string                 `json:"m"` //事件推出原因
+	Balance  []WsPMContractBalance  `json:"B"` //余额信息
+	Position []WsPMContractPosition `json:"P"` //持仓信息
+}
+
+type WsPMContractBalance struct {
+	Asset              string `json:"a"`  //资产名称
+	WalletBalance      string `json:"wb"` //钱包余额
+	CrossWalletBalance string `json:"cw"` //除去逐仓仓位保证金的钱包余额
+	BalanceChange      string `json:"bc"` //除去盈亏与交易手续费以外的钱包余额改变量
+}
+
+type WsPMContractPosition struct {
+	Symbol             string `json:"s"`   //交易对
+	PositionAmount     string `json:"pa"`  //仓位
+	EntryPrice         string `json:"ep"`  //入仓价格
+	CumulativeRealized string `json:"cr"`  //(费前)累计实现损益
+	UnrealizedProfit   string `json:"up"`  //持仓未实现盈亏
+	PositionSide       string `json:"ps"`  //持仓方向
+	BreakEvenPrice     string `json:"bep"` //盈亏平衡价
+}
+
+// 统一账户合约订单/交易 更新推送
+type WsPMContractPayloadOrderTradeUpdate struct {
+	Event     string            `json:"e"`  //事件类型
+	Timestamp int64             `json:"E"`  //事件时间
+	TradeTime int64             `json:"T"`  //撮合时间
+	EventLine string            `json:"fs"` //事件业务线
+	Order     WsPMContractOrder `json:"o"`  //订单信息
+}
+
+type WsPMContractOrder struct {
+	Symbol         string `json:"s"`   //交易对
+	ClientOrderId  string `json:"c"`   //clientOrderId
+	Side           string `json:"S"`   //订单方向
+	Type           string `json:"o"`   //订单类型
+	TimeInForce    string `json:"f"`   //有效方式
+	OrigQty        string `json:"q"`   //订单原始数量
+	Price          string `json:"p"`   //订单原始价格
+	AvgPrice       string `json:"ap"`  //订单平均价格
+	StopPrice      string `json:"sp"`  //止盈止损单触发价格
+	ExcecutionType string `json:"x"`   //本次事件的具体执行类型
+	Status         string `json:"X"`   //订单的当前状态
+	OrderId        int64  `json:"i"`   //orderId
+	LastQty        string `json:"l"`   //订单末次成交量
+	ExecutedQty    string `json:"z"`   //订单累计已成交量
+	LastPrice      string `json:"L"`   //订单末次成交价格
+	FeeAsset       string `json:"N"`   //手续费资产类别
+	FeeQty         string `json:"n"`   //手续费数量
+	TradeTime      int64  `json:"T"`   //成交时间
+	TradeId        int64  `json:"t"`   //成交ID
+	BuyNetValue    string `json:"b"`   //买单净值
+	SellNetValue   string `json:"a"`   //卖单净值
+	IsMaker        bool   `json:"m"`   //该成交是作为挂单成交吗？
+	IsReduceOnly   bool   `json:"R"`   //是否是只减仓单
+	PositionSide   string `json:"ps"`  //持仓方向
+	RealizedProfit string `json:"rp"`  //该交易实现盈亏
+	StrategyType   string `json:"st"`  //策略单类型
+	StrategyId     int64  `json:"si"`  //策略单ID
+	PreventMode    string `json:"V"`   //自成交防止模式
+	GoodTillDate   int64  `json:"gtd"` //TIF为GTD的订单自动取消时间
+}
+
+type WsPMMarginBalance struct {
+	Asset  string `json:"a"` //资产名称
+	Free   string `json:"f"` //可用余额
+	Locked string `json:"l"` //冻结余额
+}
+
+// 统一账户杠杆账户更新
+type WsPMMarginPayloadOutboundAccountPosition struct {
+	Event          string              `json:"e"` //事件类型
+	Timestamp      int64               `json:"E"` //事件时间
+	LastUpdateTime int64               `json:"u"` //账户末次更新时间戳
+	TimeUpdateId   int64               `json:"U"` //时间更新ID
+	Balances       []WsPMMarginBalance `json:"B"` //余额
+}
+
+type WsPMMarginPayloadExecutionReport struct {
+	Event               string `json:"e"` //事件类型
+	Timestamp           int64  `json:"E"` //事件时间
+	Symbol              string `json:"s"` //交易对
+	ClientOrderId       string `json:"c"` //clientOrderId
+	Side                string `json:"S"` //订单方向
+	Type                string `json:"o"` //订单类型
+	TimeInForce         string `json:"f"` //有效方式
+	OrigQty             string `json:"q"` //订单原始数量
+	Price               string `json:"p"` //订单原始价格
+	StopPrice           string `json:"P"` //止盈止损单触发价格
+	IcebergQty          string `json:"F"` //冰山订单数量
+	OrderListId         int64  `json:"g"` //OCO订单 OrderListId
+	OrigClientOrderId   string `json:"C"` //原始订单自定义ID(原始订单，指撤单操作的对象。撤单本身被视为另一个订单)
+	ExecutionType       string `json:"x"` //本次事件的具体执行类型
+	Status              string `json:"X"` //订单的当前状态
+	RejectReason        string `json:"r"` //订单被拒绝的原因
+	OrderId             int64  `json:"i"` //orderId
+	LastQty             string `json:"l"` //订单末次成交量
+	ExecutedQty         string `json:"z"` //订单累计已成交量
+	LastPrice           string `json:"L"` //订单末次成交价格
+	FeeQty              string `json:"n"` //手续费数量
+	FeeAsset            string `json:"N"` //手续费资产类别
+	TradeTime           int64  `json:"T"` //成交时间
+	TradeId             int64  `json:"t"` //成交ID
+	PreventMatchId      int64  `json:"v"` //被阻止撮合交易的ID; 这仅在订单因 STP 触发而过期时可见
+	IsWorking           bool   `json:"w"` //订单是否在订单簿上？
+	IsMaker             bool   `json:"m"` //该成交是作为挂单成交吗？
+	OrderCreateTime     int64  `json:"O"` //订单创建时间
+	CummulativeQuoteQty string `json:"Z"` //订单累计已成交金额
+	LastQuoteQty        string `json:"Y"` //订单末次成交金额
+	QuoteOrderQty       string `json:"Q"` //Quote Order Quantity
+	WorkingTime         int64  `json:"W"` //Working Time; 订单被添加到 order book 的时间
+	SelfTradePrevention string `json:"V"` //SelfTradePreventionMode
 }
 
 func HandleWsPayloadResult[T any](data []byte) (*T, error) {

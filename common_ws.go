@@ -55,6 +55,7 @@ const (
 	WS_ACCOUNT_PATH
 	WS_SPOT_API_PATH
 	WS_FUTURE_API_PATH
+	WS_PM_STREAM_PATH
 )
 
 // 数据流订阅基础客户端
@@ -81,9 +82,11 @@ type WsStreamClient struct {
 	aggTradeSubMap MySyncMap[string, *Subscription[WsAggTrade]]
 
 	//账户推送相关
-	wsSpotPayloadMap   MySyncMap[int64, *WsSpotPayload]
-	wsFuturePayloadMap MySyncMap[int64, *WsFuturePayload]
-	wsSwapPayloadMap   MySyncMap[int64, *WsSwapPayload]
+	wsSpotPayloadMap       MySyncMap[int64, *WsSpotPayload]
+	wsFuturePayloadMap     MySyncMap[int64, *WsFuturePayload]
+	wsSwapPayloadMap       MySyncMap[int64, *WsSwapPayload]
+	wsPMContractPayloadMap MySyncMap[int64, *WsPMContractPayload] // 统一账号合约账号
+	wsPMMarginPayloadMap   MySyncMap[int64, *WsPMMarginPayload]   // 统一账号杠杆账号
 
 	//wsApi交易相关
 	waitWsApiResultMap MySyncMap[string, WsApiResultChan]
@@ -227,6 +230,8 @@ func (ws *WsStreamClient) initStructs() {
 	ws.wsSpotPayloadMap = NewMySyncMap[int64, *WsSpotPayload]()
 	ws.wsFuturePayloadMap = NewMySyncMap[int64, *WsFuturePayload]()
 	ws.wsSwapPayloadMap = NewMySyncMap[int64, *WsSwapPayload]()
+	ws.wsPMContractPayloadMap = NewMySyncMap[int64, *WsPMContractPayload]()
+	ws.wsPMMarginPayloadMap = NewMySyncMap[int64, *WsPMMarginPayload]()
 
 	ws.waitWsApiResultMap = NewMySyncMap[string, WsApiResultChan]()
 	ws.wsApiWriterMu = &sync.Mutex{}
@@ -491,50 +496,101 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					}
 					continue
 				}
-
 				//现货账户更新推送
 				if strings.Contains(string(data), "outboundAccountPosition") {
-					res, err := HandleWsPayloadResult[WsSpotPayloadOutboundAccountPosition](data)
-					if err != nil {
-						log.Error(err)
-						continue
-					}
-					ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
-						if payload.OutboundAccountPositionPayload != nil {
-							payload.OutboundAccountPositionPayload.resultChan <- *res
+					log.Info(string(data))
+					switch ws.apiType {
+					case SPOT:
+						res, err := HandleWsPayloadResult[WsSpotPayloadOutboundAccountPosition](data)
+						if err != nil {
+							log.Error(err)
+							continue
 						}
-						return true
-					})
+						ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
+							if payload.OutboundAccountPositionPayload != nil {
+								payload.OutboundAccountPositionPayload.resultChan <- *res
+							}
+							return true
+						})
+					case PORTFOLIO_MARGIN:
+						res, err := HandleWsPayloadResult[WsPMMarginPayloadOutboundAccountPosition](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						ws.wsPMMarginPayloadMap.Range(func(_ int64, payload *WsPMMarginPayload) bool {
+							if payload.OutboundAccountPositionPayload != nil {
+								payload.OutboundAccountPositionPayload.resultChan <- *res
+							}
+							return true
+						})
+					default:
+					}
+
 				}
 
 				//现货余额更新推送
 				if strings.Contains(string(data), "balanceUpdate") {
-					res, err := HandleWsPayloadResult[WsSpotPayloadBalanceUpdate](data)
-					if err != nil {
-						log.Error(err)
-						continue
-					}
-					ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
-						if payload.BalanceUpdatePayload != nil {
-							payload.BalanceUpdatePayload.resultChan <- *res
+					switch ws.apiType {
+					case SPOT:
+						res, err := HandleWsPayloadResult[WsSpotPayloadBalanceUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
 						}
-						return true
-					})
+						ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
+							if payload.BalanceUpdatePayload != nil {
+								payload.BalanceUpdatePayload.resultChan <- *res
+							}
+							return true
+						})
+					case PORTFOLIO_MARGIN:
+						res, err := HandleWsPayloadResult[WsPMMarginPayloadBalanceUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						ws.wsPMMarginPayloadMap.Range(func(_ int64, payload *WsPMMarginPayload) bool {
+							if payload.BalanceUpdatePayload != nil {
+								payload.BalanceUpdatePayload.resultChan <- *res
+							}
+							return true
+						})
+					default:
+					}
+
 				}
 
 				//现货订单推送
 				if strings.Contains(string(data), "executionReport") {
-					res, err := HandleWsPayloadResult[WsSpotPayloadExecutionReport](data)
-					if err != nil {
-						log.Error(err)
-						continue
-					}
-					ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
-						if payload.ExecutionReportPayload != nil {
-							payload.ExecutionReportPayload.resultChan <- *res
+					log.Warn("apiType: ", ws.apiType)
+					switch ws.apiType {
+					case SPOT:
+						res, err := HandleWsPayloadResult[WsSpotPayloadExecutionReport](data)
+						if err != nil {
+							log.Error(err)
+							continue
 						}
-						return true
-					})
+						ws.wsSpotPayloadMap.Range(func(_ int64, payload *WsSpotPayload) bool {
+							if payload.ExecutionReportPayload != nil {
+								payload.ExecutionReportPayload.resultChan <- *res
+							}
+							return true
+						})
+					case PORTFOLIO_MARGIN:
+						res, err := HandleWsPayloadResult[WsPMMarginPayloadExecutionReport](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						ws.wsPMMarginPayloadMap.Range(func(_ int64, payload *WsPMMarginPayload) bool {
+							if payload.ExecutionReportPayload != nil {
+								payload.ExecutionReportPayload.resultChan <- *res
+							}
+							return true
+						})
+					default:
+					}
 				}
 
 				//U本位合约及币本位合约 余额/仓位 更新推送
@@ -560,6 +616,18 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							continue
 						}
 						ws.wsSwapPayloadMap.Range(func(_ int64, payload *WsSwapPayload) bool {
+							if payload.AccountUpdatePayload != nil {
+								payload.AccountUpdatePayload.resultChan <- *res
+							}
+							return true
+						})
+					case PORTFOLIO_MARGIN:
+						res, err := HandleWsPayloadResult[WsPMContractPayloadAccountUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						ws.wsPMContractPayloadMap.Range(func(_ int64, payload *WsPMContractPayload) bool {
 							if payload.AccountUpdatePayload != nil {
 								payload.AccountUpdatePayload.resultChan <- *res
 							}
@@ -597,7 +665,18 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							}
 							return true
 						})
-
+					case PORTFOLIO_MARGIN:
+						res, err := HandleWsPayloadResult[WsPMContractPayloadOrderTradeUpdate](data)
+						if err != nil {
+							log.Error(err)
+							continue
+						}
+						ws.wsPMContractPayloadMap.Range(func(_ int64, payload *WsPMContractPayload) bool {
+							if payload.OrderTradeUpdatePayload != nil {
+								payload.OrderTradeUpdatePayload.resultChan <- *res
+							}
+							return true
+						})
 					default:
 					}
 				}
@@ -713,10 +792,9 @@ func handlerWsStreamRequestApi(wsStreamPath WsStreamPath, listenKey string, apiT
 	switch wsStreamPath {
 	case WS_SPOT_API_PATH, WS_FUTURE_API_PATH:
 		host = getWsApiWsApi(apiType)
-	case WS_STREAM_PATH, WS_ACCOUNT_PATH:
+	case WS_STREAM_PATH, WS_ACCOUNT_PATH, WS_PM_STREAM_PATH:
 		host = getWsStreamWsApi(apiType, isGzip)
 	}
-
 	u := url.URL{
 		Scheme:   "wss",
 		Host:     host,
@@ -747,7 +825,7 @@ func getWsStreamWsApi(apiType ApiType, isGzip bool) string {
 		case TEST_NET:
 			return TEST_BINANCE_API_SWAP_WS_STREAM
 		}
-	case FUTURE:
+	case FUTURE, PORTFOLIO_MARGIN:
 		switch NowNetType {
 		case MAIN_NET:
 			if isGzip {
@@ -759,7 +837,6 @@ func getWsStreamWsApi(apiType ApiType, isGzip bool) string {
 			return TEST_BINANCE_API_FUTURE_WS_STREAM
 		}
 	}
-	log.Error("AccountType Error is ", apiType)
 	return ""
 }
 
@@ -797,6 +874,8 @@ func getWsPath(wsStreamPath WsStreamPath, listenKey string) string {
 		return "/ws-api/v3"
 	case WS_FUTURE_API_PATH:
 		return "/ws-fapi/v1"
+	case WS_PM_STREAM_PATH:
+		return fmt.Sprintf("/pm/ws/%s", listenKey)
 	}
 	log.Error("WsStreamPath Error is ", wsStreamPath)
 	return ""

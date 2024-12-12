@@ -472,3 +472,54 @@ type PortfolioMarginCmCommissionRateApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginCmCommissionRateReq
 }
+
+type PortfolioMarginAutoCollectionReq struct {
+	RecvWindow *int64 `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64 `json:"timestamp,omitempty"`  // YES
+}
+
+// 接收窗口
+func (api *PortfolioMarginAutoCollectionApi) RecvWindow(recvWindow int64) *PortfolioMarginAutoCollectionApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginAutoCollectionApi) Timestamp(timestamp int64) *PortfolioMarginAutoCollectionApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginAutoCollectionApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginAutoCollectionReq
+}
+
+type PortfolioMarginAssetCollectionReq struct {
+	Asset      *string `json:"asset,omitempty"`      // YES
+	RevcWindow *int64  `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64  `json:"timestamp,omitempty"`  // YES
+}
+
+// 资产
+func (api *PortfolioMarginAssetCollectionApi) Asset(asset string) *PortfolioMarginAssetCollectionApi {
+	api.req.Asset = GetPointer(asset)
+	return api
+}
+
+// 接收窗口
+func (api *PortfolioMarginAssetCollectionApi) RevcWindow(recvWindow int64) *PortfolioMarginAssetCollectionApi {
+	api.req.RevcWindow = GetPointer(recvWindow)
+	return api
+}
+
+// 时间戳
+func (api *PortfolioMarginAssetCollectionApi) Timestamp(timestamp int64) *PortfolioMarginAssetCollectionApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+type PortfolioMarginAssetCollectionApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginAssetCollectionReq
+}
