@@ -499,7 +499,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				}
 				//现货账户更新推送
 				if strings.Contains(string(data), "outboundAccountPosition") {
-					log.Info(string(data))
+					//log.Info(string(data))
 					switch ws.apiType {
 					case SPOT:
 						res, err := HandleWsPayloadResult[WsSpotPayloadOutboundAccountPosition](data)
@@ -564,7 +564,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 
 				//现货订单推送
 				if strings.Contains(string(data), "executionReport") {
-					log.Warn("apiType: ", ws.apiType)
+					//log.Warn("apiType: ", ws.apiType)
 					switch ws.apiType {
 					case SPOT:
 						res, err := HandleWsPayloadResult[WsSpotPayloadExecutionReport](data)
