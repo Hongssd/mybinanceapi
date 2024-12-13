@@ -234,3 +234,31 @@ func (api *PortfolioMarginCmCommissionRateApi) Do() (*PortfolioMarginCmCommissio
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginCmCommissionRate], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginCmCommissionRateRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginAutoCollection rest 统一账户资金归集
+func (client *PortfolioMarginRestClient) NewAutoCollection() *PortfolioMarginAutoCollectionApi {
+	return &PortfolioMarginAutoCollectionApi{
+		client: client,
+		req:    &PortfolioMarginAutoCollectionReq{},
+	}
+}
+
+func (api *PortfolioMarginAutoCollectionApi) Do() (*PortfolioMarginAutoCollectionRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginAutoCollection], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginAutoCollectionRes](api.client.c, url, POST)
+}
+
+// binance PortfolioMarginAssetCollection rest 特定资产资金归集
+func (client *PortfolioMarginRestClient) NewAssetCollection() *PortfolioMarginAssetCollectionApi {
+	return &PortfolioMarginAssetCollectionApi{
+		client: client,
+		req:    &PortfolioMarginAssetCollectionReq{},
+	}
+}
+
+func (api *PortfolioMarginAssetCollectionApi) Do() (*PortfolioMarginAssetCollectionRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginAssetCollection], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginAssetCollectionRes](api.client.c, url, POST)
+}

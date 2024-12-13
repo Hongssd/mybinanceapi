@@ -23,6 +23,8 @@ const (
 	PortfolioMarginCmPositionRisk         // 查询CM持仓风险
 	PortfolioMarginUmCommissionRate       // 查询UM手续费率
 	PortfolioMarginCmCommissionRate       // 查询CM手续费率
+	PortfolioMarginAutoCollection         // 统一账户资金归集
+	PortfolioMarginAssetCollection        // 特定资产资金归集
 
 	// 交易接口
 	PortfolioMarginUmOrderPost               // UM下单
@@ -68,6 +70,11 @@ const (
 	PortfolioMarginMarginOrderOcoGet           // 查询杠杆账户OCO订单
 	PortfolioMarginMarginOrderOcoOpenOrderList // 查询杠杆账户 OCO 挂单 (USER_DATA)
 	PortfolioMarginMarginOcoAllOrderList       // 查询杠杆账户 OCO 全部挂单 (USER_DATA)
+
+	// WS接口
+	PortfolioMarginListenKeyPost // 创建listenKey (USER_STREAM)
+	PortfolioMarginListenKeyPut  // 延长listenKey有效期 (USER_STREAM)
+	PortfolioMarginListenKeyDel  // 关闭listenKey (USER_STREAM)
 )
 
 var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
@@ -92,6 +99,8 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmPositionRisk:         "/papi/v1/cm/positionRisk",      // 查询CM持仓风险
 	PortfolioMarginUmCommissionRate:       "/papi/v1/um/commissionRate",    // 查询UM手续费率
 	PortfolioMarginCmCommissionRate:       "/papi/v1/cm/commissionRate",    // 查询CM手续费率
+	PortfolioMarginAutoCollection:         "/papi/v1/auto-collection",      // 统一账户资金归集
+	PortfolioMarginAssetCollection:        "/papi/v1/asset-collection",     // 特定资产资金归集
 
 	//交易接口
 	PortfolioMarginUmOrderPost:               "/papi/v1/um/order",                    // UM下单
@@ -137,4 +146,9 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginMarginOrderOcoGet:           "/papi/v1/margin/orderList",     // 查询杠杆账户OCO订单
 	PortfolioMarginMarginOrderOcoOpenOrderList: "/papi/v1/margin/openOrderList", // 查询杠杆账户 OCO 挂单 (USER_DATA)
 	PortfolioMarginMarginOcoAllOrderList:       "/papi/v1/margin/allOrderList",  // 查询杠杆账户 OCO 全部挂单 (USER_DATA)
+
+	// WS接口相关
+	PortfolioMarginListenKeyPost: "/papi/v1/listenKey", // 创建listenKey (USER_STREAM)
+	PortfolioMarginListenKeyPut:  "/papi/v1/listenKey", // 延长listenKey有效期 (USER_STREAM)
+	PortfolioMarginListenKeyDel:  "/papi/v1/listenKey", // 关闭listenKey (USER_STREAM)
 }
