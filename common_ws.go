@@ -564,7 +564,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 
 				//现货订单推送
 				if strings.Contains(string(data), "executionReport") {
-					//log.Warn("apiType: ", ws.apiType)
+					log.Debug(string(data))
 					switch ws.apiType {
 					case SPOT:
 						res, err := HandleWsPayloadResult[WsSpotPayloadExecutionReport](data)

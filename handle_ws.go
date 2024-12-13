@@ -313,6 +313,7 @@ type WsSpotPayloadExecutionReport struct {
 	Status              string `json:"X"` //订单的当前状态
 	RejectReason        string `json:"r"` //订单被拒绝的原因
 	OrderId             int64  `json:"i"` //orderId
+	IgnoreI             int64  `json:"I"` //请忽略
 	LastQty             string `json:"l"` //订单末次成交量
 	ExecutedQty         string `json:"z"` //订单累计已成交量
 	LastPrice           string `json:"L"` //订单末次成交价格
@@ -660,6 +661,7 @@ type WsPMMarginPayloadExecutionReport struct {
 	Status              string `json:"X"` //订单的当前状态
 	RejectReason        string `json:"r"` //订单被拒绝的原因
 	OrderId             int64  `json:"i"` //orderId
+	IgnoreI             int64  `json:"I"` //请忽略
 	LastQty             string `json:"l"` //订单末次成交量
 	ExecutedQty         string `json:"z"` //订单累计已成交量
 	LastPrice           string `json:"L"` //订单末次成交价格
