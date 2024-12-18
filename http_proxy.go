@@ -169,8 +169,7 @@ func RequestWithHeader(urlStr string, method string, headerMap map[string]string
 		}
 
 		currentProxy, currentProxyWeight, _ = getBestProxyAndWeight(apiType)
-		if currentProxy == nil || currentProxyWeight.UsedWeight >= maxWeight {
-			currentProxyWeight.Is429Limited = true
+		if currentProxy == nil || currentProxyWeight == nil || currentProxyWeight.UsedWeight >= maxWeight {
 			return nil, errors.New("all proxy ip weight limit reached")
 		}
 
