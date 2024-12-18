@@ -216,7 +216,7 @@ func SetServerTimeDelta(delta int64) {
 
 // 通用鉴权接口调用
 func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, error) {
-	log.Info(url)
+	//log.Info(url)
 	body, err := RequestWithHeader(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)
 	if err != nil {
 		return nil, err
