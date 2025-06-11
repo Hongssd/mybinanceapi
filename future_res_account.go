@@ -111,3 +111,29 @@ type FuturePositionRiskRow struct {
 	PositionSide     string `json:"positionSide"`     //持仓方向
 	UpdateTime       int64  `json:"updateTime"`       //更新时间
 }
+
+//	{
+//		"avgCostTimestampOfLast30d":7241837, //过去30天平均数据下载时间
+//	  	"downloadId":"546975389218332672",   //下载Id
+//	}
+type FutureIncomeAsynRes struct {
+	AvgCostTimestampOfLast30d int64  `json:"avgCostTimestampOfLast30d"` //过去30天平均数据下载时间
+	DownloadId                string `json:"downloadId"`                //下载Id
+}
+
+//	{
+//		"downloadId":"545923594199212032", // 下载Id
+//	  	"status":"completed",     // 状态，枚举类型：completed 已完成，processing 处理中
+//	  	"url":"www.binance.com",  // 适配该笔ID请求的下载链接
+//	  	"notified":true,          // 忽略
+//	  	"expirationTimestamp":1645009771000,  // 晚于该时间戳之后链接将自动失效
+//	  	"isExpired":null,
+//	}
+type FutureIncomeAsynIdRes struct {
+	DownloadId          string `json:"downloadId"`          //下载Id
+	Status              string `json:"status"`              //状态，枚举类型：completed 已完成，processing 处理中
+	Url                 string `json:"url"`                 //适配该笔ID请求的下载链接
+	Notified            bool   `json:"notified"`            //忽略
+	ExpirationTimestamp int64  `json:"expirationTimestamp"` //晚于该时间戳之后链接将自动失效
+	IsExpired           bool   `json:"isExpired"`           //是否过期
+}

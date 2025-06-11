@@ -228,6 +228,20 @@ func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, er
 	return &res.Result, res.handlerError()
 }
 
+// 通用body鉴权接口调用
+func binanceCallApiWithSecretForBody[T any](client *Client, url, method string, reqBody []byte) (*T, error) {
+	//log.Info(url)
+	body, err := RequestWithHeaderAndBody(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, reqBody, IS_GZIP)
+	if err != nil {
+		return nil, err
+	}
+	res, err := handlerCommonRest[T](body)
+	if err != nil {
+		return nil, err
+	}
+	return &res.Result, res.handlerError()
+}
+
 // 通用鉴权接口封装
 func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name, secret string) string {
 	query := binanceHandlerReq(request)
@@ -242,6 +256,27 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
 	//log.Warn(u.String())
 	return u.String()
+}
+
+// 通用body鉴权接口封装
+func binanceHandlerRequestApiWithSecretForBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
+	query := binanceHandlerReq(request)
+
+	//timestampStr := fmt.Sprintf("timestamp=%d", time.Now().UnixMilli())
+
+	//signStr := timestampStr + query
+	sign := HmacSha256(secret, query)
+	requestBody := []byte(query + "&signature=" + sign)
+	u := url.URL{
+		Scheme: "https",
+		Host:   BinanceGetRestHostByApiType(apiType),
+		Path:   name,
+		//RawQuery: timestampStr + "&signature=" + sign,
+	}
+	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
+	log.Warn("reqUrl: ", u.String())
+	log.Warn("reqBody: ", string(requestBody))
+	return requestBody, u.String()
 }
 
 // 通用非鉴权接口封装

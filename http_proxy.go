@@ -1,15 +1,17 @@
 package mybinanceapi
 
 import (
+	"bytes"
 	"compress/gzip"
 	"crypto/tls"
 	"errors"
-	"github.com/robfig/cron/v3"
 	"io"
 	"math/rand"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/robfig/cron/v3"
 )
 
 type RestProxy struct {
@@ -51,7 +53,7 @@ func SetUseProxy(useProxy bool, proxyUrls ...string) {
 	proxyList = newProxyList
 }
 
-func setWsUseProxy(useProxy bool) error {
+func SetWsUseProxy(useProxy bool) error {
 	if !UseProxy {
 		return errors.New("please set UseProxy first")
 	}
@@ -126,8 +128,11 @@ func getRandomProxy() (*RestProxy, error) {
 
 	return proxyList[rand.Intn(length)], nil
 }
-
 func RequestWithHeader(urlStr string, method string, headerMap map[string]string, isGzip bool) ([]byte, error) {
+	return RequestWithHeaderAndBody(urlStr, method, headerMap, []byte{}, isGzip)
+}
+
+func RequestWithHeaderAndBody(urlStr string, method string, headerMap map[string]string, reqBody []byte, isGzip bool) ([]byte, error) {
 	req, err := http.NewRequest(method, urlStr, nil)
 	if err != nil {
 		return nil, err
@@ -135,7 +140,8 @@ func RequestWithHeader(urlStr string, method string, headerMap map[string]string
 	for k, v := range headerMap {
 		req.Header.Set(k, v)
 	}
-	req.Header.Set("Content-Type", "application/json")
+	//req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	client := &http.Client{
 		Timeout: httpTimeout,
 	}
@@ -181,6 +187,10 @@ func RequestWithHeader(urlStr string, method string, headerMap map[string]string
 		reqProxy.TLSClientConfig = &tls.Config{InsecureSkipVerify: true} //set ssl
 
 		client.Transport = reqProxy
+	}
+	if reqBody != nil && len(reqBody) > 0 {
+		req.Body = io.NopCloser(bytes.NewBuffer(reqBody))
+		log.Warn(string(reqBody))
 	}
 
 	resp, err := client.Do(req)

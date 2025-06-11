@@ -13,6 +13,8 @@ const (
 	FutureMarginType                             //POST接口 (HMAC SHA256)变换逐全仓模式 (TRADE)
 	FutureLeverageBracket                        //GET接口 杠杆分层标准 (USER_DATA)
 	FuturePositionRisk                           //GET接口 用户持仓风险V2 (USER_DATA)
+	FutureIncomeAsyn                             //GET接口 获取合约资金流水下载Id (USER_DATA)
+	FutureIncomeAsynId                           //GET接口 通过下载Id获取合约资金流水下载链接(USER_DATA)
 
 	//交易接口
 	FutureOpenOrders        //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)
@@ -50,6 +52,7 @@ const (
 	FutureListenKeyPost   //生成listenKey (USER_STREAM)
 	FutureListenKeyPut    //延长listenKey有效期 (USER_STREAM)
 	FutureListenKeyDelete //关闭listenKey (USER_STREAM)
+
 )
 
 var FutureApiMap = map[FutureApi]string{
@@ -64,6 +67,8 @@ var FutureApiMap = map[FutureApi]string{
 	FutureMarginType:            "/fapi/v1/marginType",        //POST接口 (HMAC SHA256)变换逐全仓模式 (TRADE)
 	FutureLeverageBracket:       "/fapi/v1/leverageBracket",   //GET接口 杠杆分层标准 (USER_DATA)
 	FuturePositionRisk:          "/fapi/v2/positionRisk",      //GET接口 用户持仓风险V2 (USER_DATA)
+	FutureIncomeAsyn:            "/fapi/v1/income/asyn",       //GET接口 获取合约资金流水下载Id (USER_DATA)
+	FutureIncomeAsynId:          "/fapi/v1/income/asyn/id",    //GET接口 通过下载Id获取合约资金流水下载链接(USER_DATA)
 
 	//交易接口
 	FutureOpenOrders:        "/fapi/v1/openOrders",     //GET接口 (HMAC SHA256)查询当前挂单 (USER_DATA)

@@ -215,3 +215,63 @@ func (api *FuturePositionRiskApi) Timestamp(Timestamp int64) *FuturePositionRisk
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+// startTime	LONG	YES	起始时间，ms格式时间戳
+// endTime	LONG	YES	结束时间，ms格式时间戳
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type FutureIncomeAsynReq struct {
+	StartTime  *int64 `json:"startTime"`
+	EndTime    *int64 `json:"endTime"`
+	RecvWindow *int64 `json:"recvWindow"`
+	Timestamp  *int64 `json:"timestamp"`
+}
+
+type FutureIncomeAsynApi struct {
+	client *FutureRestClient
+	req    *FutureIncomeAsynReq
+}
+
+func (api *FutureIncomeAsynApi) StartTime(StartTime int64) *FutureIncomeAsynApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+func (api *FutureIncomeAsynApi) EndTime(EndTime int64) *FutureIncomeAsynApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+func (api *FutureIncomeAsynApi) RecvWindow(RecvWindow int64) *FutureIncomeAsynApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *FutureIncomeAsynApi) Timestamp(Timestamp int64) *FutureIncomeAsynApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// downloadId	STRING	YES	通过下载id 接口获取
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type FutureIncomeAsynIdReq struct {
+	DownloadId *string `json:"downloadId"`
+	RecvWindow *int64  `json:"recvWindow"`
+	Timestamp  *int64  `json:"timestamp"`
+}
+
+type FutureIncomeAsynIdApi struct {
+	client *FutureRestClient
+	req    *FutureIncomeAsynIdReq
+}
+
+func (api *FutureIncomeAsynIdApi) DownloadId(DownloadId string) *FutureIncomeAsynIdApi {
+	api.req.DownloadId = GetPointer(DownloadId)
+	return api
+}
+func (api *FutureIncomeAsynIdApi) RecvWindow(RecvWindow int64) *FutureIncomeAsynIdApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *FutureIncomeAsynIdApi) Timestamp(Timestamp int64) *FutureIncomeAsynIdApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

@@ -225,10 +225,11 @@ func (ws *PMMarginStreamClient) CreatePayload() (*WsPMMarginPayload, error) {
 type SpotWsType int
 
 const (
-	SPOT_WS_TYPE SpotWsType = iota
-	SPOT_MARGIN_WS_TYPE
-	SPOT_ISOLATED_MARGIN_WS_TYPE
+	SPOT_WS_TYPE SpotWsType = iota //现货
+	SPOT_MARGIN_WS_TYPE           //全倉
+	SPOT_ISOLATED_MARGIN_WS_TYPE  //逐倉
 )
+
 
 func (ws *SpotWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string, spotWsType SpotWsType, isolatedSymbol ...string) (*SpotWsStreamClient, error) {
 	ws.wsStreamPath = WS_ACCOUNT_PATH
@@ -347,7 +348,6 @@ func (ws *SpotWsStreamClient) listenKeyDelete() error {
 			log.Error(err)
 			return err
 		}
-
 	case SPOT_ISOLATED_MARGIN_WS_TYPE:
 		_, err := ws.client.NewSpotMarginIsolatedUserDataStreamDelete().Symbol(ws.isolatedSymbol).ListenKey(ws.listenKey).Do()
 		if err != nil {

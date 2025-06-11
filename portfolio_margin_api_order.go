@@ -12,8 +12,8 @@ func (client *PortfolioMarginRestClient) NewUmOrderPost() *PortfolioMarginUmOrde
 
 func (api *PortfolioMarginUmOrderPostApi) Do() (*PortfolioMarginUmOrderPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
-	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmOrderPost], api.client.c.ApiSecret)
-	return binanceCallApiWithSecret[PortfolioMarginUmOrderPostRes](api.client.c, url, POST)
+	reqBody, url := binanceHandlerRequestApiWithSecretForBody(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmOrderPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecretForBody[PortfolioMarginUmOrderPostRes](api.client.c, url, POST, reqBody)
 }
 
 // binance PortfolioMarginUmOrderDelete rest UM撤单（TRADE)

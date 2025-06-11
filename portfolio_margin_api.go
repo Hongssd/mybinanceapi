@@ -25,6 +25,8 @@ const (
 	PortfolioMarginCmCommissionRate       // 查询CM手续费率
 	PortfolioMarginAutoCollection         // 统一账户资金归集
 	PortfolioMarginAssetCollection        // 特定资产资金归集
+	PortfolioMarginUmIncomeAsyn           // 获取UM合约资金流水历史下载Id(USER_DATA)
+	PortfolioMarginUmIncomeAsynId         // 通过下载Id获取UM合约资金流水历史下载链接 (USER_DATA)
 
 	// 交易接口
 	PortfolioMarginUmOrderPost               // UM下单
@@ -101,6 +103,8 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmCommissionRate:       "/papi/v1/cm/commissionRate",    // 查询CM手续费率
 	PortfolioMarginAutoCollection:         "/papi/v1/auto-collection",      // 统一账户资金归集
 	PortfolioMarginAssetCollection:        "/papi/v1/asset-collection",     // 特定资产资金归集
+	PortfolioMarginUmIncomeAsyn:           "/papi/v1/um/income/asyn",       // 获取UM合约资金流水历史下载Id(USER_DATA)
+	PortfolioMarginUmIncomeAsynId:         "/papi/v1/um/income/asyn/id",    // 通过下载Id获取UM合约资金流水历史下载链接 (USER_DATA)
 
 	//交易接口
 	PortfolioMarginUmOrderPost:               "/papi/v1/um/order",                    // UM下单

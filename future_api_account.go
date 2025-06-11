@@ -119,3 +119,29 @@ func (api *FuturePositionRiskApi) Do() (*FuturePositionRiskRes, error) {
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FuturePositionRisk], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FuturePositionRiskRes](api.client.c, url, GET)
 }
+
+// binance FUTURE  FutureIncomeAsyn rest获取合约资金流水下载Id (USER_DATA)
+func (client *FutureRestClient) NewFutureIncomeAsyn() *FutureIncomeAsynApi {
+	return &FutureIncomeAsynApi{
+		client: client,
+		req:    &FutureIncomeAsynReq{},
+	}
+}
+func (api *FutureIncomeAsynApi) Do() (*FutureIncomeAsynRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureIncomeAsyn], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureIncomeAsynRes](api.client.c, url, GET)
+}
+
+// binance FUTURE  FutureIncomeAsynId rest通过下载Id获取合约资金流水下载链接 (USER_DATA)
+func (client *FutureRestClient) NewFutureIncomeAsynId() *FutureIncomeAsynIdApi {
+	return &FutureIncomeAsynIdApi{
+		client: client,
+		req:    &FutureIncomeAsynIdReq{},
+	}
+}
+func (api *FutureIncomeAsynIdApi) Do() (*FutureIncomeAsynIdRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureIncomeAsynId], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureIncomeAsynIdRes](api.client.c, url, GET)
+}

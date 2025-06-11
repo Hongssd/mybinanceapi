@@ -262,3 +262,35 @@ func (api *PortfolioMarginAssetCollectionApi) Do() (*PortfolioMarginAssetCollect
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginAssetCollection], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginAssetCollectionRes](api.client.c, url, POST)
 }
+
+
+// binance PortfolioMarginUmIncomeAsyn rest 获取UM合约资金流水历史下载Id (USER_DATA)
+func (client *PortfolioMarginRestClient) NewUmIncomeAsyn() *PortfolioMarginUmIncomeAsynApi {
+	return &PortfolioMarginUmIncomeAsynApi{
+		client: client,
+		req:    &PortfolioMarginUmIncomeAsynReq{},
+	}
+}
+
+func (api *PortfolioMarginUmIncomeAsynApi) Do() (*PortfolioMarginUmIncomeAsynRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmIncomeAsyn], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmIncomeAsynRes](api.client.c, url, GET)
+}
+
+// binance PortfolioMarginUmIncomeAsynId rest 通过下载Id获取UM合约资金流水历史下载链接 (USER_DATA)
+func (client *PortfolioMarginRestClient) NewUmIncomeAsynId() *PortfolioMarginUmIncomeAsynIdApi {
+	return &PortfolioMarginUmIncomeAsynIdApi{
+		client: client,
+		req:    &PortfolioMarginUmIncomeAsynIdReq{},
+	}
+}
+
+func (api *PortfolioMarginUmIncomeAsynIdApi) Do() (*PortfolioMarginUmIncomeAsynIdRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmIncomeAsynId], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmIncomeAsynIdRes](api.client.c, url, GET)
+}	
+
+
+
