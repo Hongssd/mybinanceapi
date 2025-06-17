@@ -242,7 +242,7 @@ type PortfolioMarginMarginOrderPostRes struct {
 	TimeInForce           string `json:"timeInForce"`           // TIF
 	Type                  string `json:"type"`                  // 订单类型
 	Side                  string `json:"side"`                  // 方向
-	MarginBuyBorrowAmount int    `json:"marginBuyBorrowAmount"` // 下单后没有发生借款则不返回该字段
+	MarginBuyBorrowAmount string `json:"marginBuyBorrowAmount"` // 下单后没有发生借款则不返回该字段
 	MarginBuyBorrowAsset  string `json:"marginBuyBorrowAsset"`  // 下单后没有发生借款则不返回该字段
 	Fills                 []struct {
 		Price           string `json:"price"`           // 成交价格
