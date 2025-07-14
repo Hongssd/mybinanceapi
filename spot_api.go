@@ -58,6 +58,8 @@ const (
 	SpotAssetTradeFee           //GET接口 查询用户交易手续费率 (USER_DATA)
 	SpotCapitalDepositHisrec    //GET接口 获取充值历史 (USER_DATA)
 	SpotCapitalDepositAddress   //GET接口 获取充值地址 (USER_DATA)
+	SpotAssetDustBtc            //POST接口 获取可以转换成BNB的小额资产 (USER_DATA)
+	SpotAssetDust               //POST接口 小额资产转换(USER_DATA)
 
 	//现货订单接口
 	SpotOpenOrders         //GET接口 查询当前挂单 (USER_DATA)
@@ -171,6 +173,8 @@ var SpotApiMap = map[SpotApi]string{
 	SpotAssetTradeFee:           "/sapi/v1/asset/tradeFee",           //GET接口 查询用户交易手续费率 (USER_DATA)
 	SpotCapitalDepositHisrec:    "/sapi/v1/capital/deposit/hisrec",   //GET接口 获取充值历史 (USER_DATA)
 	SpotCapitalDepositAddress:   "/sapi/v1/capital/deposit/address",  //GET接口 获取充值地址 (USER_DATA)
+	SpotAssetDustBtc:            "/sapi/v1/asset/dust-btc",           //POST接口 获取可以转换成BNB的小额资产 (USER_DATA)
+	SpotAssetDust:               "/sapi/v1/asset/dust",               //POST接口 小额资产转换(USER_DATA)
 
 	//现货订单接口
 	SpotOpenOrders: "/api/v3/openOrders", //GET接口 查询当前挂单 (USER_DATA)

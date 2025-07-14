@@ -2255,3 +2255,115 @@ type PortfolioMarginMarginMyTradesApi struct {
 	client *PortfolioMarginRestClient
 	req    *PortfolioMarginMarginMyTradesReq
 }
+
+// 单次还款价值需小于等于 50000 USD
+// 如果amount未发送，则在有足够的特定偿还资产的情况下，将偿还所有资产负债。
+// 如果发送amount，则在有足够的特定还款资产的情况下，仅偿还指定amount的资产负债。
+// 无论是否将需要偿还的负债资产放入specifyRepayAssets中，系统都会先使用相同的资产（如果有）来偿还负债
+// asset	STRING	YES
+// amount	STRING	NO
+// specifyRepayAssets	STRING	NO	指定还款资产，多资产用逗号分隔
+// recvWindow	LONG	NO	赋值不能超过60000
+// timestamp	LONG	YES
+type PortfolioMarginMarginRepayDebtReq struct {
+	Asset              *string `json:"asset"`
+	Amount             *string `json:"amount"`
+	SpecifyRepayAssets *string `json:"specifyRepayAssets"`
+	RecvWindow         *int64  `json:"recvWindow"`
+	Timestamp          *int64  `json:"timestamp"`
+}
+
+type PortfolioMarginMarginRepayDebtApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginRepayDebtReq
+}
+
+func (api *PortfolioMarginMarginRepayDebtApi) Asset(asset string) *PortfolioMarginMarginRepayDebtApi {
+	api.req.Asset = GetPointer(asset)
+	return api
+}
+func (api *PortfolioMarginMarginRepayDebtApi) Amount(amount string) *PortfolioMarginMarginRepayDebtApi {
+	api.req.Amount = GetPointer(amount)
+	return api
+}
+func (api *PortfolioMarginMarginRepayDebtApi) SpecifyRepayAssets(specifyRepayAssets string) *PortfolioMarginMarginRepayDebtApi {
+	api.req.SpecifyRepayAssets = GetPointer(specifyRepayAssets)
+	return api
+}
+func (api *PortfolioMarginMarginRepayDebtApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginRepayDebtApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+func (api *PortfolioMarginMarginRepayDebtApi) Timestamp(timestamp int64) *PortfolioMarginMarginRepayDebtApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}
+
+// asset	STRING	NO
+// startTime	LONG	NO
+// endTime	LONG	NO
+// current	LONG	NO	当前查询页。 开始值 1. 默认:1
+// size	LONG	NO	默认:10 最大:100
+// archived	STRING	NO	默认: false. 查询6个月以前的数据，需要设为 true
+// recvWindow	LONG	NO	赋值不能超过 60000
+// timestamp	LONG	YES
+// 响应返回为降序排列。
+// 查询时间范围最大不得超过30天，这是确保数据正确性必须的。
+// 若startTime和endTime没传，则默认返回最近7天数据。
+// 如果发送了startTime且未发送endTime，则返回startTime到现在的的利息历史记录；若startTime至今超过30天，则返回过去30天的利息历史记录。
+// 如果没有发送startTime而发送了endTime，则返回endTime之前7天的利息历史记录。
+// 返回的type数据有5种类型:
+// PERIODIC 每小时收的利息
+// ON_BORROW 借款的时候第一次收的利息
+// PERIODIC_CONVERTED 每小时收的利息，用BNB抵扣
+// ON_BORROW_CONVERTED 借款的时候第一次收的利息，用BNB抵扣
+// PORTFOLIO统一账户负余额每日利息
+type PortfolioMarginMarginInterestHistoryReq struct {
+	Asset      *string `json:"asset"`
+	StartTime  *int64  `json:"startTime"`
+	EndTime    *int64  `json:"endTime"`
+	Current    *int64  `json:"current"`
+	Size       *int64  `json:"size"`
+	Archived   *string `json:"archived"`
+	RecvWindow *int64  `json:"recvWindow"`
+	Timestamp  *int64  `json:"timestamp"`
+}
+
+type PortfolioMarginMarginInterestHistoryApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginMarginInterestHistoryReq
+}
+
+func (api *PortfolioMarginMarginInterestHistoryApi) Asset(asset string) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.Asset = GetPointer(asset)
+	return api
+}
+
+func (api *PortfolioMarginMarginInterestHistoryApi) StartTime(startTime int64) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.StartTime = GetPointer(startTime)
+	return api
+}
+func (api *PortfolioMarginMarginInterestHistoryApi) EndTime(endTime int64) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.EndTime = GetPointer(endTime)
+	return api
+}
+func (api *PortfolioMarginMarginInterestHistoryApi) Current(current int64) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.Current = GetPointer(current)
+	return api
+}
+func (api *PortfolioMarginMarginInterestHistoryApi) Size(size int64) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.Size = GetPointer(size)
+	return api
+}
+func (api *PortfolioMarginMarginInterestHistoryApi) Archived(archived string) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.Archived = GetPointer(archived)
+	return api
+}
+func (api *PortfolioMarginMarginInterestHistoryApi) RecvWindow(recvWindow int64) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.RecvWindow = GetPointer(recvWindow)
+	return api
+}
+func (api *PortfolioMarginMarginInterestHistoryApi) Timestamp(timestamp int64) *PortfolioMarginMarginInterestHistoryApi {
+	api.req.Timestamp = GetPointer(timestamp)
+	return api
+}

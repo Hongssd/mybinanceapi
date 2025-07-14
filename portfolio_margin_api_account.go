@@ -263,6 +263,20 @@ func (api *PortfolioMarginAssetCollectionApi) Do() (*PortfolioMarginAssetCollect
 	return binanceCallApiWithSecret[PortfolioMarginAssetCollectionRes](api.client.c, url, POST)
 }
 
+// binance PortfolioMarginUmIncome rest 获取UM损益资金流水 (USER_DATA)
+func (client *PortfolioMarginRestClient) NewUmIncome() *PortfolioMarginUmIncomeApi {
+	return &PortfolioMarginUmIncomeApi{
+		client: client,
+		req:    &PortfolioMarginUmIncomeReq{},
+	}
+}
+
+func (api *PortfolioMarginUmIncomeApi) Do() (*PortfolioMarginUmIncomeRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginUmIncome], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginUmIncomeRes](api.client.c, url, GET)
+}
+
 
 // binance PortfolioMarginUmIncomeAsyn rest 获取UM合约资金流水历史下载Id (USER_DATA)
 func (client *PortfolioMarginRestClient) NewUmIncomeAsyn() *PortfolioMarginUmIncomeAsynApi {
@@ -292,5 +306,16 @@ func (api *PortfolioMarginUmIncomeAsynIdApi) Do() (*PortfolioMarginUmIncomeAsynI
 	return binanceCallApiWithSecret[PortfolioMarginUmIncomeAsynIdRes](api.client.c, url, GET)
 }	
 
+// binance PortfolioMarginRepayFuturesNegativeBalance rest 清还合约负余额 (USER_DATA)
+func (client *PortfolioMarginRestClient) NewRepayFuturesNegativeBalance() *PortfolioMarginRepayFuturesNegativeBalanceApi {
+	return &PortfolioMarginRepayFuturesNegativeBalanceApi{
+		client: client,
+		req:    &PortfolioMarginRepayFuturesNegativeBalanceReq{},
+	}
+}
 
-
+func (api *PortfolioMarginRepayFuturesNegativeBalanceApi) Do() (*PortfolioMarginRepayFuturesNegativeBalanceRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginRepayFuturesNegativeBalance], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginRepayFuturesNegativeBalanceRes](api.client.c, url, POST)
+}

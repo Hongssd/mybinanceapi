@@ -809,3 +809,50 @@ type PortfolioMarginMarginMyTradesResRow struct {
 }
 
 type PortfolioMarginMarginMyTradesRes []PortfolioMarginMarginMyTradesResRow
+
+//	{
+//	    "amount": "0.10000000",
+//		"asset": "BNB",
+//	    "specifyRepayAssets": [
+//	    "USDT",
+//	    "BTC"
+//		],
+//	    "updateTime": 1636371437000
+//		"success": true
+//	}
+type PortfolioMarginMarginRepayDebtRes struct {
+	Amount             string   `json:"amount"`
+	Asset              string   `json:"asset"`
+	SpecifyRepayAssets []string `json:"specifyRepayAssets"`
+	UpdateTime         int64    `json:"updateTime"`
+	Success            bool     `json:"success"`
+}
+
+//	{
+//		"rows": [
+//		  {
+//			"txId": 1352286576452864727,
+//			"interestAccuredTime": 1672160400000,
+//			"asset": "USDT",
+//			"rawAsset": “USDT”,
+//			"principal": "45.3313",
+//			"interest": "0.00024995",
+//			"interestRate": "0.00013233",
+//			"type": "ON_BORROW"
+//		  }
+//		],
+//		"total": 1
+//	  }
+type PortfolioMarginMarginInterestHistoryResRow struct {
+	TxId                int64  `json:"txId"`
+	InterestAccuredTime int64  `json:"interestAccuredTime"`
+	Asset               string `json:"asset"`
+	RawAsset            string `json:"rawAsset"`
+	Principal           string `json:"principal"`
+	Interest            string `json:"interest"`
+	InterestRate        string `json:"interestRate"`
+}
+type PortfolioMarginMarginInterestHistoryRes struct {
+	Rows  []PortfolioMarginMarginInterestHistoryResRow `json:"rows"`
+	Total int64                                        `json:"total"`
+}

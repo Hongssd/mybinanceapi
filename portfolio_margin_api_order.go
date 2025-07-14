@@ -561,3 +561,31 @@ func (api *PortfolioMarginMarginMyTradesApi) Do() (*PortfolioMarginMarginMyTrade
 	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginMyTrades], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[PortfolioMarginMarginMyTradesRes](api.client.c, url, GET)
 }
+
+// binance PortfolioMarginMarginRepayDebt rest 杠杆账户还款(TRADE)
+func (client *PortfolioMarginRestClient) NewMarginRepayDebt() *PortfolioMarginMarginRepayDebtApi {
+	return &PortfolioMarginMarginRepayDebtApi{
+		client: client,
+		req:    &PortfolioMarginMarginRepayDebtReq{},
+	}
+}
+
+func (api *PortfolioMarginMarginRepayDebtApi) Do() (*PortfolioMarginMarginRepayDebtRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginRepayDebt], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginMarginRepayDebtRes](api.client.c, url, POST)
+}
+
+// binance PortfolioMarginMarginInterestHistory rest 获取杠杆利息历史(USER_DATA)
+func (client *PortfolioMarginRestClient) NewMarginInterestHistory() *PortfolioMarginMarginInterestHistoryApi {
+	return &PortfolioMarginMarginInterestHistoryApi{
+		client: client,
+		req:    &PortfolioMarginMarginInterestHistoryReq{},
+	}
+}
+
+func (api *PortfolioMarginMarginInterestHistoryApi) Do() (*PortfolioMarginMarginInterestHistoryRes, error) {
+	api.Timestamp(time.Now().UnixMilli())
+	url := binanceHandlerRequestApiWithSecret(PORTFOLIO_MARGIN, api.req, PortfolioMarginApiMap[PortfolioMarginMarginInterestHistory], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[PortfolioMarginMarginInterestHistoryRes](api.client.c, url, GET)
+}

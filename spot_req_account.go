@@ -320,3 +320,75 @@ type SpotCapitalDepositHisrecApi struct {
 	client *SpotRestClient
 	req    *SpotCapitalDepositHisrecReq
 }
+
+//accountType	STRING	NO	SPOT或MARGIN,默认SPOT
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotAssetDustBtcReq struct {
+	AccountType *string `json:"accountType"` //NO	SPOT或MARGIN,默认SPOT
+	RecvWindow  *int64  `json:"recvWindow"`  //NO
+	Timestamp   *int64  `json:"timestamp"`   //YES
+}
+
+type SpotAssetDustBtcApi struct {
+	client *SpotRestClient
+	req    *SpotAssetDustBtcReq
+}
+
+//accountType	STRING	NO	SPOT或MARGIN,默认SPOT
+func (api *SpotAssetDustBtcApi) AccountType(AccountType string) *SpotAssetDustBtcApi {
+	api.req.AccountType = GetPointer(AccountType)
+	return api
+}
+
+// recvWindow	LONG	NO
+func (api *SpotAssetDustBtcApi) RecvWindow(RecvWindow int64) *SpotAssetDustBtcApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// timestamp	LONG	YES
+func (api *SpotAssetDustBtcApi) Timestamp(Timestamp int64) *SpotAssetDustBtcApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// asset	ARRAY	YES	正在转换的资产。 例如：asset=BTC,USDT
+// accountType	STRING	NO	SPOT或MARGIN,默认SPOT
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotAssetDustReq struct {
+	Asset       *string `json:"asset"`       //YES	正在转换的资产。 例如：asset=BTC,USDT
+	AccountType *string `json:"accountType"` //NO	SPOT或MARGIN,默认SPOT
+	RecvWindow  *int64  `json:"recvWindow"`  //NO
+	Timestamp   *int64  `json:"timestamp"`   //YES
+}
+
+type SpotAssetDustApi struct {
+	client *SpotRestClient
+	req    *SpotAssetDustReq
+}
+
+// asset	ARRAY	YES	正在转换的资产。 例如：asset=BTC,USDT
+func (api *SpotAssetDustApi) Asset(Asset string) *SpotAssetDustApi {
+	api.req.Asset = GetPointer(Asset)
+	return api
+}
+
+// accountType	STRING	NO	SPOT或MARGIN,默认SPOT
+func (api *SpotAssetDustApi) AccountType(AccountType string) *SpotAssetDustApi {
+	api.req.AccountType = GetPointer(AccountType)
+	return api
+}
+
+// recvWindow	LONG	NO
+func (api *SpotAssetDustApi) RecvWindow(RecvWindow int64) *SpotAssetDustApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// timestamp	LONG	YES
+func (api *SpotAssetDustApi) Timestamp(Timestamp int64) *SpotAssetDustApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

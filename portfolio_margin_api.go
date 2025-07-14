@@ -25,8 +25,11 @@ const (
 	PortfolioMarginCmCommissionRate       // 查询CM手续费率
 	PortfolioMarginAutoCollection         // 统一账户资金归集
 	PortfolioMarginAssetCollection        // 特定资产资金归集
+	PortfolioMarginUmIncome               //GET 获取UM损益资金流水(USER_DATA)
 	PortfolioMarginUmIncomeAsyn           // 获取UM合约资金流水历史下载Id(USER_DATA)
 	PortfolioMarginUmIncomeAsynId         // 通过下载Id获取UM合约资金流水历史下载链接 (USER_DATA)
+
+	PortfolioMarginRepayFuturesNegativeBalance //清还合约负余额(USER_DATA)
 
 	// 交易接口
 	PortfolioMarginUmOrderPost               // UM下单
@@ -66,6 +69,8 @@ const (
 	PortfolioMarginMarginOpenOrders          // 查询杠杆账户当前全部挂单
 	PortfolioMarginMarginAllOrders           // 查询杠杆账户所有订单
 	PortfolioMarginMarginMyTrades            // 查询杠杆账户成交历史
+	PortfolioMarginMarginRepayDebt           // 杠杆账户还款(TRADE)
+	PortfolioMarginMarginInterestHistory     // GET 获取杠杆利息历史(USER_DATA)
 
 	PortfolioMarginMarginOrderOcoPost          // 杠杆OCO下单
 	PortfolioMarginMarginOrderOcoDelete        // 取消杠杆账户OCO订单(TRADE)
@@ -84,27 +89,29 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginPing: "/papi/v1/ping", // 测试服务器连通性
 
 	// 账户信息接口
-	PortfolioMarginGetBalance:             "/papi/v1/balance",              // 查询账户余额
-	PortfolioMarginGetAccount:             "/papi/v1/account",              // 查询账户信息
-	PortfolioMarginGetMaxBorrowable:       "/papi/v1/margin/maxBorrowable", // 查询最大可借贷额度
-	PortfolioMarginGetMaxWithdraw:         "/papi/v1/margin/maxWithdraw",   // 查询最大可转出额度
-	PortfolioMarginSetUmLeverage:          "/papi/v1/um/leverage",          // 设置UM开仓杠杆
-	PortfolioMarginSetCmLeverage:          "/papi/v1/cm/leverage",          // 设置CM开仓杠杆
-	PortfolioMarginUmPositionSideDualPost: "/papi/v1/um/positionSide/dual", // 更改UM持仓模式
-	PortfolioMarginUmPositionSideDualGet:  "/papi/v1/um/positionSide/dual", // 查询UM持仓模式
-	PortfolioMarginCmPositionSideDualPost: "/papi/v1/cm/positionSide/dual", // 更改CM持仓模式
-	PortfolioMarginCmPositionSideDualGet:  "/papi/v1/cm/positionSide/dual", // 查询CM持仓模式
-	PortfolioMarginUmAccountV1:            "/papi/v1/um/account",           // 获取UM账户信息
-	PortfolioMarginUmAccountV2:            "/papi/v2/um/account",           // 获取UM账户信息
-	PortfolioMarginCmAccount:              "/papi/v1/cm/account",           // 获取CM账户信息
-	PortfolioMarginUmPositionRisk:         "/papi/v1/um/positionRisk",      // 查询UM持仓风险
-	PortfolioMarginCmPositionRisk:         "/papi/v1/cm/positionRisk",      // 查询CM持仓风险
-	PortfolioMarginUmCommissionRate:       "/papi/v1/um/commissionRate",    // 查询UM手续费率
-	PortfolioMarginCmCommissionRate:       "/papi/v1/cm/commissionRate",    // 查询CM手续费率
-	PortfolioMarginAutoCollection:         "/papi/v1/auto-collection",      // 统一账户资金归集
-	PortfolioMarginAssetCollection:        "/papi/v1/asset-collection",     // 特定资产资金归集
-	PortfolioMarginUmIncomeAsyn:           "/papi/v1/um/income/asyn",       // 获取UM合约资金流水历史下载Id(USER_DATA)
-	PortfolioMarginUmIncomeAsynId:         "/papi/v1/um/income/asyn/id",    // 通过下载Id获取UM合约资金流水历史下载链接 (USER_DATA)
+	PortfolioMarginGetBalance:                  "/papi/v1/balance",                        // 查询账户余额
+	PortfolioMarginGetAccount:                  "/papi/v1/account",                        // 查询账户信息
+	PortfolioMarginGetMaxBorrowable:            "/papi/v1/margin/maxBorrowable",           // 查询最大可借贷额度
+	PortfolioMarginGetMaxWithdraw:              "/papi/v1/margin/maxWithdraw",             // 查询最大可转出额度
+	PortfolioMarginSetUmLeverage:               "/papi/v1/um/leverage",                    // 设置UM开仓杠杆
+	PortfolioMarginSetCmLeverage:               "/papi/v1/cm/leverage",                    // 设置CM开仓杠杆
+	PortfolioMarginUmPositionSideDualPost:      "/papi/v1/um/positionSide/dual",           // 更改UM持仓模式
+	PortfolioMarginUmPositionSideDualGet:       "/papi/v1/um/positionSide/dual",           // 查询UM持仓模式
+	PortfolioMarginCmPositionSideDualPost:      "/papi/v1/cm/positionSide/dual",           // 更改CM持仓模式
+	PortfolioMarginCmPositionSideDualGet:       "/papi/v1/cm/positionSide/dual",           // 查询CM持仓模式
+	PortfolioMarginUmAccountV1:                 "/papi/v1/um/account",                     // 获取UM账户信息
+	PortfolioMarginUmAccountV2:                 "/papi/v2/um/account",                     // 获取UM账户信息
+	PortfolioMarginCmAccount:                   "/papi/v1/cm/account",                     // 获取CM账户信息
+	PortfolioMarginUmPositionRisk:              "/papi/v1/um/positionRisk",                // 查询UM持仓风险
+	PortfolioMarginCmPositionRisk:              "/papi/v1/cm/positionRisk",                // 查询CM持仓风险
+	PortfolioMarginUmCommissionRate:            "/papi/v1/um/commissionRate",              // 查询UM手续费率
+	PortfolioMarginCmCommissionRate:            "/papi/v1/cm/commissionRate",              // 查询CM手续费率
+	PortfolioMarginAutoCollection:              "/papi/v1/auto-collection",                // 统一账户资金归集
+	PortfolioMarginAssetCollection:             "/papi/v1/asset-collection",               // 特定资产资金归集
+	PortfolioMarginUmIncome:                    "/papi/v1/um/income",                      // 获取UM损益资金流水(USER_DATA)
+	PortfolioMarginUmIncomeAsyn:                "/papi/v1/um/income/asyn",                 // 获取UM合约资金流水历史下载Id(USER_DATA)
+	PortfolioMarginUmIncomeAsynId:              "/papi/v1/um/income/asyn/id",              // 通过下载Id获取UM合约资金流水历史下载链接 (USER_DATA)
+	PortfolioMarginRepayFuturesNegativeBalance: "/papi/v1/repay-futures-negative-balance", //清还合约负余额(USER_DATA)
 
 	//交易接口
 	PortfolioMarginUmOrderPost:               "/papi/v1/um/order",                    // UM下单
@@ -137,13 +144,15 @@ var PortfolioMarginApiMap = map[PortfolioMarginApi]string{
 	PortfolioMarginCmConditionalAllOrders:           "/papi/v1/cm/conditional/allOrders",     // 查询CM所有条件订单
 	PortfolioMarginCmConditionalOrderHistory:        "/papi/v1/cm/conditional/orderHistory",  // 查询CM条件单历史
 
-	PortfolioMarginMarginOrderPost:           "/papi/v1/margin/order",         // 杠杆下单
-	PortfolioMarginMarginOrderDelete:         "/papi/v1/margin/order",         // 杠杆账户撤销订单(TRADE)
-	PortfolioMarginMarginAllOpenOrdersDelete: "/papi/v1/margin/allOpenOrders", // 杠杆账户撤销单一交易对的所有挂单(TRADE)
-	PortfolioMarginMarginOrderGet:            "/papi/v1/margin/order",         // 查询杠杆账户订单
-	PortfolioMarginMarginOpenOrders:          "/papi/v1/margin/openOrders",    // 查询杠杆账户当前全部挂单
-	PortfolioMarginMarginAllOrders:           "/papi/v1/margin/allOrders",     // 查询杠杆账户所有订单
-	PortfolioMarginMarginMyTrades:            "/papi/v1/margin/myTrades",      // 查询杠杆账户成交历史
+	PortfolioMarginMarginOrderPost:           "/papi/v1/margin/order",                 // 杠杆下单
+	PortfolioMarginMarginOrderDelete:         "/papi/v1/margin/order",                 // 杠杆账户撤销订单(TRADE)
+	PortfolioMarginMarginAllOpenOrdersDelete: "/papi/v1/margin/allOpenOrders",         // 杠杆账户撤销单一交易对的所有挂单(TRADE)
+	PortfolioMarginMarginOrderGet:            "/papi/v1/margin/order",                 // 查询杠杆账户订单
+	PortfolioMarginMarginOpenOrders:          "/papi/v1/margin/openOrders",            // 查询杠杆账户当前全部挂单
+	PortfolioMarginMarginAllOrders:           "/papi/v1/margin/allOrders",             // 查询杠杆账户所有订单
+	PortfolioMarginMarginMyTrades:            "/papi/v1/margin/myTrades",              // 查询杠杆账户成交历史
+	PortfolioMarginMarginRepayDebt:           "/papi/v1/margin/repay-debt",            //杠杆账户还款(TRADE)
+	PortfolioMarginMarginInterestHistory:     "/papi/v1/margin/marginInterestHistory", // 获取杠杆利息历史(USER_DATA)
 
 	PortfolioMarginMarginOrderOcoPost:          "/papi/v1/margin/order/oco",     // 杠杆OCO下单
 	PortfolioMarginMarginOrderOcoDelete:        "/papi/v1/margin/orderList",     // 取消杠杆账户OCO订单(TRADE)

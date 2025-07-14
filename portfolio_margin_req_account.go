@@ -524,6 +524,61 @@ type PortfolioMarginAssetCollectionApi struct {
 	req    *PortfolioMarginAssetCollectionReq
 }
 
+// symbol	STRING	NO
+// incomeType	STRING	NO	TRANSFER, WELCOME_BONUS, REALIZED_PNL, FUNDING_FEE, COMMISSION, INSURANCE_CLEAR, REFERRAL_KICKBACK, COMMISSION_REBATE, API_REBATE, CONTEST_REWARD, CROSS_COLLATERAL_TRANSFER, OPTIONS_PREMIUM_FEE, OPTIONS_SETTLE_PROFIT, INTERNAL_TRANSFER, AUTO_EXCHANGE, DELIVERED_SETTELMENT, COIN_SWAP_DEPOSIT, COIN_SWAP_WITHDRAW, POSITION_LIMIT_INCREASE_FEE
+// startTime	LONG	NO	起始时间
+// endTime	LONG	NO	结束时间
+// limit	INT	NO	默认 100; 最大 1000
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type PortfolioMarginUmIncomeReq struct {
+	Symbol     *string `json:"symbol,omitempty"`     // NO
+	IncomeType *string `json:"incomeType,omitempty"` // NO
+	StartTime  *int64  `json:"startTime,omitempty"`  // NO
+	EndTime    *int64  `json:"endTime,omitempty"`    // NO
+	Limit      *int    `json:"limit,omitempty"`      // NO
+	RecvWindow *int64  `json:"recvWindow,omitempty"` // NO
+	Timestamp  *int64  `json:"timestamp,omitempty"`  // YES
+}
+type PortfolioMarginUmIncomeApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginUmIncomeReq
+}
+
+func (api *PortfolioMarginUmIncomeApi) Symbol(symbol string) *PortfolioMarginUmIncomeApi {
+	api.req.Symbol = GetPointer(symbol)
+	return api
+}
+
+func (api *PortfolioMarginUmIncomeApi) IncomeType(incomeType string) *PortfolioMarginUmIncomeApi {
+	api.req.IncomeType = GetPointer(incomeType)
+	return api
+}
+
+func (api *PortfolioMarginUmIncomeApi) StartTime(StartTime int64) *PortfolioMarginUmIncomeApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+
+func (api *PortfolioMarginUmIncomeApi) EndTime(EndTime int64) *PortfolioMarginUmIncomeApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+
+func (api *PortfolioMarginUmIncomeApi) Limit(Limit int) *PortfolioMarginUmIncomeApi {
+	api.req.Limit = GetPointer(Limit)
+	return api
+}
+
+func (api *PortfolioMarginUmIncomeApi) RecvWindow(RecvWindow int64) *PortfolioMarginUmIncomeApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *PortfolioMarginUmIncomeApi) Timestamp(Timestamp int64) *PortfolioMarginUmIncomeApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
 // startTime	LONG	YES	起始时间，ms格式时间戳
 // endTime	LONG	YES	结束时间，ms格式时间戳
 // recvWindow	LONG	NO
@@ -585,6 +640,25 @@ func (api *PortfolioMarginUmIncomeAsynIdApi) RecvWindow(RecvWindow int64) *Portf
 }
 
 func (api *PortfolioMarginUmIncomeAsynIdApi) Timestamp(Timestamp int64) *PortfolioMarginUmIncomeAsynIdApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+type PortfolioMarginRepayFuturesNegativeBalanceReq struct {
+	RecvWindow *int64 `json:"recvWindow"`
+	Timestamp  *int64 `json:"timestamp"`
+}
+
+type PortfolioMarginRepayFuturesNegativeBalanceApi struct {
+	client *PortfolioMarginRestClient
+	req    *PortfolioMarginRepayFuturesNegativeBalanceReq
+}
+
+func (api *PortfolioMarginRepayFuturesNegativeBalanceApi) RecvWindow(RecvWindow int64) *PortfolioMarginRepayFuturesNegativeBalanceApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *PortfolioMarginRepayFuturesNegativeBalanceApi) Timestamp(Timestamp int64) *PortfolioMarginRepayFuturesNegativeBalanceApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }

@@ -100,3 +100,35 @@ type SpotCapitalDepositHisrecResRow struct {
 	WalletType    int    `json:"walletType"`
 }
 type SpotCapitalDepositHisrecRes []SpotCapitalDepositHisrecResRow
+
+type SpotAssetDustBtcRes struct {
+	Details            []SpotAssetDustBtcDetail `json:"details"`
+	TotalTransferBTC   string                   `json:"totalTransferBTC"`
+	TotalTransferBNB   string                   `json:"totalTransferBNB"`
+	DribbletPercentage string                   `json:"dribbletPercentage"`
+}
+
+type SpotAssetDustBtcDetail struct {
+	Asset            string `json:"asset"`
+	AssetFullName    string `json:"assetFullName"`
+	AmountFree       string `json:"amountFree"`
+	ToBTC            string `json:"toBTC"`
+	ToBNB            string `json:"toBNB"`
+	ToBNBOffExchange string `json:"toBNBOffExchange"`
+	Exchange         string `json:"exchange"`
+}
+
+type SpotAssetDustRes struct {
+	TotalServiceCharge string                `json:"totalServiceCharge"`
+	TotalTransfered    string                `json:"totalTransfered"`
+	TransferResult     []SpotAssetDustResRow `json:"transferResult"`
+}
+
+type SpotAssetDustResRow struct {
+	Amount              string `json:"amount"`
+	FromAsset           string `json:"fromAsset"`
+	OperateTime         int64  `json:"operateTime"`
+	ServiceChargeAmount string `json:"serviceChargeAmount"`
+	TranId              int64  `json:"tranId"`
+	TransferedAmount    string `json:"transferedAmount"`
+}

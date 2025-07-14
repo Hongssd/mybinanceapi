@@ -185,8 +185,46 @@ type PortfolioMarginCmCommissionRateRes struct {
 	TakerCommissionRate string `json:"takerCommissionRate"` // taker手续费率
 }
 
-type PortfolioMarginAutoCollectionRes struct{}
-type PortfolioMarginAssetCollectionRes struct{}
+type PortfolioMarginAutoCollectionRes struct {
+	Msg string `json:"msg"` // 消息
+}
+type PortfolioMarginAssetCollectionRes struct {
+	Msg string `json:"msg"` // 消息
+}
+
+// [
+//     {
+//         "symbol": "",               // 交易对，仅针对涉及交易对的资金流
+//         "incomeType": "TRANSFER",   // 资金流类型
+//         "income": "-0.37500000",    // 资金流数量，正数代表流入，负数代表流出
+//         "asset": "USDT",            // 资产内容
+//         "info":"TRANSFER",          // 备注信息，取决于流水类型
+//         "time": 1570608000000,
+//         "tranId":"9689322392",      // 划转ID
+//         "tradeId":""                // 引起流水产生的原始交易ID
+//     },
+//     {
+//         "symbol": "BTCUSDT",
+//         "incomeType": "COMMISSION",
+//         "income": "-0.01000000",
+//         "asset": "USDT",
+//         "info":"COMMISSION",
+//         "time": 1570636800000,
+//         "tranId":"9689322392",
+//         "tradeId":"2059192"
+//     }
+// ]
+type PortfolioMarginUmIncomeResRow struct {
+	Symbol     string `json:"symbol"`     // 交易对，仅针对涉及交易对的资金流
+	IncomeType string `json:"incomeType"` // 资金流类型
+	Income     string `json:"income"`     // 资金流数量，正数代表流入，负数代表流出
+	Asset      string `json:"asset"`      // 资产内容
+	Info       string `json:"info"`       // 备注信息，取决于流水类型
+	Time       int64  `json:"time"`       // 时间
+	TranId     int64  `json:"tranId"`     // 划转ID
+	TradeId    string `json:"tradeId"`    // 引起流水产生的原始交易ID
+}
+type PortfolioMarginUmIncomeRes []PortfolioMarginUmIncomeResRow
 
 // {
 // 	"avgCostTimestampOfLast30d":7241837, //过去30天平均数据下载时间
@@ -214,4 +252,8 @@ type PortfolioMarginUmIncomeAsynIdRes struct {
 	Notified            bool   `json:"notified"`            // 忽略
 	ExpirationTimestamp int64  `json:"expirationTimestamp"` // 晚于该时间戳之后链接将自动失效
 	IsExpired           bool   `json:"isExpired"`           // 忽略
+}
+
+type PortfolioMarginRepayFuturesNegativeBalanceRes struct {
+	Msg string `json:"msg"` // 消息
 }

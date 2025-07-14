@@ -106,3 +106,42 @@ func (api *SpotCapitalDepositHisrecApi) Do() (*SpotCapitalDepositHisrecRes, erro
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotCapitalDepositHisrec], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotCapitalDepositHisrecRes](api.client.c, url, GET)
 }
+
+// binance SPOT SpotAssetDustBtc rest获取可以转换成BNB的小额资产 (USER_DATA)
+func (client *SpotRestClient) NewSpotAssetDustBtc() *SpotAssetDustBtcApi {
+	return &SpotAssetDustBtcApi{
+		client: client,
+		req:    &SpotAssetDustBtcReq{},
+	}
+}
+func (api *SpotAssetDustBtcApi) Do() (*SpotAssetDustBtcRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetDustBtc], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAssetDustBtcRes](api.client.c, url, POST)
+}
+
+// binance SPOT SpotAssetDust rest小额资产转换 (USER_DATA)
+func (client *SpotRestClient) NewSpotAssetDust() *SpotAssetDustApi {
+	return &SpotAssetDustApi{
+		client: client,
+		req:    &SpotAssetDustReq{},
+	}
+}
+func (api *SpotAssetDustApi) Do() (*SpotAssetDustRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotAssetDust], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotAssetDustRes](api.client.c, url, POST)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
