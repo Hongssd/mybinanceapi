@@ -132,3 +132,25 @@ type SpotAssetDustResRow struct {
 	TranId              int64  `json:"tranId"`
 	TransferedAmount    string `json:"transferedAmount"`
 }
+
+// [
+//
+//	{
+//	  "asset": "ETH",
+//	  "interest": "0.00083334",
+//	  "principal": "0.001",
+//	  "liabilityAsset": "USDT",
+//	  "liabilityQty": 0.3552
+//	}
+//
+// ]
+type SpotMarginExchangeSmallLiabilityGetRes []SpotMarginExchangeSmallLiabilityGetResRow
+type SpotMarginExchangeSmallLiabilityGetResRow struct {
+	Asset          string `json:"asset"`
+	Interest       string `json:"interest"`
+	Principal      string `json:"principal"`
+	LiabilityAsset string `json:"liabilityAsset"`
+	LiabilityQty   string `json:"liabilityQty"`
+}
+
+type SpotMarginExchangeSmallLiabilityPostRes struct{}

@@ -133,7 +133,31 @@ func (api *SpotAssetDustApi) Do() (*SpotAssetDustRes, error) {
 	return binanceCallApiWithSecret[SpotAssetDustRes](api.client.c, url, POST)
 }
 
+// binance SPOT SpotMarginExchangeSmallLiabilityGet rest查询可小额负债转换的资产 (USER_DATA)
+func (client *SpotRestClient) NewSpotMarginExchangeSmallLiabilityGet() *SpotMarginExchangeSmallLiabilityGetApi {
+	return &SpotMarginExchangeSmallLiabilityGetApi{
+		client: client,
+		req:    &SpotMarginExchangeSmallLiabilityGetReq{},
+	}
+}
+func (api *SpotMarginExchangeSmallLiabilityGetApi) Do() (*SpotMarginExchangeSmallLiabilityGetRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginExchangeSmallLiabilityGet], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotMarginExchangeSmallLiabilityGetRes](api.client.c, url, GET)
+}
 
+//binance SPOT SpotMarginExchangeSmallLiabilityPost rest全仓杠杆小额负债转换 (MARGIN)
+func (client *SpotRestClient) NewSpotMarginExchangeSmallLiabilityPost() *SpotMarginExchangeSmallLiabilityPostApi {
+	return &SpotMarginExchangeSmallLiabilityPostApi{
+		client: client,
+		req:    &SpotMarginExchangeSmallLiabilityPostReq{},
+	}
+}
+func (api *SpotMarginExchangeSmallLiabilityPostApi) Do() (*SpotMarginExchangeSmallLiabilityPostRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginExchangeSmallLiabilityPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotMarginExchangeSmallLiabilityPostRes](api.client.c, url, POST)
+}
 
 
 

@@ -392,3 +392,50 @@ func (api *SpotAssetDustApi) Timestamp(Timestamp int64) *SpotAssetDustApi {
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotMarginExchangeSmallLiabilityGetReq struct {
+	RecvWindow *int64 `json:"recvWindow"` //NO
+	Timestamp  *int64 `json:"timestamp"`  //YES
+}
+
+type SpotMarginExchangeSmallLiabilityGetApi struct {
+	client *SpotRestClient
+	req    *SpotMarginExchangeSmallLiabilityGetReq
+}
+
+func (api *SpotMarginExchangeSmallLiabilityGetApi) RecvWindow(RecvWindow int64) *SpotMarginExchangeSmallLiabilityGetApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotMarginExchangeSmallLiabilityGetApi) Timestamp(Timestamp int64) *SpotMarginExchangeSmallLiabilityGetApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// assetNames	ARRAY	YES	小额转换的资产列表，举例: assetNames = BTC,ETH
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotMarginExchangeSmallLiabilityPostReq struct {
+	AssetNames *string `json:"assetNames"` //YES	小额转换的资产列表，举例: assetNames = BTC,ETH
+	RecvWindow *int64  `json:"recvWindow"` //NO
+	Timestamp  *int64  `json:"timestamp"`  //YES
+}
+
+type SpotMarginExchangeSmallLiabilityPostApi struct {
+	client *SpotRestClient
+	req    *SpotMarginExchangeSmallLiabilityPostReq
+}
+
+// assetNames	ARRAY	YES	小额转换的资产列表，举例: assetNames = BTC,ETH
+func (api *SpotMarginExchangeSmallLiabilityPostApi) AssetNames(AssetNames string) *SpotMarginExchangeSmallLiabilityPostApi {
+	api.req.AssetNames = GetPointer(AssetNames)
+	return api
+}
+func (api *SpotMarginExchangeSmallLiabilityPostApi) RecvWindow(RecvWindow int64) *SpotMarginExchangeSmallLiabilityPostApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *SpotMarginExchangeSmallLiabilityPostApi) Timestamp(Timestamp int64) *SpotMarginExchangeSmallLiabilityPostApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
