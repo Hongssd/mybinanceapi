@@ -77,10 +77,12 @@ type WsStreamClient struct {
 	//wsSwapPayloadMap   map[int64]*WsSwapPayload
 
 	//行情订阅相关
-	commonSubMap   MySyncMap[int64, *Subscription[SubscribeResult]] //订阅的返回结果
-	klineSubMap    MySyncMap[string, *Subscription[WsKline]]
-	depthSubMap    MySyncMap[string, *Subscription[WsDepth]]
-	aggTradeSubMap MySyncMap[string, *Subscription[WsAggTrade]]
+	commonSubMap    MySyncMap[int64, *Subscription[SubscribeResult]] //订阅的返回结果
+	klineSubMap     MySyncMap[string, *Subscription[WsKline]]
+	depthSubMap     MySyncMap[string, *Subscription[WsDepth]]
+	aggTradeSubMap  MySyncMap[string, *Subscription[WsAggTrade]]
+	tickerSubMap    MySyncMap[string, *Subscription[WsTicker]]    //单个ticker订阅
+	tickerAllSubMap MySyncMap[string, *Subscription[[]*WsTicker]] //全市场ticker订阅
 
 	//账户推送相关
 	wsSpotPayloadMap       MySyncMap[int64, *WsSpotPayload]
@@ -227,6 +229,8 @@ func (ws *WsStreamClient) initStructs() {
 	ws.klineSubMap = NewMySyncMap[string, *Subscription[WsKline]]()
 	ws.depthSubMap = NewMySyncMap[string, *Subscription[WsDepth]]()
 	ws.aggTradeSubMap = NewMySyncMap[string, *Subscription[WsAggTrade]]()
+	ws.tickerSubMap = NewMySyncMap[string, *Subscription[WsTicker]]()
+	ws.tickerAllSubMap = NewMySyncMap[string, *Subscription[[]*WsTicker]]()
 
 	ws.wsSpotPayloadMap = NewMySyncMap[int64, *WsSpotPayload]()
 	ws.wsFuturePayloadMap = NewMySyncMap[int64, *WsFuturePayload]()
@@ -298,6 +302,20 @@ func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(params []string) {
 			isCloseMap[sub.ID] = true
 		} else if sub, ok := ws.aggTradeSubMap.Load(param); ok {
 			ws.aggTradeSubMap.Delete(param)
+			if _, ok2 := isCloseMap[sub.ID]; ok2 {
+				continue
+			}
+			sub.closeChan <- struct{}{}
+			isCloseMap[sub.ID] = true
+		} else if sub, ok := ws.tickerSubMap.Load(param); ok {
+			ws.tickerSubMap.Delete(param)
+			if _, ok2 := isCloseMap[sub.ID]; ok2 {
+				continue
+			}
+			sub.closeChan <- struct{}{}
+			isCloseMap[sub.ID] = true
+		} else if sub, ok := ws.tickerAllSubMap.Load(param); ok {
+			ws.tickerAllSubMap.Delete(param)
 			if _, ok2 := isCloseMap[sub.ID]; ok2 {
 				continue
 			}
@@ -421,6 +439,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				}
 
 				// log.Debugf("[%s] receive result: %s", ws.apiType.String(), string(data))
+
 				//处理订阅或查询订阅列表请求返回结果
 				if strings.Contains(string(data), "error") || strings.Contains(string(data), "result") {
 					result := SubscribeResult{}
@@ -494,6 +513,59 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							continue
 						}
 						sub.resultChan <- *a
+					}
+					continue
+				}
+
+				//Ticker订阅
+				if strings.Contains(string(data), "@ticker") && !strings.Contains(string(data), "!ticker@arr") {
+					//单个Ticker处理 - 使用统一的处理方式
+					_, ddata, err := handlerWsCombined(data)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+
+					var rawTicker map[string]interface{}
+					err = json.Unmarshal(ddata, &rawTicker)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+
+					ticker := ConvertToWsTicker(ws.apiType, rawTicker)
+					param := getTickerSubscribeParam(ticker.Symbol)
+					if sub, ok := ws.tickerSubMap.Load(param); ok {
+						sub.resultChan <- *ticker
+					}
+					continue
+				}
+
+				//全市场Ticker订阅
+				if strings.Contains(string(data), "!ticker@arr") {
+					//全市场Ticker处理 - 使用统一的处理方式
+					_, ddata, err := handlerWsCombinedArr(data)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+
+					var rawTickerArray []map[string]interface{}
+					err = json.Unmarshal(ddata, &rawTickerArray)
+					if err != nil {
+						log.Error(err)
+						continue
+					}
+
+					var tickers []*WsTicker
+					for _, rawTicker := range rawTickerArray {
+						ticker := ConvertToWsTicker(ws.apiType, rawTicker)
+						tickers = append(tickers, ticker)
+					}
+
+					param := getTickerAllSubscribeParam()
+					if sub, ok := ws.tickerAllSubMap.Load(param); ok {
+						sub.resultChan <- tickers
 					}
 					continue
 				}

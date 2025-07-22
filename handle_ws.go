@@ -24,11 +24,6 @@ type WsKline struct {
 	Confirm              bool    `json:"confirm"`                      //这根K线是否完结
 }
 
-func HandleWsCombinedKline(apiType ApiType, data []byte) (*WsKline, error) {
-	_, ddata, _ := handlerWsCombined(data)
-	return HandleWsKline(apiType, ddata)
-}
-
 func handlerWsCombined(data []byte) (string, []byte, error) {
 	all := make(map[string]interface{})
 	err := json.Unmarshal(data, &all)
@@ -44,6 +39,28 @@ func handlerWsCombined(data []byte) (string, []byte, error) {
 	}
 	stream := all["stream"].(string)
 	return stream, ddata, nil
+}
+
+func handlerWsCombinedArr(data []byte) (string, []byte, error) {
+	all := make(map[string]interface{})
+	err := json.Unmarshal(data, &all)
+	if err != nil {
+		log.Error(err)
+		return "", nil, err
+	}
+	mdata := (all["data"]).([]interface{})
+	ddata, err := json.Marshal(mdata)
+	if err != nil {
+		log.Error(err)
+		return "", nil, err
+	}
+	stream := all["stream"].(string)
+	return stream, ddata, nil
+}
+
+func HandleWsCombinedKline(apiType ApiType, data []byte) (*WsKline, error) {
+	_, ddata, _ := handlerWsCombined(data)
+	return HandleWsKline(apiType, ddata)
 }
 
 func HandleWsKline(apiType ApiType, data []byte) (*WsKline, error) {
@@ -688,4 +705,172 @@ func HandleWsPayloadResult[T any](data []byte) (*T, error) {
 		return nil, err
 	}
 	return &result, nil
+}
+
+type WsTicker struct {
+	Timestamp          int64  `json:"timestamp"`            //事件时间
+	AccountType        string `json:"account_type"`         //账户类型 SPOT 现货 FUTURE U合约 SWAP 币本位合约
+	Event              string `json:"event"`                //事件类型
+	Symbol             string `json:"symbol"`               //交易对
+	PriceChange        string `json:"price_change"`         //24小时价格变化
+	PriceChangePercent string `json:"price_change_percent"` //24小时价格变化（百分比）
+	WeightedAvgPrice   string `json:"weighted_avg_price"`   //平均价格
+	PrevClosePrice     string `json:"prev_close_price"`     //整整24小时之前，向前数的最后一次成交价格
+	LastPrice          string `json:"last_price"`           //最新成交价格
+	LastQty            string `json:"last_qty"`             //最新成交交易的成交量
+	BidPrice           string `json:"bid_price"`            //目前最高买单价
+	BidQty             string `json:"bid_qty"`              //目前最高买单价的挂单量
+	AskPrice           string `json:"ask_price"`            //目前最低卖单价
+	AskQty             string `json:"ask_qty"`              //目前最低卖单价的挂单量
+	OpenPrice          string `json:"open_price"`           //整整24小时前，向后数的第一次成交价格
+	HighPrice          string `json:"high_price"`           //24小时内最高成交价
+	LowPrice           string `json:"low_price"`            //24小时内最低成交价
+	Volume             string `json:"volume"`               //24小时内成交量
+	QuoteVolume        string `json:"quote_volume"`         //24小时内成交额
+	OpenTime           int64  `json:"open_time"`            //统计开始时间
+	CloseTime          int64  `json:"close_time"`           //统计结束时间
+	FirstId            int64  `json:"first_id"`             //24小时内第一笔成交交易ID
+	LastId             int64  `json:"last_id"`              //24小时内最后一笔成交交易ID
+	Count              int64  `json:"count"`                //24小时内成交数
+}
+
+// 转换ticker数据，添加额外字段
+func ConvertToWsTicker(apiType ApiType, rawTicker map[string]interface{}) *WsTicker {
+	ticker := HandleWsTickerMap(apiType, rawTicker)
+	return ticker
+}
+
+func HandleWsTickerMap(apiType ApiType, m map[string]interface{}) *WsTicker {
+	switch apiType {
+	case SPOT:
+		// {
+		// 	"e": "24hrTicker",  // 事件类型
+		// 	"E": 1672515782136, // 事件时间
+		// 	"s": "BNBBTC",      // 交易对
+		// 	"p": "0.0015",      // 24小时价格变化
+		// 	"P": "250.00",      // 24小时价格变化（百分比）
+		// 	"w": "0.0018",      // 平均价格
+		// 	"x": "0.0009",      // 整整24小时之前，向前数的最后一次成交价格
+		// 	"c": "0.0025",      // 最新成交价格
+		// 	"Q": "10",          // 最新成交交易的成交量
+		// 	"b": "0.0024",      // 目前最高买单价
+		// 	"B": "10",          // 目前最高买单价的挂单量
+		// 	"a": "0.0026",      // 目前最低卖单价
+		// 	"A": "100",         // 目前最低卖单价的挂单量
+		// 	"o": "0.0010",      // 整整24小时前，向后数的第一次成交价格
+		// 	"h": "0.0025",      // 24小时内最高成交价
+		// 	"l": "0.0010",      // 24小时内最低成交加
+		// 	"v": "10000",       // 24小时内成交量
+		// 	"q": "18",          // 24小时内成交额
+		// 	"O": 0,             // 统计开始时间
+		// 	"C": 1675216573749, // 统计结束时间
+		// 	"F": 0,             // 24小时内第一笔成交交易ID
+		// 	"L": 18150,         // 24小时内最后一笔成交交易ID
+		// 	"n": 18151          // 24小时内成交数
+		//   }
+		ticker := WsTicker{
+			Timestamp:          interfaceStringToInt64(m["E"]),
+			AccountType:        apiType.String(),
+			Event:              m["e"].(string),
+			Symbol:             m["s"].(string),
+			PriceChange:        m["p"].(string),
+			PriceChangePercent: m["P"].(string),
+			WeightedAvgPrice:   m["w"].(string),
+			PrevClosePrice:     m["x"].(string),
+			LastPrice:          m["c"].(string),
+			LastQty:            m["Q"].(string),
+			BidPrice:           m["b"].(string),
+			BidQty:             m["B"].(string),
+			AskPrice:           m["a"].(string),
+			AskQty:             m["A"].(string),
+			OpenPrice:          m["o"].(string),
+			HighPrice:          m["h"].(string),
+			LowPrice:           m["l"].(string),
+			Volume:             m["v"].(string),
+			QuoteVolume:        m["q"].(string),
+			OpenTime:           interfaceStringToInt64(m["O"]),
+			CloseTime:          interfaceStringToInt64(m["C"]),
+			FirstId:            interfaceStringToInt64(m["F"]),
+			LastId:             interfaceStringToInt64(m["L"]),
+			Count:              interfaceStringToInt64(m["n"]),
+		}
+		return &ticker
+	case FUTURE, SWAP:
+		// {
+		// 	"e": "24hrTicker",  // 事件类型
+		// 	"E": 123456789,     // 事件时间
+		// 	"s": "BNBUSDT",      // 交易对
+		// 	"p": "0.0015",      // 24小时价格变化
+		// 	"P": "250.00",      // 24小时价格变化(百分比)
+		// 	"w": "0.0018",      // 平均价格
+		// 	"c": "0.0025",      // 最新成交价格
+		// 	"Q": "10",          // 最新成交价格上的成交量
+		// 	"o": "0.0010",      // 24小时内第一比成交的价格
+		// 	"h": "0.0025",      // 24小时内最高成交价
+		// 	"l": "0.0010",      // 24小时内最低成交价
+		// 	"v": "10000",       // 24小时内成交量
+		// 	"q": "18",          // 24小时内成交额
+		// 	"O": 0,             // 统计开始时间
+		// 	"C": 86400000,      // 统计关闭时间
+		// 	"F": 0,             // 24小时内第一笔成交交易ID
+		// 	"L": 18150,         // 24小时内最后一笔成交交易ID
+		// 	"n": 18151          // 24小时内成交数
+		//   }
+		ticker := WsTicker{
+			Timestamp:          interfaceStringToInt64(m["E"]),
+			AccountType:        apiType.String(),
+			Event:              m["e"].(string),
+			Symbol:             m["s"].(string),
+			PriceChange:        m["p"].(string),
+			PriceChangePercent: m["P"].(string),
+			WeightedAvgPrice:   m["w"].(string),
+			PrevClosePrice:     "", // FUTURE/SWAP没有此字段，设为空
+			LastPrice:          m["c"].(string),
+			LastQty:            m["Q"].(string),
+			BidPrice:           "", // FUTURE/SWAP没有此字段，设为空
+			BidQty:             "", // FUTURE/SWAP没有此字段，设为空
+			AskPrice:           "", // FUTURE/SWAP没有此字段，设为空
+			AskQty:             "", // FUTURE/SWAP没有此字段，设为空
+			OpenPrice:          m["o"].(string),
+			HighPrice:          m["h"].(string),
+			LowPrice:           m["l"].(string),
+			Volume:             m["v"].(string),
+			QuoteVolume:        m["q"].(string),
+			OpenTime:           interfaceStringToInt64(m["O"]),
+			CloseTime:          interfaceStringToInt64(m["C"]),
+			FirstId:            interfaceStringToInt64(m["F"]),
+			LastId:             interfaceStringToInt64(m["L"]),
+			Count:              interfaceStringToInt64(m["n"]),
+		}
+		return &ticker
+	default:
+		// 默认使用SPOT格式
+		ticker := WsTicker{
+			Timestamp:          interfaceStringToInt64(m["E"]),
+			AccountType:        apiType.String(),
+			Event:              m["e"].(string),
+			Symbol:             m["s"].(string),
+			PriceChange:        m["p"].(string),
+			PriceChangePercent: m["P"].(string),
+			WeightedAvgPrice:   m["w"].(string),
+			PrevClosePrice:     m["x"].(string),
+			LastPrice:          m["c"].(string),
+			LastQty:            m["Q"].(string),
+			BidPrice:           m["b"].(string),
+			BidQty:             m["B"].(string),
+			AskPrice:           m["a"].(string),
+			AskQty:             m["A"].(string),
+			OpenPrice:          m["o"].(string),
+			HighPrice:          m["h"].(string),
+			LowPrice:           m["l"].(string),
+			Volume:             m["v"].(string),
+			QuoteVolume:        m["q"].(string),
+			OpenTime:           interfaceStringToInt64(m["O"]),
+			CloseTime:          interfaceStringToInt64(m["C"]),
+			FirstId:            interfaceStringToInt64(m["F"]),
+			LastId:             interfaceStringToInt64(m["L"]),
+			Count:              interfaceStringToInt64(m["n"]),
+		}
+		return &ticker
+	}
 }
