@@ -439,3 +439,124 @@ func (api *SpotMarginExchangeSmallLiabilityPostApi) Timestamp(Timestamp int64) *
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+// subAccountId	STRING	NO
+// startTime	LONG	NO	Default: 7 days from current timestamp
+// endTime	LONG	NO	Default: present timestamp
+// page	LONG	NO	default 1
+// size	LONG	NO	default 500，max500
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotBrokerRebateRecentRecordReq struct {
+	SubAccountId *string `json:"subAccountId"` //NO
+	StartTime    *int64  `json:"startTime"`    //NO
+	EndTime      *int64  `json:"endTime"`      //NO
+	Page         *int64  `json:"page"`         //NO
+	Size         *int64  `json:"size"`         //NO
+	RecvWindow   *int64  `json:"recvWindow"`   //NO
+	Timestamp    *int64  `json:"timestamp"`    //YES
+}
+
+type SpotBrokerRebateRecentRecordApi struct {
+	client *SpotRestClient
+	req    *SpotBrokerRebateRecentRecordReq
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) SubAccountId(SubAccountId string) *SpotBrokerRebateRecentRecordApi {
+	api.req.SubAccountId = GetPointer(SubAccountId)
+	return api
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) StartTime(StartTime int64) *SpotBrokerRebateRecentRecordApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) EndTime(EndTime int64) *SpotBrokerRebateRecentRecordApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) Page(Page int64) *SpotBrokerRebateRecentRecordApi {
+	api.req.Page = GetPointer(Page)
+	return api
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) Size(Size int64) *SpotBrokerRebateRecentRecordApi {
+	api.req.Size = GetPointer(Size)
+	return api
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) RecvWindow(RecvWindow int64) *SpotBrokerRebateRecentRecordApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+func (api *SpotBrokerRebateRecentRecordApi) Timestamp(Timestamp int64) *SpotBrokerRebateRecentRecordApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}
+
+// futuresType	LONG	YES	1:USDT Futures, 2: Coin Futures
+// startTime	LONG	YES
+// endTime	LONG	YES
+// page	LONG	NO	default 1
+// size	LONG	NO	default 10, max 100
+// filterResult	BOOLEAN	NO	TRUE or FALSE. Default: FALSE
+// recvWindow	LONG	NO
+// timestamp	LONG	YES
+type SpotBrokerRebateFuturesRecentRecordReq struct {
+	FuturesType  *int64 `json:"futuresType"`  //YES	1:USDT Futures, 2: Coin Futures
+	StartTime    *int64 `json:"startTime"`    //YES
+	EndTime      *int64 `json:"endTime"`      //YES
+	Page         *int64 `json:"page"`         //NO
+	Size         *int64 `json:"size"`         //NO
+	FilterResult *bool  `json:"filterResult"` //NO	TRUE or FALSE. Default: FALSE
+	RecvWindow   *int64 `json:"recvWindow"`   //NO
+	Timestamp    *int64 `json:"timestamp"`    //YES
+}
+
+type SpotBrokerRebateFuturesRecentRecordApi struct {
+	client *SpotRestClient
+	req    *SpotBrokerRebateFuturesRecentRecordReq
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) FuturesType(FuturesType int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.FuturesType = GetPointer(FuturesType)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) StartTime(StartTime int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.StartTime = GetPointer(StartTime)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) EndTime(EndTime int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.EndTime = GetPointer(EndTime)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) Page(Page int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.Page = GetPointer(Page)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) Size(Size int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.Size = GetPointer(Size)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) FilterResult(FilterResult bool) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.FilterResult = GetPointer(FilterResult)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) RecvWindow(RecvWindow int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+func (api *SpotBrokerRebateFuturesRecentRecordApi) Timestamp(Timestamp int64) *SpotBrokerRebateFuturesRecentRecordApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

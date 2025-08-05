@@ -118,6 +118,9 @@ const (
 	SpotBrokerSubAccountDepositHist                 //GET接口 查询经纪商子账户充值历史
 	SpotBrokerUniversalTransferPost                 //POST接口 经纪商子账户万能划转
 	SpotBrokerUniversalTransferGet                  //GET接口 查询经纪商子账户万能划转历史
+
+	SpotBrokerRebateRecentRecord        //GET接口 查询经纪商返佣近期记录（现货）
+	SpotBrokerRebateFuturesRecentRecord //GET接口 查询经纪商返佣近期记录（合约）
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -236,4 +239,7 @@ var SpotApiMap = map[SpotApi]string{
 	SpotBrokerSubAccountDepositHist:                 "/sapi/v1/broker/subAccount/depositHist",                  //GET接口 查询经纪商子账户充值历史
 	SpotBrokerUniversalTransferPost:                 "/sapi/v1/broker/universalTransfer",                       //POST接口 经纪商子账户万能划转
 	SpotBrokerUniversalTransferGet:                  "/sapi/v1/broker/universalTransfer",                       //GET接口 查询经纪商子账户万能划转历史
+
+	SpotBrokerRebateRecentRecord:        "/sapi/v1/broker/rebate/recentRecord",         //GET接口 查询经纪商返佣近期记录（现货）
+	SpotBrokerRebateFuturesRecentRecord: "/sapi/v1/broker/rebate/futures/recentRecord", //GET接口 查询经纪商返佣近期记录（合约）
 }

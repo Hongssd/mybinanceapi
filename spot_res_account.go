@@ -154,3 +154,69 @@ type SpotMarginExchangeSmallLiabilityGetResRow struct {
 }
 
 type SpotMarginExchangeSmallLiabilityPostRes struct{}
+
+// [
+//         {
+//             "subaccountId":"1",
+//             "income": "0.02063898",
+//             "asset":"BTC",
+//             "symbol": "ETHBTC",
+//             "tradeId": 123456,
+//             "time":1544433328000,
+//             "status": 1
+//         },
+//         {
+//             "subaccountId":"2",
+//             "income": "1.2063898",
+//             "asset":"USDT",
+//             "symbol": "BTCUSDT",
+//             "tradeId": 223456,
+//             "time":1581580800000,
+//             "status": 1
+//         }
+
+// ]
+
+type SpotBrokerRebateRecentRecordRes []SpotBrokerRebateRecentRecordResRow
+type SpotBrokerRebateRecentRecordResRow struct {
+	SubAccountId string `json:"subaccountId"`
+	Income       string `json:"income"`
+	Asset        string `json:"asset"`
+	Symbol       string `json:"symbol"`
+	TradeId      int64  `json:"tradeId"`
+	Time         int64  `json:"time"`
+	Status       int64  `json:"status"`
+}
+
+// [
+//
+//	{
+//	   "subaccountId": "1",
+//	   "income": "0.02063898",
+//	   "asset": "USDT",
+//	   "symbol": "ETHUSDT",
+//	   "tradeId": 123456,
+//	   "time": 1544433328000,
+//	   "status": 1
+//	 },
+//	 {
+//	   "subaccountId": "2",
+//	   "income": "0.02060008",
+//	   "asset": "USDT",
+//	   "symbol": "BTCUSDT",
+//	   "tradeId": 223456,
+//	   "time": 1544433328000,
+//	   "status": 1
+//	 }
+//
+// ]
+type SpotBrokerRebateFuturesRecentRecordRes []SpotBrokerRebateFuturesRecentRecordResRow
+type SpotBrokerRebateFuturesRecentRecordResRow struct {
+	SubAccountId string `json:"subaccountId"`
+	Income       string `json:"income"`
+	Asset        string `json:"asset"`
+	Symbol       string `json:"symbol"`
+	TradeId      int64  `json:"tradeId"`
+	Time         int64  `json:"time"`
+	Status       int64  `json:"status"`
+}

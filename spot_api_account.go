@@ -159,13 +159,28 @@ func (api *SpotMarginExchangeSmallLiabilityPostApi) Do() (*SpotMarginExchangeSma
 	return binanceCallApiWithSecret[SpotMarginExchangeSmallLiabilityPostRes](api.client.c, url, POST)
 }
 
+// binance SPOT SpotBrokerRebateRecentRecord rest查询经纪商返佣近期记录（现货）
+func (client *SpotRestClient) NewSpotBrokerRebateRecentRecord() *SpotBrokerRebateRecentRecordApi {
+	return &SpotBrokerRebateRecentRecordApi{
+		client: client,
+		req:    &SpotBrokerRebateRecentRecordReq{},
+	}
+}
+func (api *SpotBrokerRebateRecentRecordApi) Do() (*SpotBrokerRebateRecentRecordRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerRebateRecentRecord], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotBrokerRebateRecentRecordRes](api.client.c, url, GET)
+}
 
-
-
-
-
-
-
-
-
-
+// binance SPOT SpotBrokerRebateFuturesRecentRecord rest查询经纪商返佣近期记录（合约）
+func (client *SpotRestClient) NewSpotBrokerRebateFuturesRecentRecord() *SpotBrokerRebateFuturesRecentRecordApi {
+	return &SpotBrokerRebateFuturesRecentRecordApi{
+		client: client,
+		req:    &SpotBrokerRebateFuturesRecentRecordReq{},
+	}
+}
+func (api *SpotBrokerRebateFuturesRecentRecordApi) Do() (*SpotBrokerRebateFuturesRecentRecordRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerRebateFuturesRecentRecord], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotBrokerRebateFuturesRecentRecordRes](api.client.c, url, GET)
+}

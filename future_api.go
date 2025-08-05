@@ -28,7 +28,7 @@ const (
 	FutureBatchOrdersDelete //DELETE接口 (HMAC SHA256)批量撤销订单 (TRADE)
 	FutureUserTrades        //GET接口 (HMAC SHA256)账户成交历史 (USER_DATA)
 	FutureCommissionRate    //GET接口 (HMAC SHA256)查询用户当前的手续费率
-
+	
 	//通用接口
 	FuturePing         //GET接口 测试服务器连通性
 	FutureServerTime   //GET接口 获取服务器时间
