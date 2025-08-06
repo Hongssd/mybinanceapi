@@ -53,6 +53,9 @@ const (
 	FutureListenKeyPut    //延长listenKey有效期 (USER_STREAM)
 	FutureListenKeyDelete //关闭listenKey (USER_STREAM)
 
+	// 返佣资格
+	FutureApiReferralIfNewUser //GET接口 查询返佣资格
+
 )
 
 var FutureApiMap = map[FutureApi]string{
@@ -106,5 +109,7 @@ var FutureApiMap = map[FutureApi]string{
 	FutureListenKeyPost:   "/fapi/v1/listenKey", //POST接口 生成listenKey (USER_STREAM)
 	FutureListenKeyPut:    "/fapi/v1/listenKey", //PUT接口 延长listenKey有效期 (USER_STREAM)
 	FutureListenKeyDelete: "/fapi/v1/listenKey", //DELETE接口 关闭listenKey (USER_STREAM)
+
+	FutureApiReferralIfNewUser: "/fapi/v1/apiReferral/ifNewUser", //GET接口 查询返佣资格
 
 }

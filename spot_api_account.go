@@ -184,3 +184,16 @@ func (api *SpotBrokerRebateFuturesRecentRecordApi) Do() (*SpotBrokerRebateFuture
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotBrokerRebateFuturesRecentRecord], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotBrokerRebateFuturesRecentRecordRes](api.client.c, url, GET)
 }
+
+// binance SPOT SpotApiReferralIfNewUser rest查询返佣资格
+func (client *SpotRestClient) NewSpotApiReferralIfNewUser() *SpotApiReferralIfNewUserApi {
+	return &SpotApiReferralIfNewUserApi{
+		client: client,
+		req:    &SpotApiReferralIfNewUserReq{},
+	}
+}
+func (api *SpotApiReferralIfNewUserApi) Do() (*SpotApiReferralIfNewUserRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotApiReferralIfNewUser], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotApiReferralIfNewUserRes](api.client.c, url, GET)
+}

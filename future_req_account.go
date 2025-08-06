@@ -275,3 +275,28 @@ func (api *FutureIncomeAsynIdApi) Timestamp(Timestamp int64) *FutureIncomeAsynId
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type FutureApiReferralIfNewUserReq struct {
+	BrokerId   *string `json:"brokerid"` //NO
+	RecvWindow *int64  `json:"recvWindow"`
+	Timestamp  *int64  `json:"timestamp"`
+}
+
+type FutureApiReferralIfNewUserApi struct {
+	client *FutureRestClient
+	req    *FutureApiReferralIfNewUserReq
+}
+
+func (api *FutureApiReferralIfNewUserApi) BrokerId(BrokerId string) *FutureApiReferralIfNewUserApi {
+	api.req.BrokerId = GetPointer(BrokerId)
+	return api
+}
+
+func (api *FutureApiReferralIfNewUserApi) RecvWindow(RecvWindow int64) *FutureApiReferralIfNewUserApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+func (api *FutureApiReferralIfNewUserApi) Timestamp(Timestamp int64) *FutureApiReferralIfNewUserApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

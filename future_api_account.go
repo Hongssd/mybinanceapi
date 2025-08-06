@@ -145,3 +145,16 @@ func (api *FutureIncomeAsynIdApi) Do() (*FutureIncomeAsynIdRes, error) {
 	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureIncomeAsynId], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[FutureIncomeAsynIdRes](api.client.c, url, GET)
 }
+
+// binance FUTURE  FutureApiReferralIfNewUser rest查询返佣资格
+func (client *FutureRestClient) NewFutureApiReferralIfNewUser() *FutureApiReferralIfNewUserApi {
+	return &FutureApiReferralIfNewUserApi{
+		client: client,
+		req:    &FutureApiReferralIfNewUserReq{},
+	}
+}
+func (api *FutureApiReferralIfNewUserApi) Do() (*FutureApiReferralIfNewUserRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(FUTURE, api.req, FutureApiMap[FutureApiReferralIfNewUser], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[FutureApiReferralIfNewUserRes](api.client.c, url, GET)
+}

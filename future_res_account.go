@@ -137,3 +137,5 @@ type FutureIncomeAsynIdRes struct {
 	ExpirationTimestamp int64  `json:"expirationTimestamp"` //晚于该时间戳之后链接将自动失效
 	IsExpired           bool   `json:"isExpired"`           //是否过期
 }
+
+type FutureApiReferralIfNewUserRes map[string]interface{}

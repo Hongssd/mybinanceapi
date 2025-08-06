@@ -220,3 +220,5 @@ type SpotBrokerRebateFuturesRecentRecordResRow struct {
 	Time         int64  `json:"time"`
 	Status       int64  `json:"status"`
 }
+
+type SpotApiReferralIfNewUserRes map[string]interface{}

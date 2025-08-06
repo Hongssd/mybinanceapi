@@ -560,3 +560,29 @@ func (api *SpotBrokerRebateFuturesRecentRecordApi) Timestamp(Timestamp int64) *S
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotApiReferralIfNewUserReq struct {
+	ApiAgentCode *string `json:"apiAgentCode"` //NO
+	RecvWindow   *int64  `json:"recvWindow"`   //NO
+	Timestamp    *int64  `json:"timestamp"`    //YES
+}
+
+type SpotApiReferralIfNewUserApi struct {
+	client *SpotRestClient
+	req    *SpotApiReferralIfNewUserReq
+}
+
+func (api *SpotApiReferralIfNewUserApi) ApiAgentCode(ApiAgentCode string) *SpotApiReferralIfNewUserApi {
+	api.req.ApiAgentCode = GetPointer(ApiAgentCode)
+	return api
+}
+
+func (api *SpotApiReferralIfNewUserApi) RecvWindow(RecvWindow int64) *SpotApiReferralIfNewUserApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+func (api *SpotApiReferralIfNewUserApi) Timestamp(Timestamp int64) *SpotApiReferralIfNewUserApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

@@ -121,6 +121,8 @@ const (
 
 	SpotBrokerRebateRecentRecord        //GET接口 查询经纪商返佣近期记录（现货）
 	SpotBrokerRebateFuturesRecentRecord //GET接口 查询经纪商返佣近期记录（合约）
+
+	SpotApiReferralIfNewUser //GET接口 查询返佣资格
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -242,4 +244,6 @@ var SpotApiMap = map[SpotApi]string{
 
 	SpotBrokerRebateRecentRecord:        "/sapi/v1/broker/rebate/recentRecord",         //GET接口 查询经纪商返佣近期记录（现货）
 	SpotBrokerRebateFuturesRecentRecord: "/sapi/v1/broker/rebate/futures/recentRecord", //GET接口 查询经纪商返佣近期记录（合约）
+
+	SpotApiReferralIfNewUser: "/sapi/v1/apiReferral/ifNewUser", //GET接口 查询返佣资格
 }
