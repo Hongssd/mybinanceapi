@@ -727,3 +727,41 @@ func (api *SpotMarginIsolatedMarginTierApi) Timestamp(Timestamp int64) *SpotMarg
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+// 名称	类型	是否必需	描述
+// assets	String	YES	资产列表，以逗号分隔，最多20个
+// isIsolated	Boolean	YES	是否逐仓杠杆，"TRUE", "FALSE"
+type SpotMarginNextHourlyInterestRateReq struct {
+	Assets     *string `json:"assets"`     // YES 资产列表，以逗号分隔，最多20个
+	IsIsolated *string `json:"isIsolated"` // YES 是否逐仓杠杆，"TRUE", "FALSE"
+	RecvWindow *int64  `json:"recvWindow"` // NO 赋值不能大于 60000
+	Timestamp  *int64  `json:"timestamp"`  // YES
+}
+type SpotMarginNextHourlyInterestRateApi struct {
+	client *SpotRestClient
+	req    *SpotMarginNextHourlyInterestRateReq
+}
+
+// Assets: YES 资产列表，以逗号分隔，最多20个
+func (api *SpotMarginNextHourlyInterestRateApi) Assets(Assets string) *SpotMarginNextHourlyInterestRateApi {
+	api.req.Assets = GetPointer(Assets)
+	return api
+}
+
+// IsIsolated: YES 是否逐仓杠杆，"TRUE", "FALSE"
+func (api *SpotMarginNextHourlyInterestRateApi) IsIsolated(IsIsolated string) *SpotMarginNextHourlyInterestRateApi {
+	api.req.IsIsolated = GetPointer(IsIsolated)
+	return api
+}
+
+// RecvWindow: NO 赋值不能大于 60000
+func (api *SpotMarginNextHourlyInterestRateApi) RecvWindow(RecvWindow int64) *SpotMarginNextHourlyInterestRateApi {
+	api.req.RecvWindow = GetPointer(RecvWindow)
+	return api
+}
+
+// Timestamp: YES
+func (api *SpotMarginNextHourlyInterestRateApi) Timestamp(Timestamp int64) *SpotMarginNextHourlyInterestRateApi {
+	api.req.Timestamp = GetPointer(Timestamp)
+	return api
+}

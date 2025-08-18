@@ -851,6 +851,7 @@ type PortfolioMarginMarginInterestHistoryResRow struct {
 	Principal           string `json:"principal"`
 	Interest            string `json:"interest"`
 	InterestRate        string `json:"interestRate"`
+	Type                string `json:"type"`
 }
 type PortfolioMarginMarginInterestHistoryRes struct {
 	Rows  []PortfolioMarginMarginInterestHistoryResRow `json:"rows"`

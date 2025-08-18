@@ -277,3 +277,16 @@ func (api *SpotMarginIsolatedMarginTierApi) Do() (*MarginIsolatedMarginTierRes, 
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginIsolatedMarginTier], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[MarginIsolatedMarginTierRes](api.client.c, url, GET)
 }
+
+// binance SPOT杠杆接口 MarginNextHourlyInterestRate rest 查询下小时预估利率 (USER_DATA)
+func (client *SpotRestClient) NewSpotMarginNextHourlyInterestRate() *SpotMarginNextHourlyInterestRateApi {
+	return &SpotMarginNextHourlyInterestRateApi{
+		client: client,
+		req:    &SpotMarginNextHourlyInterestRateReq{},
+	}
+}
+func (api *SpotMarginNextHourlyInterestRateApi) Do() (*MarginNextHourlyInterestRateRes, error) {
+	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginNextHourlyInterestRate], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[MarginNextHourlyInterestRateRes](api.client.c, url, GET)
+}

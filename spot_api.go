@@ -51,6 +51,7 @@ const (
 
 	SpotMarginExchangeSmallLiabilityGet  //GET 查询可小额负债转换的资产 (USER_DATA)
 	SpotMarginExchangeSmallLiabilityPost //POST 全仓杠杆小额负债转换 (MARGIN)
+	SpotMarginNextHourlyInterestRate     //GET 查询下小时预估利率 (USER_DATA)
 
 	//现货账户接口
 	SpotAccountApiTradingStatus //GET接口 账户API交易状态(USER_DATA)
@@ -166,13 +167,14 @@ var SpotApiMap = map[SpotApi]string{
 	SpotMarginLoan:             "/sapi/v1/margin/loan",              //POST  杠杆账户借贷 (MARGIN) 支持逐仓和全仓
 	SpotMarginRepay:            "/sapi/v1/margin/repay",             //POST  杠杆账户归还借贷 (MARGIN) 支持逐仓和全仓
 
-	SpotMarginMaxLeverage:                "/sapi/v1/margin/max-leverage",             //POST 调整全仓最大杠杆倍数（USER_DATA)
-	SpotMarginTradeCoeff:                 "/sapi/v1/margin/tradeCoeff",               // GET 获取用户个人杠杆账户信息汇总（USER_DATA）全仓
-	SpotMarginCrossMarginData:            "/sapi/v1/margin/crossMarginData",          //GET接口 获取全仓杠杆利率及限额 (USER_DATA)
-	SpotMarginIsolatedMarginData:         "/sapi/v1/margin/isolatedMarginData",       // GET接口 获取逐仓杠杆利率及限额 (USER_DATA)
-	SpotMarginIsolatedMarginTier:         "/sapi/v1/margin/isolatedMarginTier",       // GET接口 获取逐仓杠杆档位信息 (USER_DATA)
-	SpotMarginExchangeSmallLiabilityGet:  "/sapi/v1/margin/exchange-small-liability", //GET接口 查询可小额负债转换的资产 (USER_DATA)
-	SpotMarginExchangeSmallLiabilityPost: "/sapi/v1/margin/exchange-small-liability", //POST接口 全仓杠杆小额负债转换 (MARGIN)
+	SpotMarginMaxLeverage:                "/sapi/v1/margin/max-leverage",              //POST 调整全仓最大杠杆倍数（USER_DATA)
+	SpotMarginTradeCoeff:                 "/sapi/v1/margin/tradeCoeff",                // GET 获取用户个人杠杆账户信息汇总（USER_DATA）全仓
+	SpotMarginCrossMarginData:            "/sapi/v1/margin/crossMarginData",           //GET接口 获取全仓杠杆利率及限额 (USER_DATA)
+	SpotMarginIsolatedMarginData:         "/sapi/v1/margin/isolatedMarginData",        // GET接口 获取逐仓杠杆利率及限额 (USER_DATA)
+	SpotMarginIsolatedMarginTier:         "/sapi/v1/margin/isolatedMarginTier",        // GET接口 获取逐仓杠杆档位信息 (USER_DATA)
+	SpotMarginExchangeSmallLiabilityGet:  "/sapi/v1/margin/exchange-small-liability",  //GET接口 查询可小额负债转换的资产 (USER_DATA)
+	SpotMarginExchangeSmallLiabilityPost: "/sapi/v1/margin/exchange-small-liability",  //POST接口 全仓杠杆小额负债转换 (MARGIN)
+	SpotMarginNextHourlyInterestRate:     "/sapi/v1/margin/next-hourly-interest-rate", //GET接口 查询下小时预估利率 (USER_DATA)
 
 	//现货账户接口
 	SpotAccountApiTradingStatus: "/sapi/v1/account/apiTradingStatus", //GET接口 账户API交易状态(USER_DATA)

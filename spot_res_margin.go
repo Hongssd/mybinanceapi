@@ -210,3 +210,21 @@ type MarginIsolatedMarginTierResRow struct {
 	QuoteAssetMaxBorrowable string `json:"quoteAssetMaxBorrowable"`
 }
 type MarginIsolatedMarginTierRes []MarginIsolatedMarginTierResRow
+
+// [
+//
+//	{
+//	    "asset": "BTC",
+//	    "nextHourlyInterestRate": "0.00000571"
+//	},
+//	{
+//	    "asset": "ETH",
+//	    "nextHourlyInterestRate": "0.00000578"
+//	}
+//
+// ]
+type MarginNextHourlyInterestRateResRow struct {
+	Asset              string `json:"asset"`
+	NextHourlyInterest string `json:"nextHourlyInterestRate"`
+}
+type MarginNextHourlyInterestRateRes []MarginNextHourlyInterestRateResRow
