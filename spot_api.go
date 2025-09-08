@@ -124,6 +124,10 @@ const (
 	SpotBrokerRebateFuturesRecentRecord //GET接口 查询经纪商返佣近期记录（合约）
 
 	SpotApiReferralIfNewUser //GET接口 查询返佣资格
+
+	SpotApiVipVipPortalFutureIpWhitelistsGet    //GET接口 查询VIP专属合约IP白名单 MM低延迟接口
+	SpotApiVipVipPortalFutureIpWhitelistsPost   //POST接口 更新VIP专属合约IP白名单 MM低延迟接口
+	SpotApiVipVipPortalFutureIpWhitelistsDelete //DELETE接口 删除VIP专属合约IP白名单 MM低延迟接口
 )
 
 var SpotApiMap = map[SpotApi]string{
@@ -248,4 +252,9 @@ var SpotApiMap = map[SpotApi]string{
 	SpotBrokerRebateFuturesRecentRecord: "/sapi/v1/broker/rebate/futures/recentRecord", //GET接口 查询经纪商返佣近期记录（合约）
 
 	SpotApiReferralIfNewUser: "/sapi/v1/apiReferral/ifNewUser", //GET接口 查询返佣资格
+
+	SpotApiVipVipPortalFutureIpWhitelistsGet:    "/sapi/v1/vip/vip-portal/futures/ip-whitelists", //GET接口 查询VIP专属合约IP白名单 MM低延迟接口
+	SpotApiVipVipPortalFutureIpWhitelistsPost:   "/sapi/v1/vip/vip-portal/futures/ip-whitelists", //POST接口 更新VIP专属合约IP白名单 MM低延迟接口
+	SpotApiVipVipPortalFutureIpWhitelistsDelete: "/sapi/v1/vip/vip-portal/futures/ip-whitelists", //DELETE接口 删除VIP专属合约IP白名单 MM低延迟接口
+
 }

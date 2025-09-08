@@ -197,3 +197,12 @@ func (api *SpotApiReferralIfNewUserApi) Do() (*SpotApiReferralIfNewUserRes, erro
 	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotApiReferralIfNewUser], api.client.c.ApiSecret)
 	return binanceCallApiWithSecret[SpotApiReferralIfNewUserRes](api.client.c, url, GET)
 }
+
+
+
+
+
+
+
+
+

@@ -262,7 +262,7 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 	return u.String()
 }
 
-// 通用body鉴权接口封装
+// 通用query body鉴权接口封装
 func binanceHandlerRequestApiWithSecretForBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
 	query := binanceHandlerReq(request)
 
@@ -282,6 +282,22 @@ func binanceHandlerRequestApiWithSecretForBody[T any](apiType ApiType, request *
 	log.Warn("reqBody: ", string(requestBody))
 	return requestBody, u.String()
 }
+
+// // 通用json Body鉴权接口封装
+// func binanceHandlerRequestApiWithSecretForJsonBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
+// 	reqBody, err := json.Marshal(request)
+// 	if err != nil {
+// 		return nil, ""
+// 	}
+// 	sign := HmacSha256(secret, string(reqBody))
+
+// 	u := url.URL{
+// 		Scheme:   "https",
+// 		Host:     BinanceGetRestHostByApiType(apiType),
+// 		Path:     name,
+// 		RawQuery: "signature=" + sign,
+// 	}
+// }
 
 // 通用非鉴权接口封装
 func binanceHandlerRequestApi[T any](apiType ApiType, request *T, name string) string {
