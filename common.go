@@ -119,6 +119,9 @@ const (
 	TEST_BINANCE_API_FUTURE_HTTP      = "testnet.binancefuture.com"
 	TEST_BINANCE_API_SWAP_HTTP        = "testnet.binancefuture.com"
 
+	BINANCE_API_FUTURE_HTTP_FOR_MM = "fapi-mm.binance.com" //做市商独有低延迟接口
+	BINANCE_API_SWAP_HTTP_FOR_MM   = "dapi-mm.binance.com" //做市商独有低延迟接口
+
 	IS_GZIP = true
 )
 
@@ -127,6 +130,7 @@ type NetType int
 const (
 	MAIN_NET NetType = iota
 	TEST_NET
+	MAIN_NET_MM //做市商主网
 )
 
 var NowNetType = MAIN_NET
@@ -390,7 +394,7 @@ func BinanceGetRestHostByApiType(apiType ApiType) string {
 	switch apiType {
 	case SPOT:
 		switch NowNetType {
-		case MAIN_NET:
+		case MAIN_NET, MAIN_NET_MM:
 			return BINANCE_API_SPOT_HTTP
 		case TEST_NET:
 			return TEST_BINANCE_API_SPOT_HTTP
@@ -401,6 +405,8 @@ func BinanceGetRestHostByApiType(apiType ApiType) string {
 			return BINANCE_API_FUTURE_HTTP
 		case TEST_NET:
 			return TEST_BINANCE_API_FUTURE_HTTP
+		case MAIN_NET_MM:
+			return BINANCE_API_FUTURE_HTTP_FOR_MM
 		}
 	case SWAP:
 		switch NowNetType {
@@ -408,10 +414,12 @@ func BinanceGetRestHostByApiType(apiType ApiType) string {
 			return BINANCE_API_SWAP_HTTP
 		case TEST_NET:
 			return TEST_BINANCE_API_SWAP_HTTP
+		case MAIN_NET_MM:
+			return BINANCE_API_SWAP_HTTP_FOR_MM
 		}
 	case PORTFOLIO_MARGIN:
 		switch NowNetType {
-		case MAIN_NET:
+		case MAIN_NET, MAIN_NET_MM:
 			return BINANCE_API_PORTFOLIO_MARGIN_HTTP
 		case TEST_NET:
 			return BINANCE_API_PORTFOLIO_MARGIN_HTTP

@@ -22,8 +22,15 @@ const (
 	BINANCE_API_SWAP_WS_STREAM_GZIP   = "sdstream.binance.com"
 	BINANCE_API_FUTURE_WS_STREAM_GZIP = "sfstream.binance.com"
 
+	BINANCE_API_FUTURE_WS_STREAM_FOR_MM = "fstream-mm.binance.com"
+	BINANCE_API_SWAP_WS_STREAM_FOR_MM   = "dstream-mm.binance.com"
+
 	BINANCE_API_SPOT_WS_API   = "ws-api.binance.com:9443"
 	BINANCE_API_FUTURE_WS_API = "ws-fapi.binance.com"
+	BINANCE_API_SWAP_WS_API   = "ws-dapi.binance.com"
+
+	BINANCE_API_FUTURE_WS_API_FOR_MM = "ws-fapi-mm.binance.com" //做市商独有低延迟接口
+	BINANCE_API_SWAP_WS_API_FOR_MM   = "ws-dapi-mm.binance.com" //做市商独有低延迟接口
 
 	TEST_BINANCE_API_SPOT_WS_STREAM   = "testnet.binance.vision"
 	TEST_BINANCE_API_FUTURE_WS_STREAM = "fstream.binancefuture.com"
@@ -31,6 +38,7 @@ const (
 
 	TEST_BINANCE_API_SPOT_WS_API   = "testnet.binance.vision"
 	TEST_BINANCE_API_FUTURE_WS_API = "testnet.binancefuture.com"
+	TEST_BINANCE_API_SWAP_WS_API   = "testnet.binancefuture.com"
 )
 
 const (
@@ -53,10 +61,11 @@ type WsStreamPath int
 
 const (
 	WS_STREAM_PATH WsStreamPath = iota
+	WS_PM_STREAM_PATH
 	WS_ACCOUNT_PATH
 	WS_SPOT_API_PATH
 	WS_FUTURE_API_PATH
-	WS_PM_STREAM_PATH
+	WS_SWAP_API_PATH
 )
 
 // 数据流订阅基础客户端
@@ -873,7 +882,7 @@ func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan
 func handlerWsStreamRequestApi(wsStreamPath WsStreamPath, listenKey string, apiType ApiType, isGzip bool) string {
 	host := ""
 	switch wsStreamPath {
-	case WS_SPOT_API_PATH, WS_FUTURE_API_PATH:
+	case WS_SPOT_API_PATH, WS_FUTURE_API_PATH, WS_SWAP_API_PATH:
 		host = getWsApiWsApi(apiType)
 	case WS_STREAM_PATH, WS_ACCOUNT_PATH, WS_PM_STREAM_PATH:
 		host = getWsStreamWsApi(apiType, isGzip)
@@ -892,7 +901,7 @@ func getWsStreamWsApi(apiType ApiType, isGzip bool) string {
 	switch apiType {
 	case SPOT:
 		switch NowNetType {
-		case MAIN_NET:
+		case MAIN_NET, MAIN_NET_MM:
 			return BINANCE_API_SPOT_WS_STREAM
 		case TEST_NET:
 			return TEST_BINANCE_API_SPOT_WS_STREAM
@@ -907,6 +916,8 @@ func getWsStreamWsApi(apiType ApiType, isGzip bool) string {
 			}
 		case TEST_NET:
 			return TEST_BINANCE_API_SWAP_WS_STREAM
+		case MAIN_NET_MM:
+			return BINANCE_API_SWAP_WS_STREAM_FOR_MM
 		}
 	case FUTURE, PORTFOLIO_MARGIN:
 		switch NowNetType {
@@ -918,6 +929,8 @@ func getWsStreamWsApi(apiType ApiType, isGzip bool) string {
 			}
 		case TEST_NET:
 			return TEST_BINANCE_API_FUTURE_WS_STREAM
+		case MAIN_NET_MM:
+			return BINANCE_API_FUTURE_WS_STREAM_FOR_MM
 		}
 	}
 	return ""
@@ -934,13 +947,22 @@ func getWsApiWsApi(apiType ApiType) string {
 			return TEST_BINANCE_API_SPOT_WS_API
 		}
 	case SWAP:
-		return ""
+		switch NowNetType {
+		case MAIN_NET:
+			return BINANCE_API_SWAP_WS_API
+		case TEST_NET:
+			return TEST_BINANCE_API_SWAP_WS_API
+		case MAIN_NET_MM:
+			return BINANCE_API_SWAP_WS_API_FOR_MM
+		}
 	case FUTURE:
 		switch NowNetType {
 		case MAIN_NET:
 			return BINANCE_API_FUTURE_WS_API
 		case TEST_NET:
 			return TEST_BINANCE_API_FUTURE_WS_API
+		case MAIN_NET_MM:
+			return BINANCE_API_FUTURE_WS_API_FOR_MM
 		}
 	}
 	log.Error("AccountType Error is ", apiType)
@@ -957,6 +979,8 @@ func getWsPath(wsStreamPath WsStreamPath, listenKey string) string {
 		return "/ws-api/v3"
 	case WS_FUTURE_API_PATH:
 		return "/ws-fapi/v1"
+	case WS_SWAP_API_PATH:
+		return "/ws-dapi/v1"
 	case WS_PM_STREAM_PATH:
 		return fmt.Sprintf("/pm/ws/%s", listenKey)
 	}

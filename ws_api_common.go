@@ -3,11 +3,12 @@ package mybinanceapi
 import (
 	"context"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
-	"github.com/gorilla/websocket"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/bwmarrin/snowflake"
+	"github.com/gorilla/websocket"
 )
 
 type WsApiResultChan interface {
@@ -72,6 +73,16 @@ func (ws *FutureWsStreamClient) ConvertToWsApi(apiKey string, apiSecret string) 
 	ws.isListenWs = true
 	b := MyBinance{}
 	ws.client = b.NewFutureRestClient(apiKey, apiSecret)
+	return ws, nil
+}
+
+func (ws *SwapWsStreamClient) ConvertToWsApi(apiKey string, apiSecret string) (*SwapWsStreamClient, error) {
+	ws.wsStreamPath = WS_SWAP_API_PATH
+	ws.apiKey = apiKey
+	ws.apiSecret = apiSecret
+	ws.isListenWs = true
+	b := MyBinance{}
+	ws.client = b.NewSwapRestClient(apiKey, apiSecret)
 	return ws, nil
 }
 
