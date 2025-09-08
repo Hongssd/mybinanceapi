@@ -595,13 +595,13 @@ type WsPMContractBalance struct {
 }
 
 type WsPMContractPosition struct {
-	Symbol             string  `json:"s"`   //交易对
-	PositionAmount     string  `json:"pa"`  //仓位
-	EntryPrice         string  `json:"ep"`  //入仓价格
-	CumulativeRealized string  `json:"cr"`  //(费前)累计实现损益
-	UnrealizedProfit   string  `json:"up"`  //持仓未实现盈亏
-	PositionSide       string  `json:"ps"`  //持仓方向
-	BreakEvenPrice     float64 `json:"bep"` //盈亏平衡价
+	Symbol             string `json:"s"`   //交易对
+	PositionAmount     string `json:"pa"`  //仓位
+	EntryPrice         string `json:"ep"`  //入仓价格
+	CumulativeRealized string `json:"cr"`  //(费前)累计实现损益
+	UnrealizedProfit   string `json:"up"`  //持仓未实现盈亏
+	PositionSide       string `json:"ps"`  //持仓方向
+	BreakEvenPrice     string `json:"bep"` //盈亏平衡价
 }
 
 // 统一账户合约订单/交易 更新推送
