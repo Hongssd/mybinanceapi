@@ -254,7 +254,7 @@ func binanceCallApiWithSecretForBody[T any](client *Client, url, method string, 
 
 // 通用json body鉴权接口调用
 func binanceCallApiWithSecretForJsonBody[T any](client *Client, url, method string, reqBody []byte) (*T, error) {
-	log.Warn(method, ": ", url)
+	// log.Warn(method, ": ", url)
 	body, err := RequestWithHeaderAndBody(url, method, map[string]string{
 		"X-MBX-APIKEY": client.ApiKey,
 		"Content-Type": "application/json",
@@ -280,10 +280,7 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 		Path:     name,
 		RawQuery: query + "&signature=" + sign,
 	}
-	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
-	log.Warn("reqUrl: ", u.String())
-	log.Warn("query: ", query)
-	log.Warn("sign: ", sign)
+
 	return u.String()
 }
 
@@ -291,49 +288,15 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 func binanceHandlerRequestApiWithSecretForBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
 	query := binanceHandlerReq(request)
 
-	//timestampStr := fmt.Sprintf("timestamp=%d", time.Now().UnixMilli())
-
-	//signStr := timestampStr + query
 	sign := HmacSha256(secret, query)
 	requestBody := []byte(query + "&signature=" + sign)
 	u := url.URL{
 		Scheme: "https",
 		Host:   BinanceGetRestHostByApiType(apiType),
 		Path:   name,
-		//RawQuery: timestampStr + "&signature=" + sign,
 	}
-	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
-	log.Warn("reqUrl: ", u.String())
-	log.Warn("reqBody: ", string(requestBody))
-	log.Warn("requestBody: ", string(requestBody))
+
 	return requestBody, u.String()
-}
-
-// 通用json Body鉴权接口封装
-func binanceHandlerRequestApiWithSecretForJsonBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
-	jsonBody, _ := json.Marshal(request)
-	signSource := string(jsonBody)
-	sign := HmacSha256(secret, signSource)
-
-	signMap := map[string]interface{}{}
-	json.Unmarshal(jsonBody, &signMap)
-
-	// signMap["signature"] = sign
-
-	targetJsonBody, _ := json.Marshal(signMap)
-
-	u := url.URL{
-		Scheme:   "https",
-		Host:     BinanceGetRestHostByApiType(apiType),
-		Path:     name,
-		RawQuery: "signature=" + sign,
-	}
-
-	log.Warn("signSource: ", signSource)
-	log.Warn("sign: ", sign)
-	log.Warn("reqUrl: ", u.String())
-	log.Warn("reqJsonBody: ", string(targetJsonBody))
-	return jsonBody, u.String()
 }
 
 // 通用url param + json Body鉴权接口封装
@@ -342,12 +305,6 @@ func binanceHandlerRequestApiWithSecretForUrlRequestAndJsonBody[T any](apiType A
 	signSource := query //+ string(jsonBody)
 	sign := HmacSha256(secret, signSource)
 	_ = sign
-	// signMap := map[string]interface{}{}
-	// json.Unmarshal(jsonBody, &signMap)
-
-	// signMap["signature"] = sign
-
-	// targetJsonBody, _ := json.Marshal(signMap)
 
 	u := url.URL{
 		Scheme:   "https",
@@ -356,9 +313,6 @@ func binanceHandlerRequestApiWithSecretForUrlRequestAndJsonBody[T any](apiType A
 		RawQuery: query + "&signature=" + sign,
 	}
 
-	log.Warn("signSource: ", signSource)
-	log.Warn("reqUrl: ", u.String())
-	log.Warn("reqBody: ", string(jsonBody))
 	return jsonBody, u.String()
 }
 
