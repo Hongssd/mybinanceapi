@@ -141,7 +141,7 @@ func RequestWithHeaderAndBody(urlStr string, method string, headerMap map[string
 		req.Header.Set(k, v)
 	}
 	//req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	// req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	client := &http.Client{
 		Timeout: httpTimeout,
 	}
@@ -188,7 +188,7 @@ func RequestWithHeaderAndBody(urlStr string, method string, headerMap map[string
 
 		client.Transport = reqProxy
 	}
-	if reqBody != nil && len(reqBody) > 0 {
+	if len(reqBody) > 0 {
 		req.Body = io.NopCloser(bytes.NewBuffer(reqBody))
 		log.Warn(string(reqBody))
 	}

@@ -221,7 +221,10 @@ func SetServerTimeDelta(delta int64) {
 // 通用鉴权接口调用
 func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, error) {
 	//log.Info(url)
-	body, err := RequestWithHeader(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, IS_GZIP)
+	body, err := RequestWithHeader(url, method, map[string]string{
+		"X-MBX-APIKEY": client.ApiKey,
+		"Content-Type": "application/x-www-form-urlencoded",
+	}, IS_GZIP)
 	if err != nil {
 		return nil, err
 	}
@@ -235,7 +238,27 @@ func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, er
 // 通用body鉴权接口调用
 func binanceCallApiWithSecretForBody[T any](client *Client, url, method string, reqBody []byte) (*T, error) {
 	//log.Info(url)
-	body, err := RequestWithHeaderAndBody(url, method, map[string]string{"X-MBX-APIKEY": client.ApiKey}, reqBody, IS_GZIP)
+	body, err := RequestWithHeaderAndBody(url, method, map[string]string{
+		"X-MBX-APIKEY": client.ApiKey,
+		"Content-Type": "application/x-www-form-urlencoded",
+	}, reqBody, IS_GZIP)
+	if err != nil {
+		return nil, err
+	}
+	res, err := handlerCommonRest[T](body)
+	if err != nil {
+		return nil, err
+	}
+	return &res.Result, res.handlerError()
+}
+
+// 通用json body鉴权接口调用
+func binanceCallApiWithSecretForJsonBody[T any](client *Client, url, method string, reqBody []byte) (*T, error) {
+	log.Warn(method, ": ", url)
+	body, err := RequestWithHeaderAndBody(url, method, map[string]string{
+		"X-MBX-APIKEY": client.ApiKey,
+		"Content-Type": "application/json",
+	}, reqBody, IS_GZIP)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +281,9 @@ func binanceHandlerRequestApiWithSecret[T any](apiType ApiType, request *T, name
 		RawQuery: query + "&signature=" + sign,
 	}
 	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
-	//log.Warn(u.String())
+	log.Warn("reqUrl: ", u.String())
+	log.Warn("query: ", query)
+	log.Warn("sign: ", sign)
 	return u.String()
 }
 
@@ -280,24 +305,62 @@ func binanceHandlerRequestApiWithSecretForBody[T any](apiType ApiType, request *
 	// log.Debug(u.RequestURI() + "---" + u.Query().Encode())
 	log.Warn("reqUrl: ", u.String())
 	log.Warn("reqBody: ", string(requestBody))
+	log.Warn("requestBody: ", string(requestBody))
 	return requestBody, u.String()
 }
 
-// // 通用json Body鉴权接口封装
-// func binanceHandlerRequestApiWithSecretForJsonBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
-// 	reqBody, err := json.Marshal(request)
-// 	if err != nil {
-// 		return nil, ""
-// 	}
-// 	sign := HmacSha256(secret, string(reqBody))
+// 通用json Body鉴权接口封装
+func binanceHandlerRequestApiWithSecretForJsonBody[T any](apiType ApiType, request *T, name, secret string) ([]byte, string) {
+	jsonBody, _ := json.Marshal(request)
+	signSource := string(jsonBody)
+	sign := HmacSha256(secret, signSource)
 
-// 	u := url.URL{
-// 		Scheme:   "https",
-// 		Host:     BinanceGetRestHostByApiType(apiType),
-// 		Path:     name,
-// 		RawQuery: "signature=" + sign,
-// 	}
-// }
+	signMap := map[string]interface{}{}
+	json.Unmarshal(jsonBody, &signMap)
+
+	// signMap["signature"] = sign
+
+	targetJsonBody, _ := json.Marshal(signMap)
+
+	u := url.URL{
+		Scheme:   "https",
+		Host:     BinanceGetRestHostByApiType(apiType),
+		Path:     name,
+		RawQuery: "signature=" + sign,
+	}
+
+	log.Warn("signSource: ", signSource)
+	log.Warn("sign: ", sign)
+	log.Warn("reqUrl: ", u.String())
+	log.Warn("reqJsonBody: ", string(targetJsonBody))
+	return jsonBody, u.String()
+}
+
+// 通用url param + json Body鉴权接口封装
+func binanceHandlerRequestApiWithSecretForUrlRequestAndJsonBody[T any](apiType ApiType, urlRequest *T, jsonBody []byte, name, secret string) ([]byte, string) {
+	query := binanceHandlerReq(urlRequest)
+	signSource := query //+ string(jsonBody)
+	sign := HmacSha256(secret, signSource)
+	_ = sign
+	// signMap := map[string]interface{}{}
+	// json.Unmarshal(jsonBody, &signMap)
+
+	// signMap["signature"] = sign
+
+	// targetJsonBody, _ := json.Marshal(signMap)
+
+	u := url.URL{
+		Scheme:   "https",
+		Host:     BinanceGetRestHostByApiType(apiType),
+		Path:     name,
+		RawQuery: query + "&signature=" + sign,
+	}
+
+	log.Warn("signSource: ", signSource)
+	log.Warn("reqUrl: ", u.String())
+	log.Warn("reqBody: ", string(jsonBody))
+	return jsonBody, u.String()
+}
 
 // 通用非鉴权接口封装
 func binanceHandlerRequestApi[T any](apiType ApiType, request *T, name string) string {

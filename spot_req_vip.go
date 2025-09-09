@@ -35,13 +35,13 @@ func (api *SpotApiVipVipPortalFutureIpWhitelistsGetApi) Timestamp(Timestamp int6
 // Name Type Mandatory Description
 // RecvWindow LONG NO No more than 60000
 // timestamp LONG YES
-// endpoint STRING NO FAPI-MM/DAPI-MM/WS-FAPI-MM/WS-DAPI-MM/FSTREAM-MM/DSTREAM-MM
-// ipAddresses STRING[] NO
+// endpoint STRING YES FAPI-MM/DAPI-MM/WS-FAPI-MM/WS-DAPI-MM/FSTREAM-MM/DSTREAM-MM
+// ipAddresses STRING[] YES
 type SpotApiVipVipPortalFutureIpWhitelistsPostReq struct {
-	Endpoint    *string   `json:"endpoint"`    //NO FAPI-MM or FSTREAM-MM
-	IpAddresses *[]string `json:"ipAddresses"` //NO
-	RecvWindow  *int64    `json:"recvWindow"`  //NO
-	Timestamp   *int64    `json:"timestamp"`   //YES
+	Endpoint    *string   `json:"endpoint,omitempty"`    //YES FAPI-MM or FSTREAM-MM
+	IpAddresses *[]string `json:"ipAddresses,omitempty"` //YES
+	RecvWindow  *int64    `json:"recvWindow,omitempty"`  //NO
+	Timestamp   *int64    `json:"timestamp,omitempty"`   //YES
 }
 
 type SpotApiVipVipPortalFutureIpWhitelistsPostApi struct {
@@ -74,10 +74,10 @@ func (api *SpotApiVipVipPortalFutureIpWhitelistsPostApi) Timestamp(Timestamp int
 // endpoint STRING NO FAPI-MM/DAPI-MM/WS-FAPI-MM/WS-DAPI-MM/FSTREAM-MM/DSTREAM-MM
 // ipAddresses STRING[] NO
 type SpotApiVipVipPortalFutureIpWhitelistsDeleteReq struct {
-	Endpoint    *string   `json:"endpoint"`    //NO FAPI-MM or FSTREAM-MM
-	IpAddresses *[]string `json:"ipAddresses"` //NO
-	RecvWindow  *int64    `json:"recvWindow"`  //NO
-	Timestamp   *int64    `json:"timestamp"`   //YES
+	Endpoint    *string   `json:"endpoint,omitempty"`    //NO FAPI-MM or FSTREAM-MM
+	IpAddresses *[]string `json:"ipAddresses,omitempty"` //NO
+	RecvWindow  *int64    `json:"recvWindow,omitempty"`  //NO
+	Timestamp   *int64    `json:"timestamp,omitempty"`   //YES
 }
 
 type SpotApiVipVipPortalFutureIpWhitelistsDeleteApi struct {

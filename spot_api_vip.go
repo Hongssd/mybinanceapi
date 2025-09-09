@@ -24,8 +24,18 @@ func (client *SpotRestClient) NewSpotApiVipVipPortalFutureIpWhitelistsPost() *Sp
 }
 func (api *SpotApiVipVipPortalFutureIpWhitelistsPostApi) Do() (*SpotApiVipVipPortalFutureIpWhitelistsPostRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
-	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotApiVipVipPortalFutureIpWhitelistsPost], api.client.c.ApiSecret)
-	return binanceCallApiWithSecret[SpotApiVipVipPortalFutureIpWhitelistsPostRes](api.client.c, url, POST)
+	targetJson := struct {
+		IpAddresses *[]string `json:"ipAddresses,omitempty"`
+	}{
+		IpAddresses: api.req.IpAddresses,
+	}
+	jsonBody, _ := json.Marshal(targetJson)
+	_ = jsonBody
+	queryReq := *api.req
+	queryReq.IpAddresses = nil
+
+	body, url := binanceHandlerRequestApiWithSecretForUrlRequestAndJsonBody(SPOT, &queryReq, jsonBody, SpotApiMap[SpotApiVipVipPortalFutureIpWhitelistsPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecretForJsonBody[SpotApiVipVipPortalFutureIpWhitelistsPostRes](api.client.c, url, POST, body)
 }
 
 // binance SPOT SpotApiVipVipPortalFutureIpWhitelistsDelete rest删除VIP专属合约IP白名单 MM低延迟接口
@@ -37,6 +47,16 @@ func (client *SpotRestClient) NewSpotApiVipVipPortalFutureIpWhitelistsDelete() *
 }
 func (api *SpotApiVipVipPortalFutureIpWhitelistsDeleteApi) Do() (*SpotApiVipVipPortalFutureIpWhitelistsDeleteRes, error) {
 	api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
-	reqBody, url := binanceHandlerRequestApiWithSecretForBody(SPOT, api.req, SpotApiMap[SpotApiVipVipPortalFutureIpWhitelistsDelete], api.client.c.ApiSecret)
-	return binanceCallApiWithSecretForBody[SpotApiVipVipPortalFutureIpWhitelistsDeleteRes](api.client.c, url, DELETE, reqBody)
+	targetJson := struct {
+		IpAddresses *[]string `json:"ipAddresses,omitempty"`
+	}{
+		IpAddresses: api.req.IpAddresses,
+	}
+	jsonBody, _ := json.Marshal(targetJson)
+	_ = jsonBody
+	queryReq := *api.req
+	queryReq.IpAddresses = nil
+
+	body, url := binanceHandlerRequestApiWithSecretForUrlRequestAndJsonBody(SPOT, &queryReq, jsonBody, SpotApiMap[SpotApiVipVipPortalFutureIpWhitelistsDelete], api.client.c.ApiSecret)
+	return binanceCallApiWithSecretForJsonBody[SpotApiVipVipPortalFutureIpWhitelistsDeleteRes](api.client.c, url, DELETE, body)
 }
