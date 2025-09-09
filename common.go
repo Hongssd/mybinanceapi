@@ -220,7 +220,7 @@ func SetServerTimeDelta(delta int64) {
 
 // 通用鉴权接口调用
 func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, error) {
-	//log.Info(url)
+	log.Warn(method, ": ", url)
 	body, err := RequestWithHeader(url, method, map[string]string{
 		"X-MBX-APIKEY": client.ApiKey,
 		"Content-Type": "application/x-www-form-urlencoded",
@@ -237,7 +237,7 @@ func binanceCallApiWithSecret[T any](client *Client, url, method string) (*T, er
 
 // 通用body鉴权接口调用
 func binanceCallApiWithSecretForBody[T any](client *Client, url, method string, reqBody []byte) (*T, error) {
-	//log.Info(url)
+	log.Warn(method, ": ", url)
 	body, err := RequestWithHeaderAndBody(url, method, map[string]string{
 		"X-MBX-APIKEY": client.ApiKey,
 		"Content-Type": "application/x-www-form-urlencoded",
@@ -254,7 +254,7 @@ func binanceCallApiWithSecretForBody[T any](client *Client, url, method string, 
 
 // 通用json body鉴权接口调用
 func binanceCallApiWithSecretForJsonBody[T any](client *Client, url, method string, reqBody []byte) (*T, error) {
-	// log.Warn(method, ": ", url)
+	log.Warn(method, ": ", url)
 	body, err := RequestWithHeaderAndBody(url, method, map[string]string{
 		"X-MBX-APIKEY": client.ApiKey,
 		"Content-Type": "application/json",
