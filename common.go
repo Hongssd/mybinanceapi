@@ -297,7 +297,7 @@ func binanceHandlerRequestApiWithSecretForBody[T any](apiType ApiType, request *
 	}
 
 	log.Warn("reqUrl: ", u.String())
-	log.Warn("reqBody: ", requestBody)
+	log.Warn("reqBody: ", string(requestBody))
 	return requestBody, u.String()
 }
 
