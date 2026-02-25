@@ -198,11 +198,15 @@ func (api *SpotApiReferralIfNewUserApi) Do() (*SpotApiReferralIfNewUserRes, erro
 	return binanceCallApiWithSecret[SpotApiReferralIfNewUserRes](api.client.c, url, GET)
 }
 
-
-
-
-
-
-
-
-
+// binance SPOT SpotMarginUserListenTokenPost rest生成杠杆账户listenToken(USER_STREAM)
+func (client *SpotRestClient) NewSpotMarginUserListenTokenPost() *SpotMarginUserListenTokenPostApi {
+	return &SpotMarginUserListenTokenPostApi{
+		client: client,
+		req:    &SpotMarginUserListenTokenPostReq{},
+	}
+}
+func (api *SpotMarginUserListenTokenPostApi) Do() (*SpotMarginUserListenTokenPostRes, error) {
+	// api.Timestamp(time.Now().UnixMilli() + serverTimeDelta)
+	url := binanceHandlerRequestApiWithSecret(SPOT, api.req, SpotApiMap[SpotMarginUserListenTokenPost], api.client.c.ApiSecret)
+	return binanceCallApiWithSecret[SpotMarginUserListenTokenPostRes](api.client.c, url, POST)
+}

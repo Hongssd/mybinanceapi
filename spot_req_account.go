@@ -586,3 +586,29 @@ func (api *SpotApiReferralIfNewUserApi) Timestamp(Timestamp int64) *SpotApiRefer
 	api.req.Timestamp = GetPointer(Timestamp)
 	return api
 }
+
+type SpotMarginUserListenTokenPostApi struct {
+	client *SpotRestClient
+	req    *SpotMarginUserListenTokenPostReq
+}
+
+type SpotMarginUserListenTokenPostReq struct {
+	Symbol     *string `json:"symbol"`     //CONDITIONAL	交易对名称，当isIsolated为true时必填，例如：BNBUSDT
+	IsIsolated *bool   `json:"isIsolated"` //NO	是否为逐仓杠杆，true表示逐仓，默认为全仓
+	Validity   *int64  `json:"validity"`   //NO	有效期（毫秒） ，默认24小时，最大24小时
+}
+
+func (api *SpotMarginUserListenTokenPostApi) Symbol(Symbol string) *SpotMarginUserListenTokenPostApi {
+	api.req.Symbol = GetPointer(Symbol)
+	return api
+}
+
+func (api *SpotMarginUserListenTokenPostApi) IsIsolated(IsIsolated bool) *SpotMarginUserListenTokenPostApi {
+	api.req.IsIsolated = GetPointer(IsIsolated)
+	return api
+}
+
+func (api *SpotMarginUserListenTokenPostApi) Validity(Validity int64) *SpotMarginUserListenTokenPostApi {
+	api.req.Validity = GetPointer(Validity)
+	return api
+}

@@ -226,3 +226,8 @@ type SpotApiReferralIfNewUserRes map[string]interface{}
 type SpotWsApiUserDataStreamResult struct {
 	SubscriptionId int64 `json:"subscriptionId"`
 }
+
+type SpotMarginUserListenTokenPostRes struct {
+	Token          string `json:"token"`
+	ExpirationTime int64  `json:"expirationTime"`
+}
