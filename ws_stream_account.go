@@ -241,9 +241,8 @@ func (ws *SpotWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string
 		if len(isolatedSymbol) != 1 {
 			return nil, fmt.Errorf("逐仓杠杆账户只能指定一个 isolatedSymbol")
 		}
+		ws.isolatedSymbol = isolatedSymbol[0]
 	}
-
-	ws.isolatedSymbol = isolatedSymbol[0]
 
 	b := MyBinance{}
 	ws.client = b.NewSpotRestClient(apiKey, apiSecret)
