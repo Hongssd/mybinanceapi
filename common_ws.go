@@ -68,6 +68,47 @@ const (
 	WS_SWAP_API_PATH
 )
 
+// FutureStreamTier USDT-M 行情在 fstream 上按 public（盘口类）与 market（其余市场数据）分流。
+type FutureStreamTier int
+
+const (
+	FutureStreamTierUnspecified FutureStreamTier = iota
+	FutureStreamTierPublic
+	FutureStreamTierMarket
+)
+
+func (t FutureStreamTier) String() string {
+	switch t {
+	case FutureStreamTierPublic:
+		return "public"
+	case FutureStreamTierMarket:
+		return "market"
+	default:
+		return "unspecified"
+	}
+}
+
+// DefaultFuturePrivateStreamEvents 返回 USDT-M 用户数据 private WebSocket 默认的 events 列表（以 / 拼入 query）。
+func DefaultFuturePrivateStreamEvents() []string {
+	return []string{
+		"listenKeyExpired",
+		"MARGIN_CALL",
+		"ACCOUNT_UPDATE",
+		"ORDER_TRADE_UPDATE",
+	}
+}
+
+func classifyFutureStreamParam(stream string) FutureStreamTier {
+	s := strings.ToLower(stream)
+	if strings.Contains(s, "bookticker") {
+		return FutureStreamTierPublic
+	}
+	if strings.Contains(s, "@depth") {
+		return FutureStreamTierPublic
+	}
+	return FutureStreamTierMarket
+}
+
 // 数据流订阅基础客户端
 type WsStreamClient struct {
 	apiType ApiType
@@ -115,6 +156,11 @@ type WsStreamClient struct {
 	isListenWs               bool
 	listenKey                string
 	listenKeyRefreshStopChan *chan struct{}
+
+	// futureStreamTier 仅当 apiType==FUTURE 且 wsStreamPath==WS_STREAM_PATH 时用于选择 /public/stream 或 /market/stream。
+	futureStreamTier FutureStreamTier
+	// privateStreamEvents 仅当 apiType==FUTURE 且 wsStreamPath==WS_ACCOUNT_PATH 时作为 /private/stream 的 events query；nil 或空则使用 DefaultFuturePrivateStreamEvents。
+	privateStreamEvents []string
 
 	AutoReConnectTimes int //自动重连次数
 
@@ -171,6 +217,19 @@ func (sub *Subscription[T]) CloseChan() chan struct{} {
 func sendMsg[T any](ws *WsStreamClient, id int64, method string, params []string) (*Subscription[T], error) {
 	if ws == nil || ws.conn == nil || ws.isClose {
 		return nil, fmt.Errorf("websocket is close")
+	}
+	if ws.apiType == FUTURE && ws.wsStreamPath == WS_STREAM_PATH {
+		if ws.futureStreamTier == FutureStreamTierUnspecified {
+			return nil, fmt.Errorf("USDT-M行情须指定分流：请使用 NewFuturePublicWsStreamClient 或 NewFutureMarketWsStreamClient（或已弃用的 NewFutureWsStreamClient 等价于 market）")
+		}
+		if (method == SUBSCRIBE || method == UNSUBSCRIBE) && len(params) > 0 {
+			for _, p := range params {
+				want := classifyFutureStreamParam(p)
+				if want != ws.futureStreamTier {
+					return nil, fmt.Errorf("stream %q 属于 %s 入口，当前客户端为 %s", p, want.String(), ws.futureStreamTier.String())
+				}
+			}
+		}
 	}
 	if id == 0 {
 		node, err := snowflake.NewNode(1)
@@ -262,7 +321,7 @@ func (ws *WsStreamClient) OpenConn() error {
 	if ws.errChan == nil {
 		ws.errChan = make(chan error)
 	}
-	apiUrl := handlerWsStreamRequestApi(ws.wsStreamPath, ws.listenKey, ws.apiType, ws.isGzip)
+	apiUrl := handlerWsStreamRequestApi(ws)
 	if ws.conn == nil {
 		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
 		if err != nil {
@@ -930,21 +989,62 @@ func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan
 }
 
 // 获取数据流请求URL
-func handlerWsStreamRequestApi(wsStreamPath WsStreamPath, listenKey string, apiType ApiType, isGzip bool) string {
+func handlerWsStreamRequestApi(ws *WsStreamClient) string {
 	host := ""
-	switch wsStreamPath {
+	switch ws.wsStreamPath {
 	case WS_SPOT_API_PATH, WS_FUTURE_API_PATH, WS_SWAP_API_PATH:
-		host = getWsApiWsApi(apiType)
+		host = getWsApiWsApi(ws.apiType)
 	case WS_STREAM_PATH, WS_ACCOUNT_PATH, WS_PM_STREAM_PATH:
-		host = getWsStreamWsApi(apiType, isGzip)
+		host = getWsStreamWsApi(ws.apiType, ws.isGzip)
 	}
+	path, rawQuery := ws.buildWsPathAndQuery()
 	u := url.URL{
 		Scheme:   "wss",
 		Host:     host,
-		Path:     getWsPath(wsStreamPath, listenKey),
-		RawQuery: "",
+		Path:     path,
+		RawQuery: rawQuery,
 	}
 	return u.String()
+}
+
+func (ws *WsStreamClient) buildWsPathAndQuery() (path string, rawQuery string) {
+	switch ws.wsStreamPath {
+	case WS_STREAM_PATH:
+		if ws.apiType == FUTURE {
+			switch ws.futureStreamTier {
+			case FutureStreamTierPublic:
+				return "/public/stream", ""
+			case FutureStreamTierMarket:
+				return "/market/stream", ""
+			default:
+				return "/market/stream", ""
+			}
+		}
+		return "/stream", ""
+	case WS_ACCOUNT_PATH:
+		if ws.apiType == FUTURE {
+			q := url.Values{}
+			q.Set("listenKey", ws.listenKey)
+			events := ws.privateStreamEvents
+			if len(events) == 0 {
+				events = DefaultFuturePrivateStreamEvents()
+			}
+			q.Set("events", strings.Join(events, "/"))
+			return "/private/stream", q.Encode()
+		}
+		return fmt.Sprintf("/ws/%s", ws.listenKey), ""
+	case WS_SPOT_API_PATH:
+		return "/ws-api/v3", ""
+	case WS_FUTURE_API_PATH:
+		return "/ws-fapi/v1", ""
+	case WS_SWAP_API_PATH:
+		return "/ws-dapi/v1", ""
+	case WS_PM_STREAM_PATH:
+		return fmt.Sprintf("/pm/ws/%s", ws.listenKey), ""
+	default:
+		log.Error("WsStreamPath Error is ", ws.wsStreamPath)
+		return "", ""
+	}
 }
 
 // 获取数据流请求Path
@@ -1017,25 +1117,6 @@ func getWsApiWsApi(apiType ApiType) string {
 		}
 	}
 	log.Error("AccountType Error is ", apiType)
-	return ""
-}
-
-func getWsPath(wsStreamPath WsStreamPath, listenKey string) string {
-	switch wsStreamPath {
-	case WS_STREAM_PATH:
-		return "/stream"
-	case WS_ACCOUNT_PATH:
-		return fmt.Sprintf("/ws/%s", listenKey)
-	case WS_SPOT_API_PATH:
-		return "/ws-api/v3"
-	case WS_FUTURE_API_PATH:
-		return "/ws-fapi/v1"
-	case WS_SWAP_API_PATH:
-		return "/ws-dapi/v1"
-	case WS_PM_STREAM_PATH:
-		return fmt.Sprintf("/pm/ws/%s", listenKey)
-	}
-	log.Error("WsStreamPath Error is ", wsStreamPath)
 	return ""
 }
 

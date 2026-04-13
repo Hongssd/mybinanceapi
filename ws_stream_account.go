@@ -374,11 +374,17 @@ func (ws *SpotWsStreamClient) listenKeyDelete() error {
 	return nil
 }
 
-func (ws *FutureWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string) (*FutureWsStreamClient, error) {
+// ConvertToAccountWs 将客户端切换为 USDT-M 用户数据流（wss fstream /private/stream）。privateEvents 非空时作为 query events（否则使用 DefaultFuturePrivateStreamEvents）。
+func (ws *FutureWsStreamClient) ConvertToAccountWs(apiKey string, apiSecret string, privateEvents ...string) (*FutureWsStreamClient, error) {
 	ws.wsStreamPath = WS_ACCOUNT_PATH
 	ws.apiKey = apiKey
 	ws.apiSecret = apiSecret
 	ws.isListenWs = true
+	if len(privateEvents) > 0 {
+		ws.privateStreamEvents = append([]string(nil), privateEvents...)
+	} else {
+		ws.privateStreamEvents = nil
+	}
 	b := MyBinance{}
 	ws.client = b.NewFutureRestClient(apiKey, apiSecret)
 
