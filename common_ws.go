@@ -789,7 +789,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				if strings.Contains(string(data), "ACCOUNT_UPDATE") {
 					switch ws.apiType {
 					case FUTURE:
-						res, err := HandleWsPayloadResult[WsFuturePayloadAccountUpdate](data)
+						res, err := HandleWsPayloadResult[WsFuturePayloadAccountUpdate](unwrapBinanceWsData(data))
 						if err != nil {
 							log.Error(err)
 							continue
@@ -802,7 +802,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 						})
 
 					case SWAP:
-						res, err := HandleWsPayloadResult[WsSwapPayloadAccountUpdate](data)
+						res, err := HandleWsPayloadResult[WsSwapPayloadAccountUpdate](unwrapBinanceWsData(data))
 						if err != nil {
 							log.Error(err)
 							continue
@@ -814,7 +814,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							return true
 						})
 					case PORTFOLIO_MARGIN:
-						res, err := HandleWsPayloadResult[WsPMContractPayloadAccountUpdate](data)
+						res, err := HandleWsPayloadResult[WsPMContractPayloadAccountUpdate](unwrapBinanceWsData(data))
 						if err != nil {
 							log.Error(err)
 							continue
@@ -834,7 +834,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 				if strings.Contains(string(data), "ORDER_TRADE_UPDATE") {
 					switch ws.apiType {
 					case FUTURE:
-						res, err := HandleWsPayloadResult[WsFuturePayloadOrderTradeUpdate](data)
+						res, err := HandleWsPayloadResult[WsFuturePayloadOrderTradeUpdate](unwrapBinanceWsData(data))
 						if err != nil {
 							log.Error(err)
 							continue
@@ -846,7 +846,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							return true
 						})
 					case SWAP:
-						res, err := HandleWsPayloadResult[WsSwapPayloadOrderTradeUpdate](data)
+						res, err := HandleWsPayloadResult[WsSwapPayloadOrderTradeUpdate](unwrapBinanceWsData(data))
 						if err != nil {
 							log.Error(err)
 							continue
@@ -858,7 +858,7 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 							return true
 						})
 					case PORTFOLIO_MARGIN:
-						res, err := HandleWsPayloadResult[WsPMContractPayloadOrderTradeUpdate](data)
+						res, err := HandleWsPayloadResult[WsPMContractPayloadOrderTradeUpdate](unwrapBinanceWsData(data))
 						if err != nil {
 							log.Error(err)
 							continue
@@ -1023,14 +1023,17 @@ func (ws *WsStreamClient) buildWsPathAndQuery() (path string, rawQuery string) {
 		return "/stream", ""
 	case WS_ACCOUNT_PATH:
 		if ws.apiType == FUTURE {
-			q := url.Values{}
-			q.Set("listenKey", ws.listenKey)
 			events := ws.privateStreamEvents
 			if len(events) == 0 {
 				events = DefaultFuturePrivateStreamEvents()
 			}
-			q.Set("events", strings.Join(events, "/"))
-			return "/private/stream", q.Encode()
+			// 公告要求 events 以 / 分隔；url.Values.Encode 会把 / 编成 %2F，部分网关会拒绝握手，故仅对 listenKey 做 QueryEscape。
+			rawQuery := fmt.Sprintf(
+				"listenKey=%s&events=%s",
+				url.QueryEscape(ws.listenKey),
+				strings.Join(events, "/"),
+			)
+			return "/private/stream", rawQuery
 		}
 		return fmt.Sprintf("/ws/%s", ws.listenKey), ""
 	case WS_SPOT_API_PATH:

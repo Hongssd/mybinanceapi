@@ -105,19 +105,19 @@ func (ws *SpotWsStreamClient) CreatePayload() (*WsSpotPayload, error) {
 		Ws: ws,
 		Id: id,
 		OutboundAccountPositionPayload: &Payload[WsSpotPayloadOutboundAccountPosition]{
-			resultChan: make(chan WsSpotPayloadOutboundAccountPosition),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsSpotPayloadOutboundAccountPosition, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		BalanceUpdatePayload: &Payload[WsSpotPayloadBalanceUpdate]{
-			resultChan: make(chan WsSpotPayloadBalanceUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsSpotPayloadBalanceUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		ExecutionReportPayload: &Payload[WsSpotPayloadExecutionReport]{
-			resultChan: make(chan WsSpotPayloadExecutionReport),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsSpotPayloadExecutionReport, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 	}
 	ws.wsSpotPayloadMap.Store(id, payload)
@@ -133,14 +133,14 @@ func (ws *FutureWsStreamClient) CreatePayload() (*WsFuturePayload, error) {
 		Ws: ws,
 		Id: id,
 		AccountUpdatePayload: &Payload[WsFuturePayloadAccountUpdate]{
-			resultChan: make(chan WsFuturePayloadAccountUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsFuturePayloadAccountUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		OrderTradeUpdatePayload: &Payload[WsFuturePayloadOrderTradeUpdate]{
-			resultChan: make(chan WsFuturePayloadOrderTradeUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsFuturePayloadOrderTradeUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 	}
 	ws.wsFuturePayloadMap.Store(id, payload)
@@ -156,14 +156,14 @@ func (ws *SwapWsStreamClient) CreatePayload() (*WsSwapPayload, error) {
 		Ws: ws,
 		Id: id,
 		AccountUpdatePayload: &Payload[WsSwapPayloadAccountUpdate]{
-			resultChan: make(chan WsSwapPayloadAccountUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsSwapPayloadAccountUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		OrderTradeUpdatePayload: &Payload[WsSwapPayloadOrderTradeUpdate]{
-			resultChan: make(chan WsSwapPayloadOrderTradeUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsSwapPayloadOrderTradeUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 	}
 	ws.wsSwapPayloadMap.Store(id, payload)
@@ -181,14 +181,14 @@ func (ws *PMContractStreamClient) CreatePayload() (*WsPMContractPayload, error) 
 		Ws: ws,
 		Id: id,
 		AccountUpdatePayload: &Payload[WsPMContractPayloadAccountUpdate]{
-			resultChan: make(chan WsPMContractPayloadAccountUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsPMContractPayloadAccountUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		OrderTradeUpdatePayload: &Payload[WsPMContractPayloadOrderTradeUpdate]{
-			resultChan: make(chan WsPMContractPayloadOrderTradeUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsPMContractPayloadOrderTradeUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 	}
 	ws.wsPMContractPayloadMap.Store(id, payload)
@@ -204,19 +204,19 @@ func (ws *PMMarginStreamClient) CreatePayload() (*WsPMMarginPayload, error) {
 		Ws: ws,
 		Id: id,
 		OutboundAccountPositionPayload: &Payload[WsPMMarginPayloadOutboundAccountPosition]{
-			resultChan: make(chan WsPMMarginPayloadOutboundAccountPosition),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsPMMarginPayloadOutboundAccountPosition, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		BalanceUpdatePayload: &Payload[WsPMMarginPayloadBalanceUpdate]{
-			resultChan: make(chan WsPMMarginPayloadBalanceUpdate),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsPMMarginPayloadBalanceUpdate, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 		ExecutionReportPayload: &Payload[WsPMMarginPayloadExecutionReport]{
-			resultChan: make(chan WsPMMarginPayloadExecutionReport),
-			errChan:    make(chan error),
-			closeChan:  make(chan struct{}),
+			resultChan: make(chan WsPMMarginPayloadExecutionReport, 64),
+			errChan:    make(chan error, 1),
+			closeChan:  make(chan struct{}, 1),
 		},
 	}
 	ws.wsPMMarginPayloadMap.Store(id, payload)

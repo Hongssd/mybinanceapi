@@ -707,6 +707,24 @@ func HandleWsPayloadResult[T any](data []byte) (*T, error) {
 	return &result, nil
 }
 
+// unwrapBinanceWsData 将 {"stream":"...","data":{...}} 解包为内层 data（新 /private/stream 等组合封装）；否则返回原文。
+func unwrapBinanceWsData(data []byte) []byte {
+	var top map[string]interface{}
+	if err := json.Unmarshal(data, &top); err != nil {
+		return data
+	}
+	stream, okS := top["stream"].(string)
+	dataVal, okD := top["data"]
+	if !okS || !okD || stream == "" {
+		return data
+	}
+	inner, err := json.Marshal(dataVal)
+	if err != nil {
+		return data
+	}
+	return inner
+}
+
 type WsTicker struct {
 	Timestamp          int64  `json:"timestamp"`            //事件时间
 	AccountType        string `json:"account_type"`         //账户类型 SPOT 现货 FUTURE U合约 SWAP 币本位合约
