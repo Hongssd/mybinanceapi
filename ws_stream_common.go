@@ -141,43 +141,31 @@ func (*MyBinance) NewPMMarginStreamClient() *PMMarginStreamClient {
 	return ws
 }
 
-func (ws *SpotWsStreamClient) Close() error {
-	if ws.isListenWs {
-		err := ws.listenKeyDelete()
-		if err != nil {
-			return err
-		}
-		*ws.listenKeyRefreshStopChan <- struct{}{}
+func closeListenWs(ws *WsStreamClient, deleteFn func() error) error {
+	ws.stopListenKeyRefresh()
+	var delErr error
+	if ws.isListenWs && deleteFn != nil {
+		delErr = deleteFn()
 	}
-	return ws.WsStreamClient.Close()
+	closeErr := ws.Close()
+	if delErr != nil {
+		return delErr
+	}
+	return closeErr
+}
+
+func (ws *SpotWsStreamClient) Close() error {
+	return closeListenWs(&ws.WsStreamClient, ws.listenKeyDelete)
 }
 func (ws *FutureWsStreamClient) Close() error {
-	if ws.isListenWs {
-		err := ws.listenKeyDelete()
-		if err != nil {
-			return err
-		}
-		*ws.listenKeyRefreshStopChan <- struct{}{}
-	}
-	return ws.WsStreamClient.Close()
+	return closeListenWs(&ws.WsStreamClient, ws.listenKeyDelete)
 }
 func (ws *SwapWsStreamClient) Close() error {
-	if ws.isListenWs {
-		err := ws.listenKeyDelete()
-		if err != nil {
-			return err
-		}
-		*ws.listenKeyRefreshStopChan <- struct{}{}
-	}
-	return ws.WsStreamClient.Close()
+	return closeListenWs(&ws.WsStreamClient, ws.listenKeyDelete)
+}
+func (ws *PMContractStreamClient) Close() error {
+	return closeListenWs(&ws.WsStreamClient, ws.listenKeyDelete)
 }
 func (ws *PMMarginStreamClient) Close() error {
-	if ws.isListenWs {
-		err := ws.listenKeyDelete()
-		if err != nil {
-			return err
-		}
-		*ws.listenKeyRefreshStopChan <- struct{}{}
-	}
-	return ws.WsStreamClient.Close()
+	return closeListenWs(&ws.WsStreamClient, ws.listenKeyDelete)
 }

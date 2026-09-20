@@ -358,6 +358,20 @@ func getBestProxyAndWeight(apiType ApiType) (*RestProxy, *ProxyWeight, error) {
 	return minWeigthProxy, minWeight, nil
 }
 
+func getWsProxy(apiType ApiType) (*RestProxy, error) {
+	if len(proxyList) == 0 {
+		return nil, errors.New("proxyList is empty")
+	}
+	proxy, _, err := getBestProxyAndWeight(apiType)
+	if err != nil {
+		return nil, err
+	}
+	if proxy == nil {
+		return nil, errors.New("all proxy ip weight limit reached")
+	}
+	return proxy, nil
+}
+
 // 获取随机代理
 func getRandomProxy() (*RestProxy, error) {
 	length := len(proxyList)

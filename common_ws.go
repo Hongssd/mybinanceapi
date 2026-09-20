@@ -3,6 +3,8 @@ package mybinanceapi
 import (
 	"bytes"
 	"compress/gzip"
+	"crypto/tls"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -164,7 +166,8 @@ type WsStreamClient struct {
 
 	AutoReConnectTimes int //自动重连次数
 
-	afterOpenCallBack func() error
+	afterOpenCallBack    func() error
+	resultHandlerStarted bool
 }
 
 // 订阅请求结构体
@@ -265,26 +268,35 @@ func sendMsg[T any](ws *WsStreamClient, id int64, method string, params []string
 	return result, nil
 }
 
+func (ws *WsStreamClient) stopListenKeyRefresh() {
+	if ws.listenKeyRefreshStopChan == nil {
+		return
+	}
+	ch := *ws.listenKeyRefreshStopChan
+	if ch == nil {
+		return
+	}
+	select {
+	case ch <- struct{}{}:
+	default:
+	}
+}
+
 func (ws *WsStreamClient) Close() error {
 	ws.isClose = true
+	ws.resultHandlerStarted = false
+	ws.stopListenKeyRefresh()
 
-	err := ws.conn.Close()
-	if err != nil {
-		return err
+	var err error
+	if ws.conn != nil {
+		err = ws.conn.Close()
 	}
-	//手动关闭成功，给所有订阅发送关闭信号
-	go ws.sendWsCloseToAllSub()
-
-	//等待5秒，如果还有订阅未关闭，则强制关闭
-	time.Sleep(5 * time.Second)
-	//初始化连接状态
+	ws.sendWsCloseToAllSub()
 	ws.conn = nil
-	//close(ws.resultChan)
-	//close(ws.errChan)
 	ws.resultChan = nil
 	ws.errChan = nil
 	ws.initStructs()
-	return nil
+	return err
 }
 
 func (ws *WsStreamClient) initStructs() {
@@ -322,28 +334,30 @@ func (ws *WsStreamClient) OpenConn() error {
 		ws.errChan = make(chan error)
 	}
 	apiUrl := handlerWsStreamRequestApi(ws)
-	if ws.conn == nil {
-		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
-		if err != nil {
-			return err
-		}
-		ws.conn = conn
-		ws.isClose = false
-		log.Info("OpenConn success to ", apiUrl)
+	if ws.conn != nil {
+		_ = ws.conn.Close()
+		ws.conn = nil
+	}
+	conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan, ws.apiType)
+	if err != nil {
+		return err
+	}
+	ws.conn = conn
+	ws.isClose = false
+	log.Info("OpenConn success to ", apiUrl)
+	if !ws.resultHandlerStarted {
+		ws.resultHandlerStarted = true
 		ws.handleResult(ws.resultChan, ws.errChan)
-
-	} else {
-		conn, err := wsStreamServe(apiUrl, ws.isGzip, ws.resultChan, ws.errChan)
-		if err != nil {
-			return err
-		}
-		ws.conn = conn
-		log.Info("Auto ReOpenConn success to ", apiUrl)
 	}
 
 	if ws.afterOpenCallBack != nil {
 		err := ws.afterOpenCallBack()
 		if err != nil {
+			ws.isClose = true
+			if ws.conn != nil {
+				_ = ws.conn.Close()
+				ws.conn = nil
+			}
 			return err
 		}
 	}
@@ -928,21 +942,58 @@ func (sub *Subscription[T]) Unsubscribe() error {
 
 }
 
+func cloneWSDialer() *websocket.Dialer {
+	src := websocket.DefaultDialer
+	if src == nil {
+		return &websocket.Dialer{HandshakeTimeout: 45 * time.Second}
+	}
+	cloned := *src
+	return &cloned
+}
+
+func handshakeBodySnippet(resp *http.Response) string {
+	if resp == nil || resp.Body == nil {
+		return ""
+	}
+	defer resp.Body.Close()
+	var buf bytes.Buffer
+	_, _ = io.Copy(&buf, io.LimitReader(resp.Body, 256))
+	return strings.Join(strings.Fields(buf.String()), " ")
+}
+
+func wrapDialError(err error, resp *http.Response) error {
+	if err == nil {
+		return nil
+	}
+	if errors.Is(err, websocket.ErrBadHandshake) && resp != nil {
+		status := resp.StatusCode
+		body := handshakeBodySnippet(resp)
+		return fmt.Errorf("websocket: bad handshake status=%d body=%q: %w", status, body, err)
+	}
+	if resp != nil && resp.Body != nil {
+		_ = resp.Body.Close()
+	}
+	return err
+}
+
 // 标准订阅方法
-func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan error) (*websocket.Conn, error) {
-	dialer := websocket.DefaultDialer
+func wsStreamServe(api string, isGzip bool, resultChan chan []byte, errChan chan error, apiType ApiType) (*websocket.Conn, error) {
+	dialer := cloneWSDialer()
 	if WsUseProxy {
-		proxy, err := getRandomProxy()
+		proxy, err := getWsProxy(apiType)
 		if err != nil {
 			return nil, err
 		}
-		url_i := url.URL{}
-		targetProxy, _ := url_i.Parse(proxy.ProxyUrl)
+		targetProxy, err := url.Parse(proxy.ProxyUrl)
+		if err != nil {
+			return nil, err
+		}
 		dialer.Proxy = http.ProxyURL(targetProxy)
+		dialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
-	c, _, err := dialer.Dial(api, nil)
+	c, resp, err := dialer.Dial(api, nil)
 	if err != nil {
-		return nil, err
+		return nil, wrapDialError(err, resp)
 	}
 	c.SetReadLimit(6553500)
 	go func() {
